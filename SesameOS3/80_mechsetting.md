@@ -99,10 +99,7 @@ typedef struct mech_setting_s {
 ```
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformMechSetting ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -219,4 +216,4 @@ void tell_mobile_mech_setting(mobile_app *mobile) {
                    (sizeof(mech_setting_t) + offsetof(ss5_publish, payload)));
 }
 ``` 
--->
+

@@ -95,10 +95,7 @@ typedef struct mech_setting_s {
 ```
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformMechSetting ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```java
     override fun configureLockPosition(lockTarget: Short, unlockTarget: Short, result: CHResult<CHEmpty>) {
@@ -212,4 +209,4 @@ void tell_mobile_mech_setting(mobile_app *mobile) {
     talk_to_mobile(mobile, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, (uint8_t *) ss5_pub,
                    (sizeof(mech_setting_t) + offsetof(ss5_publish, payload)));
 }
-``` -->
+``` 
