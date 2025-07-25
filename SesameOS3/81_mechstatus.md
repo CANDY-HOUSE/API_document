@@ -33,7 +33,7 @@ typedef struct mech_status_s {
 #pragma pack()
 ```
 
-### Touch 的数据结构
+### Sesame Touch 的数据结构
 
 ```c
 #pragma pack(1)
@@ -49,7 +49,7 @@ typedef struct mech_status_s {
 #pragma pack()
 ```
 
-為了防止客戶端頻繁跟 sesame5 請求機械狀態，只能由 sesame5 在機械狀態改變時主動發送。
+為了防止客戶端頻繁跟 sesame device 請求機械狀態，只能由 sesame device 在機械狀態改變時主動發送。
 
 ## 手機與 ssm5 傳輸 mechStatus 互動循序圖
 
