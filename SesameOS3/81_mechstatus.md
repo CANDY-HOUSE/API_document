@@ -14,6 +14,8 @@ mechStatus 裡存放 sesame5 各個硬體的狀態。
 
 ## mechStatus 的結構內容:
 
+### Sesame5 機械狀態結構
+
 ```c
 #pragma pack(1)
 typedef struct mech_status_s {
@@ -31,6 +33,22 @@ typedef struct mech_status_s {
 #pragma pack()
 ```
 
+### Touch 的数据结构
+
+```c
+#pragma pack(1)
+typedef struct mech_status_s {
+    uint16_t battery;
+    int16_t cards_num;  // 卡片总数
+    uint8_t fingerprints_num;  // 指纹总数
+    uint8_t keyboards_num;  // 数字密码总数
+    uint8_t faces_num; // 人脸总数
+    uint8_t palms_num; // 手掌总数
+    uint8_t is_low_battery : 1;
+} mech_status_t;
+#pragma pack()
+```
+
 為了防止客戶端頻繁跟 sesame5 請求機械狀態，只能由 sesame5 在機械狀態改變時主動發送。
 
 ## 手機與 ssm5 傳輸 mechStatus 互動循序圖
@@ -39,7 +57,6 @@ typedef struct mech_status_s {
 sequenceDiagram
 Sesame5->>APP: SSM2_ITEM_CODE_MECH_STATUS
 ```
-
 
 ## ssm5 推送內容
 
@@ -73,7 +90,6 @@ payload : 詳見以下表格
 | Data | NULL | is_clockwise | is_low_battery | is_stop | is_critical | is_unlock_range | is_lock_range | is_clutch_failed |
 
 ## iOS、Android、ESP32 範例
- 
 
 ### Android 範例
 
@@ -148,5 +164,4 @@ class CHSesame5MechStatus(override val data: ByteArray) : CHSesameProtocolMechSt
     memcpy(ble_tx_buf + 2, &g_mech_status, sizeof(mech_status_t));
     talk_to_all_mob(SSM2_SEG_PARSING_TYPE_CIPHERTEXT, ble_tx_buf, sizeof(mech_status_t) + 2);
 }
-``` 
-
+```
