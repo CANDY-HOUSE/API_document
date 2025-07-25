@@ -45,10 +45,7 @@ res : CMD_RESULT_SUCCESS (0x00)
 0x01->Add mode
 
 ## iOS, Android, ESP32 Example
-
-<CustomBashOSPlatformCardModeSet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```jsx | pure
     override fun cardModeSet(mode: Byte, result: CHResult<CHEmpty>) {
@@ -75,4 +72,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

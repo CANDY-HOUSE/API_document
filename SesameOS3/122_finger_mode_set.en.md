@@ -45,10 +45,7 @@ res : CMD_RESULT_SUCCESS (0x00)
 0x01->Addition Mode
 
 ## iOS, Android, ESP32 examples
-
-<CustomBashOSPlatformFingerModeSet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android example
+ ## Android example
 
 ```jsx | pure
    override fun fingerPrintModeSet(mode: Byte, result: CHResult<CHEmpty>) {
@@ -75,4 +72,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

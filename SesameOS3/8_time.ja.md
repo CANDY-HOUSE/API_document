@@ -42,10 +42,7 @@ timestamp：携帯電話の timestamp
 res：CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
-
- <CustomBashOSPlatformTime ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```jsx | pure
 
@@ -79,4 +76,4 @@ if (cmd_it_code == SSM2_ITEM_CODE_TIME) {
                 talk_to_mobile(mobile, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, (uint8_t *) ss5_res,
                                offsetof(ss5_response, payload));
             }
-``` -->
+``` 

@@ -100,10 +100,7 @@ typedef struct {
 ```
 
 ## iOS、Android、ESP32 範例
-
- <CustomBashOSPlatformHistory ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -255,4 +252,4 @@ void send_read_history_cmd_to_ssm(sesame * ssm) {
     talk_to_ssm(ssm, SSM_SEG_PARSING_TYPE_CIPHERTEXT);
 }
 ``` 
--->
+

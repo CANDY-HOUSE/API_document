@@ -45,10 +45,7 @@ res : CMD_RESULT_SUCCESS (0x00)
 0x01->新規追加モード
 
 ## iOS、Android、ESP32 のサンプル
-
-<CustomBashOSPlatformFingerModeGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidのサンプル
+ ## Androidのサンプル
 
 ```jsx | pure
     override fun fingerPrintModeGet(result: CHResult<Byte>) {
@@ -76,4 +73,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

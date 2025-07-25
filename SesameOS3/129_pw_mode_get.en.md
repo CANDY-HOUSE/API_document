@@ -45,10 +45,7 @@ res: CMD_RESULT_SUCCESS (0x00)
 0x01-> Addition mode
 
 ## iOS, Android, ESP32 Examples
-
-<CustomBashOSPlatformPwModeGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```jsx | pure
   override fun keyBoardPassCodeModeGet(result: CHResult<Byte>) {
@@ -75,4 +72,4 @@ res: CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

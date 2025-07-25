@@ -43,9 +43,6 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Examples
 
- <CustomBashOSPlatformTime ios='true' android='true'  esp32='true'/>
-
-<!--
 ## Android Example
 
 ```jsx | pure
@@ -81,4 +78,4 @@ if (cmd_it_code == SSM2_ITEM_CODE_TIME) {
                 talk_to_mobile(mobile, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, (uint8_t *) ss5_res,
                                offsetof(ss5_response, payload));
             }
-``` -->
+``` 

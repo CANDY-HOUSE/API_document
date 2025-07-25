@@ -40,10 +40,7 @@ order: 117
 res：CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformFingerGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android例
+ ## Android例
 
 ```jsx | pure
     override fun fingerPrints(result: CHResult<CHEmpty>) {
@@ -69,4 +66,4 @@ res：CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

@@ -40,10 +40,7 @@ item code : SSM_OS3_FINGERPRINT_GET (117)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Examples
-
-<CustomBashOSPlatformFingerGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```jsx | pure
     override fun fingerPrints(result: CHResult<CHEmpty>) {
@@ -69,4 +66,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

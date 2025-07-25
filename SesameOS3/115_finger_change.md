@@ -100,10 +100,7 @@ name_len = 4
 | Data | Finger Name | Finger Name Len | Finger ID | Finger ID Len |
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformFingerChange ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -138,4 +135,4 @@ name_len = 4
 ```jsx | pure
 
 ``` 
--->
+

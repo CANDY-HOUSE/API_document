@@ -45,10 +45,7 @@ res：CMD_RESULT_SUCCESS (0x00)
 0x01->新規作成モード
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformPwModeGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```jsx | pure
   override fun keyBoardPassCodeModeGet(result: CHResult<Byte>) {
@@ -75,4 +72,4 @@ res：CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

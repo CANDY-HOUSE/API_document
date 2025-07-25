@@ -45,10 +45,7 @@ res：CMD_RESULT_SUCCESS (0x00)
 0x01->新規モード
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformCardModeGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```jsx | pure
   override fun cardModeGet(result: CHResult<Byte>) {
@@ -71,4 +68,4 @@ res：CMD_RESULT_SUCCESS (0x00)
     }
 ```
 
-廃止 -->
+廃止 

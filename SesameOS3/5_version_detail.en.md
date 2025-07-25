@@ -39,10 +39,7 @@ item code : SSM2_ITEM_CODE_VERSION_DETAIL (0x05)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## Examples for iOS, Android, and ESP32
-
- <CustomBashOSPlatformVersionDetail ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```jsx | pure
     override fun getVersionTag(result: CHResult<String>) {
@@ -80,4 +77,4 @@ if (src_id == SSM2_ITEM_CODE_VERSION_DETAIL) {
         memcpy(ble_tx_buf + 3, GIT_SHORT_HASH, strlen(GIT_SHORT_HASH));
         talk_to_mob(p_param->conidx, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, ble_tx_buf, (strlen(GIT_SHORT_HASH) + 3));
     }
-``` -->
+``` 

@@ -40,10 +40,7 @@ item code: SSM_OS3_CARD_GET (109)
 res: CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 examples
-
-<CustomBashOSPlatformCardGet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android example
+ ## Android example
 
 ```jsx | pure
     override fun cards(result: CHResult<CHEmpty>) {
@@ -70,4 +67,4 @@ res: CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

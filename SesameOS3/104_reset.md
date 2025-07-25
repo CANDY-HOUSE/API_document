@@ -43,14 +43,7 @@ item code : SSM3_ITEM_RESET (104)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformReset
-  ios='true'
-  android='true' 
-  esp32='true'
-/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -94,4 +87,4 @@ if (src_id == SSM3_ITEM_RESET) {
     }
 ``` 
 
--->
+

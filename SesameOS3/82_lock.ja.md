@@ -42,10 +42,7 @@ type : SSM2_OP_CODE_RESPONSE (0x07)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformLock ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android 例
+ ## Android 例
 
 ```java
     override fun lock(historytag: ByteArray?, result: CHResult<CHEmpty>) {
@@ -108,4 +105,4 @@ void ssm_lock(uint8_t * tag, uint8_t tag_length) {
         talk_to_ssm(ssm, SSM_SEG_PARSING_TYPE_CIPHERTEXT);
     }
 }
-``` -->
+``` 

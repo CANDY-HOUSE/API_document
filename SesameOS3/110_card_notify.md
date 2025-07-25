@@ -50,10 +50,7 @@ card_name_len = 8
 | Data | card_name | card_name_len | card_id | card_id_len | card_type |
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformCardNotify ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -72,4 +69,4 @@ if (receivePayload.cmdItCode == SesameItemCode.SSM_OS3_CARD_NOTIFY.value) {
         (self.delegate as? CHSesameTouchProDelegate)?.onCardReceive(device:self, id: card.cardID, name: card.cardName, type: card.cardType)
 ```
 
--->
+

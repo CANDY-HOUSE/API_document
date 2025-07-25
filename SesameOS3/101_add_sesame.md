@@ -95,10 +95,7 @@ item code : SSM3_ITEM_ADD_SESAME (101)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformAddSesame ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -160,4 +157,4 @@ res : CMD_RESULT_SUCCESS (0x00)
         publish_ssm_keys(p_param->conidx);
 ``` 
 
--->
+

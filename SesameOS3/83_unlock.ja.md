@@ -42,10 +42,7 @@ order: 83
 res：CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 のサンプル
-
-<CustomBashOSPlatformUnlock ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidのサンプル
+ ## Androidのサンプル
 
 ```java
     override fun unlock(historytag: ByteArray?, result: CHResult<CHEmpty>) {
@@ -108,4 +105,4 @@ void ssm_lock(uint8_t * tag, uint8_t tag_length) {
         talk_to_ssm(ssm, SSM_SEG_PARSING_TYPE_CIPHERTEXT);
     }
 }
-``` -->
+``` 

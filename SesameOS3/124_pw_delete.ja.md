@@ -42,10 +42,7 @@ item code : SSM_OS3_PASSCODE_DELETE (124)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformPwDelete ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```jsx | pure
     override fun keyBoardPassCodeDelete(ID: String, result: CHResult<CHEmpty>) {
@@ -72,4 +69,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

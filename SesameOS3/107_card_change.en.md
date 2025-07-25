@@ -94,10 +94,7 @@ name_len = 4
 | Data | Card Name | Card Name Len | Card ID | Card ID Len |
 
 ## Examples for iOS, Android, ESP32
-
-<CustomBashOSPlatformCardChange ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```jsx | pure
     override fun cardChange(ID: String, name: String, result: CHResult<CHEmpty>) {
@@ -128,4 +125,4 @@ name_len = 4
 
 ```jsx | pure
 
-``` -->
+``` 

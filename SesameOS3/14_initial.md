@@ -39,10 +39,7 @@ item code : SSM2_ITEM_CODE_INITIAL (14)
 | Data | 4 bytes random code |
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformInitial ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -115,4 +112,4 @@ static void ssm_initial_handle(sesame * ssm, uint8_t cmd_it_code) {
 }
 ``` 
 
--->
+

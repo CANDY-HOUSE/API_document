@@ -40,14 +40,7 @@ order: 104
 res：CMD_RESULT_SUCCESS（0x00）
 
 ## iOS、Android、ESP32 のエグザンプル
-
-<CustomBashOSPlatformReset
-  ios='true'
-  android='true' 
-  esp32='true'
-/>
-
-<!-- ## Androidのエグザンプル
+ ## Androidのエグザンプル
 
 ```jsx | pure
     open fun reset(result: CHResult<CHEmpty>) {
@@ -87,4 +80,4 @@ if (src_id == SSM3_ITEM_RESET) {
         static co_timer_t reset_timer;
         co_timer_set(&reset_timer, 1000, TIMER_ONE_SHOT, after_100ms_reboot, NULL);
     }
-``` -->
+``` 

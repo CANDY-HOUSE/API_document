@@ -44,10 +44,7 @@ item code : SSM3_ITEM_REMOVE_SESAME (103)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformRemoveSesame ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -94,4 +91,4 @@ res : CMD_RESULT_SUCCESS (0x00)
         ssm_remove_key(p_param->data, p_param->length);
         publish_ssm_keys(p_param->conidx);
 ``` 
--->
+

@@ -42,10 +42,7 @@ item code: SSM2_ITEM_CODE_MAGNET (17)
 res: CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Examples
-
-<CustomBashOSPlatformMegnet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```java
     override fun magnet(result: CHResult<CHEmpty>) {
@@ -83,4 +80,4 @@ if (cmd_it_code == SSM2_ITEM_CODE_MAGNET) {
     talk_to_mobile(mobile, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, (uint8_t *) ss5_res,
                                    offsetof(ss5_response, payload));
 }
-``` -->
+``` 

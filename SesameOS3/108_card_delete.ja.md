@@ -40,10 +40,7 @@ item code : SSM_OS3_CARD_DELETE (108)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformCardDelete ios='true' android='true'  esp32='true'/>
-
-<!-- ## Androidの例
+ ## Androidの例
 
 ```jsx | pure
   override fun cardDelete(ID: String, result: CHResult<CHEmpty>) {
@@ -71,4 +68,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

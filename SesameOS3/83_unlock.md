@@ -45,10 +45,7 @@ item code : SSM2_ITEM_CODE_UNLOCK (82)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformUnlock ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -115,4 +112,4 @@ void ssm_lock(uint8_t * tag, uint8_t tag_length) {
 }
 ```
 
--->
+

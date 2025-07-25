@@ -95,9 +95,6 @@ payload : 詳見以下表格
 
 ## iOS、Android、ESP32 範例
 
- <CustomBashOSPlatformLogin ios='true' android='true'  esp32='true'/>
-
-<!--
 
 ### Android 範例
 
@@ -217,5 +214,5 @@ void send_reg_cmd_to_ssm(sesame * ssm) {
   }
 ```
 
--->
+
 

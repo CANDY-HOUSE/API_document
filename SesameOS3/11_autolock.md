@@ -43,14 +43,7 @@ item code : SSM2_ITEM_CODE_AUTOLOCK (11)
 res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformAutoLock
-  ios='true'
-  android='true' 
-  esp32='true'
-/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -98,4 +91,4 @@ void autolock_sentence(void) {
 }
 ``` 
 
--->
+

@@ -47,10 +47,7 @@ res : CMD_RESULT_SUCCESS (0x00)
 0x01->新增模式
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformPwModeGet ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -81,4 +78,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ``` 
 
--->
+

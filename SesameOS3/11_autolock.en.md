@@ -40,14 +40,7 @@ item code: SSM2_ITEM_CODE_AUTOLOCK (11)
 res: CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Examples
-
-<CustomBashOSPlatformAutoLock
-  ios='true'
-  android='true' 
-  esp32='true'
-/>
-
-<!-- ## Android Example
+ ## Android Example
 
 ```java
     override fun autolock(delay: Int, result: CHResult<Int>) {
@@ -91,4 +84,4 @@ void autolock_sentence(void) {
         //        }
     }
 }
-``` -->
+``` 

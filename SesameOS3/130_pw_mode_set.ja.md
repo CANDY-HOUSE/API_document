@@ -45,10 +45,7 @@ res : CMD_RESULT_SUCCESS (0x00)
 0x01->新規追加モード
 
 ## iOS、Android、ESP32 の例
-
-<CustomBashOSPlatformPwModeSet ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android の例
+ ## Android の例
 
 ```jsx | pure
     override fun keyBoardPassCodeModeSet(mode: Byte, result: CHResult<CHEmpty>) {
@@ -75,4 +72,4 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ```jsx | pure
 
-``` -->
+``` 

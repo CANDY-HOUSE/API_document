@@ -59,9 +59,6 @@ payload : 詳細は下の表を参照してください。
 
 ## iOS、Android、ESP32 のサンプル
 
- <CustomBashOSPlatformLogin ios='true' android='true'  esp32='true'/>
- 
-<!--
 ## Androidのサンプル
 
 ```jsx | pure
@@ -126,5 +123,5 @@ void send_login_cmd_to_ssm(sesame * ssm) {
     talk_to_ssm(ssm, SSM_SEG_PARSING_TYPE_PLAINTEXT);
 }
 
-``` -->
+``` 
 ````

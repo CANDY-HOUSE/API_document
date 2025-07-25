@@ -99,10 +99,7 @@ name_len = 4
 | Data | Card Name | Card Name Len | Card ID | Card ID Len |
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformCardChange ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -136,4 +133,4 @@ name_len = 4
 ```jsx | pure
 
 ``` 
--->
+

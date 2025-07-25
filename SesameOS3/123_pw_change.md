@@ -102,10 +102,7 @@ name_len = 4
 | Data | Password Name | Password Name Len | Password ID | Password ID Len |
 
 ## iOS、Android、ESP32 範例
-
-<CustomBashOSPlatformPwChange ios='true' android='true'  esp32='true'/>
-
-<!-- 
+ 
 
 ### Android 範例
 
@@ -138,4 +135,4 @@ name_len = 4
 
 ``` 
 
--->
+

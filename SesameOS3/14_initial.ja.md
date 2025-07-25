@@ -36,10 +36,7 @@ item code : SSM2_ITEM_CODE_INITIAL (14)
 | データ | 4 バイトのランダムコード |
 
 ## iOS、Android、ESP32 例
-
-<CustomBashOSPlatformInitial ios='true' android='true'  esp32='true'/>
-
-<!-- ## Android 例
+ ## Android 例
 
 ```java
     override fun onGattSesamePublish(receivePayload: SSM3PublishPayload) {
@@ -108,4 +105,4 @@ static void ssm_initial_handle(sesame * ssm, uint8_t cmd_it_code) {
     }
     send_login_cmd_to_ssm(ssm);
 }
-``` -->
+``` 
