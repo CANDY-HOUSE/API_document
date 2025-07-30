@@ -111,6 +111,14 @@ payload : 詳見以下表格
 | :--: | :--: | :----------: | :------------: | :-----: | :---------: | :-------------: | :-----------: | :--------------: |
 | Data | NULL | is_clockwise | is_low_battery | is_stop | is_critical | is_unlock_range | is_lock_range | is_clutch_failed |
 
+## Sesame Touch 推送內容
+
+参考 ssm5 推送內容， 替换对应的 mechStatus 和 payload 字段
+
+## Sesame Face 推送內容
+
+参考 ssm5 推送內容， 替换对应的 mechStatus 和 payload 字段
+
 ## iOS、Android、ESP32 範例
 
 ### Android 範例
