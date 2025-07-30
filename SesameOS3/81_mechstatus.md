@@ -36,6 +36,28 @@ typedef struct mech_status_s {
 ### Sesame Touch 的数据结构
 
 ```c
+
+#pragma pack(1)
+typedef struct mech_status_s {
+    uint16_t battery;
+    int16_t cards_num;  // 卡片总数
+    uint8_t fingerprints_num;  // 指纹总数
+    uint8_t keyboards_num;  // 数字密码总数
+    uint8_t is_clutch_failed : 1;
+    uint8_t is_lock_range : 1;
+    uint8_t is_unlock_range : 1;
+    uint8_t is_critical : 1;
+    uint8_t is_stop : 1;
+    uint8_t is_low_battery : 1;
+    uint8_t is_clockwise : 1;
+} mech_status_t;
+#pragma pack()
+```
+
+### Sesame Face 的数据结构
+
+```c
+
 #pragma pack(1)
 typedef struct mech_status_s {
     uint16_t battery;
