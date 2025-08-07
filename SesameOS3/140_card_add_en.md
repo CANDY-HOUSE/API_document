@@ -1,42 +1,43 @@
 ---
-nav: 示例
+nav: Example
 group: SESAME API
 type:
   title: Bluetooth
   order: 0
-title: 140_Card Add（添加）
+title: 140_Card Add（Add）
 order: 140
 ---
 
-# 140 卡片添加
+# 140 Card Add
 
-手机通过蓝牙向 ssm_touch 发送添加卡片的指令。  
-发送的数据包含卡片类型、卡片 ID 和名称。添加成功后设备将返回响应。
+The smartphone sends a command via Bluetooth to ssm_touch to add a card.
+The data sent includes the card type, card ID, and card name.
+Upon successful addition, the device returns a response.
 
-## 序列图
+## Sequence Diagram
 
 ```mermaid
 sequenceDiagram
 APP->>SesameTouch: {SSM_OS3_CARD_ADD(140)}
-SesameTouch-->>APP: 命令成功
+SesameTouch-->>APP: Command Success
 ```
 
-## 手机发送的数据格式
+## Mobile Sent Data
 
-| 字节范围  | 内容                      |
+| Byte Range  | Content                      |
 | --------- | ------------------------- |
-| [0]       | 卡片头数据（CARD_HEADER） |
-| [1]       | 卡片类型（CARD_TYPE）     |
-| [2]       | ID 长度（字节数）         |
-| [3 ～ 18] | 卡片 ID（字节数组）       |
-| [19]      | 名称长度（字节数）        |
-| [20-39]   | 名称（字节数组）          |
+| [0]       | Card header (CARD_HEADER) |
+| [1]       | Card type (CARD_TYPE)     |
+| [2]       | ID length (in bytes)       |
+| [3 ～ 18] | Card ID (byte array)       |
+| [19]      | Name length (in bytes)  |
+| [20-39]   | Card name (byte array)      |
 
 item code : SSM_OS3_CARD_ADD (140)
 
 ---
 
-### 枚举定义 和 数据结构
+### Enumerations and Data Structure
 
 ```c
 typedef enum {
@@ -49,59 +50,59 @@ typedef enum {
   CARD_TYPE_OTHER = 0x00,
   CARD_TYPE_SUICA = 0x01,
   CARD_TYPE_PASMO = 0x02,
-  CARD_TYPE_CLOUD_BASE = 0x80, // 云端卡, 需要云端验证
+  CARD_TYPE_CLOUD_BASE = 0x80, // Cloud-based card, requires cloud validation
 } CARD_TYPE;
 
 typedef struct {
     uint8_t card_header;  // EMPTY 0xFF， USED 0xF0， DELETED 0x00
-    uint8_t card_type;  // 米非卡 费力卡
-    uint8_t card_id_lg;  // id 长度
+    uint8_t card_type;  // MIFARE, FeliCa, etc.
+    uint8_t card_id_lg;  // Length of card ID
     uint8_t card_id[16];
-    uint8_t card_name_lg;  // 名称 长度
+    uint8_t card_name_lg;  // Length of name
     uint8_t card_name[20];
-} card_note_t;  ///total 40 字节
+} card_note_t;  ///total 40 bytes
 ```
 
-## Payload 结构说明
+## Payload Format
 
-添加卡片的 payload 数据结构如下：
+The payload data structure for card addition is as follows：
 
-| 字节偏移 | 名称        | 类型      | 说明                        |
+| Byte Offset | Name        | Type      | Description                        |
 | -------- | ----------- | --------- | --------------------------- |
-| 0        | card_header | uint8     | 卡片头数据（字节数）      |
-| 1        | card_type   | uint8     | 卡片类型（参见 CARD_TYPE）  |
-| 2        | id_length   | uint8     | 卡片 ID 长度（单位：字节）  |
-| 3~(N)    | card_id     | uint8[16] | 卡片 ID 字节数组            |
-| N+1      | name_length | uint8     | 名称长度（单位：字节）      |
-| N+2~(M)  | card_name   | uint8[20] | 名称字符串的 UTF-8 字节数组 |
+| 0        | card_header | uint8     | Card header      |
+| 1        | card_type   | uint8     | Card type (see CARD_TYPE)  |
+| 2        | id_length   | uint8     | Length of card ID (in bytes)  |
+| 3~(N)    | card_id     | uint8[16] | Card ID as byte array         |
+| N+1      | name_length | uint8     | Length of name (in bytes)      |
+| N+2~(M)  | card_name   | uint8[20] | UTF-8 encoded name byte array |
 
-### payload 字节示例
+### Example Payload Bytes
 
-假设卡片类型为 SUICA（0x01），ID 为 `"12345678"`，名称为 `"Home"`：
+Assuming card type is SUICA（0x01）, ID is `"12345678"`, and name is `"Home"`：
 
-| 字节偏移 | 内容（十六进制）                                                | 说明             |
+| Byte Offset | Content (Hex)                             |Description         |
 | -------- | --------------------------------------------------------------- | ---------------- |
 | 0        | `0xF0`                                                          | CARD_DATA_USED   |
 | 1        | `0x01`                                                          | CARD_TYPE_SUICA  |
-| 2        | `0x08`                                                          | ID 长度 = 8 字节 |
+| 2        | `0x08`                                                          | ID length = 8 bytes |
 | 3~18     | `0x01 02 03 04 05 06 07 08 00 00 00 00 00 00 00 00`             | `"12345678"`     |
-| 19       | `0x04`                                                          | 名称长度 = 4     |
+| 19       | `0x04`                                                          | Name length = 4 bytes    |
 | 20~39    | `0x48 6F 6D 65 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` | `"Home"`         |
 
 ---
 
-## 设备响应格式（来自 ssm_touch）
+## ssm_touch Return Content
 
-| Byte | 2            | 1            | 0            |
+| Byte Offset | 2            | 1            | 0            |
 | ---- | ------------ | ------------ | ------------ |
-| Data | res          | 指令代码     | 响应类型     |
-| 说明 | 命令处理状态 | 当前指令编号 | 响应类型常量 |
+| Filed | res          | Command code	     | Response type	     |
+| Description | Command result| Current command identifier | Response type constant |
 
 - type : `SSM2_OP_CODE_RESPONSE`（0x07）
 - item code : `SSM_OS3_CARD_ADD`（140）
-- res：`CMD_RESULT_SUCCESS`（0x00）或失败状态码
+- res：`CMD_RESULT_SUCCESS`（0x00）or failure status code
 
-### 失败状态码
+### Failure Status Codes
 
 ```C
 typedef enum {
@@ -118,9 +119,9 @@ typedef enum {
 } cmd_result_e;
 ```
 
-## iOS、Android、ESP32 範例
+## iOS,Android,ESP32 Example
 
-### Android 实现示例
+### Android Example
 
 ```kotlin
 internal fun ByteArray.padEnd(length: Int, value: Byte = 0x00.toByte()): ByteArray {
@@ -140,13 +141,13 @@ override fun cardAdd(id: ByteArray, name: String, result: CHResult<CHEmpty>) {
 }
 ```
 
-### esp32 实现示例
+### esp32 Example
 
 ```c
 // todo
 ```
 
-### iOS 实现示例
+### iOS Example
 
 ```swift
 TODO()
