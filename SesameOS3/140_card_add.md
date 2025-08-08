@@ -66,14 +66,14 @@ typedef struct {
 
 添加卡片的 payload 数据结构如下：
 
-| 字节偏移 | 名称        | 类型      | 说明                        |
-| -------- | ----------- | --------- | --------------------------- |
-| 0        | card_header | uint8     | 卡片头数据（字节数）      |
-| 1        | card_type   | uint8     | 卡片类型（参见 CARD_TYPE）  |
-| 2        | id_length   | uint8     | 卡片 ID 长度（单位：字节）  |
-| 3~(N)    | card_id     | uint8[16] | 卡片 ID 字节数组            |
-| N+1      | name_length | uint8     | 名称长度（单位：字节）      |
-| N+2~(M)  | card_name   | uint8[20] | 名称字符串的 UTF-8 字节数组 |
+| 字节偏移 | 名称        | 类型      | 说明                           |
+| -------- | ----------- | --------- | ------------------------------ |
+| 0        | card_header | uint8     | 卡片头数据（参见 CARD_HEADER） |
+| 1        | card_type   | uint8     | 卡片类型（参见 CARD_TYPE）     |
+| 2        | id_length   | uint8     | 卡片 ID 长度（单位：字节）     |
+| 3~(N)    | card_id     | uint8[16] | 卡片 ID 字节数组               |
+| N+1      | name_length | uint8     | 名称长度（单位：字节）         |
+| N+2~(M)  | card_name   | uint8[20] | 名称字符串的 UTF-8 字节数组    |
 
 ### payload 字节示例
 
