@@ -42,7 +42,6 @@ payload : 詳見以下表格
 ```c
 typedef enum {
     KB_TYPE_LOCAL = 0x00,
-    KB_TYPE_CLOUD = 0x01,
 } KB_TYPE;
 
 typedef struct {
