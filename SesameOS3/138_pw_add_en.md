@@ -48,7 +48,6 @@ typedef enum {
 
 typedef enum {
     KB_TYPE_LOCAL = 0x00,
-    KB_TYPE_CLOUD = 0x01,
 } KB_TYPE;
 
 typedef struct {

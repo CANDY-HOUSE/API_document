@@ -50,7 +50,6 @@ typedef enum {
   CARD_TYPE_OTHER = 0x00,
   CARD_TYPE_SUICA = 0x01,
   CARD_TYPE_PASMO = 0x02,
-  CARD_TYPE_CLOUD_BASE = 0x80, // Cloud-based card, requires cloud validation
 } CARD_TYPE;
 
 typedef struct {
