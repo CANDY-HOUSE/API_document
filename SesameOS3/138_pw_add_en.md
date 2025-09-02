@@ -118,7 +118,7 @@ typedef enum {
 
 ## iOS、Android、ESP32 Example
 
-###　Android　Example
+### Android　Example
 
 ```kotlin
 internal fun ByteArray.padEnd(length: Int, value: Byte = 0x00.toByte()): ByteArray {
