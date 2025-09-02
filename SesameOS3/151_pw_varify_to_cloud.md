@@ -10,7 +10,7 @@ order: 151
 
 # 151 密码云端验证
 
-当设备检测到 "未注册的" 或者 "类型是 KB_TYPE_CLOUD 的" 数字密码 输入时，立即通过蓝牙将信息转发至 Hub3/APP，由 Hub3/APP 判定或者转发至云端进行判定。
+当设备检测到 "未注册的" 的" 数字密码 输入时，立即通过蓝牙将信息转发至 Hub3/APP，由 Hub3/APP 判定或者转发至云端进行判定。
 
 根据判定结果，Hub3/APP 或者 云端 直接发命令给这台 SesameTouch 绑定的锁， 执行开锁。
 
@@ -46,7 +46,7 @@ typedef enum {
 
 typedef struct {
     uint8_t kb_header;  // 0xFF:空；0xF0:已使用；0x00:已删除
-    uint8_t kb_type;  // 数字密码的类型，用于确定是否需要云端验证。0x00:本地密码；0x01:云端密码(是通过IoT添加的密码)
+    uint8_t kb_type;  // 数字密码的类型
     uint8_t kb_id_lg;  // 数字密码的长度
     uint8_t kb_id[16];  // 数字密码的内容
     uint8_t kb_name_lg;  // 名称的长度
