@@ -8,73 +8,93 @@ title: 4_history (履歴)
 order: 4
 ---
 
-# 4 履歴
+# 4 History (履歴)
 
-携帯電話から履歴リクエストコマンドを送信し、Sesame5 はフラッシュ内の最も古い履歴を返し、その履歴をフラッシュから削除します。
+スマートフォンから Sesame5 に履歴リクエストコマンドを送信すると、デバイスは Flash 内の **最も古い履歴を 1 件返します**。  
+その履歴を削除する場合は、読み出した後に **削除コマンド** を送信する必要があります。  
+（読み出しただけでは削除されません）
 
-<!-- Sesame5のブロードキャストには、履歴タグを読み取る必要があるかどうかのフラグが含まれています。詳細は広告欄の説明をご覧ください。 -->
+<!-- Sesame5 のブロードキャストには、履歴タグを読み取る必要があるかどうかのフラグが含まれています。詳細は advertising フィールドを参照してください。 -->
 
 ## シーケンス図
 
-<p align="left" >
-  <img src="./src/history/history.png" alt="" title="">
-</p>
+```mermaid
+sequenceDiagram
+APP->>Sesame5: SSM2_ITEM_CODE_HISTORY(4)
+Sesame5-->>APP: Succes,History
+```
 
-## 携帯電話からのデータ送信
+## スマートフォンからの送信データ
+
+### 履歴の読み出し
 
 | Byte |    1    |     0     |
 | ---- | :-----: | :-------: |
-| Data | is peek | item code |
+| Data | 0x01 | item code |
 
 item code : SSM2_ITEM_CODE_HISTORY (4)
 
-is peek == true : 最新の履歴を表示し、履歴を削除しない
+`0x01` : 最も古い履歴を 1 件読み出す（削除はしない）
 
-is peek == false : 最も古い履歴を 1 つポップアップし、その履歴を削除する
+### 履歴の削除
 
-## ssm5 返信内容
+読み出した履歴を削除する場合は、HISTORY_DELETE を送信します。
 
-### if (is peek == true || (is peek == true && flash に履歴がある場合))
+| Byte |  N ~ 0  |
+| ---- | :-----: |
+| Data | recordId |
 
-| Byte |          N ~ 3           |    2     |       1        |       0        |
-| ---- | :----------------------: | :------: | :------------: | :------------: |
-| Data |        ペイロード        |   res    | アイテムコード |     タイプ     |
-| 説明 | 携帯電話に送信するデータ | 処理状態 |  コマンド番号  | プッシュタイプ |
+item code : `SSM2_ITEM_CODE_HISTORY_DELETE`  
+recordId : 読み出した際に取得した履歴の ID（4 バイト）
 
-タイプ : SSM2_OP_CODE_RESPONSE (0x07)
 
-アイテムコード : SSM2_ITEM_CODE_HISTORY(4)
+
+## ssm5 の返信内容
+
+### 履歴が存在する場合
+
+| Byte |     N ~ 3      |      2       |     1     |    0     |
+| ---- | :------------: | :----------: | :-------: | :------: |
+| Data |    payload     |     res      | item_code |   type   |
+| 說明 | 履歴データ内容 | 結果 | コマンド番号  | プッシュタイプ |
+
+type : SSM2_OP_CODE_RESPONSE (0x07)
+
+item code : SSM2_ITEM_CODE_HISTORY(4)
 
 res : CMD_RESULT_SUCCESS (0x00)
 
-ペイロード (History): 以下は履歴データの形式です。
 
-#### payload
+#### payload　構造
 
-| Byte |     N ~ 16     |   15 ~ 9    |     8 ~ 5      |     4      |         3 ~ 0          |
-| ---- | :------------: | :---------: | :------------: | :--------: | :--------------------: |
-| Data |     param      | mech_status |       ts       |    type    |           id           |
-| 説明 | 履歴タグと長さ |  機械状態   | タイムスタンプ | 履歴タイプ | データが何個目の履歴か |
+| Byte |     N ~ 16     |   15 ~ 9    |   8 ~ 5   |    4     |   3 ~ 0    |
+| ---- | :------------: | :---------: | :-------: | :------: | :--------: |
+| Data |     param      | mech_status |    ts     |   type   |     id     |
+| 説明 | 履歴タグ・長さ |  機械状態   | タイムスタンプ | 履歴タイプ | レコード ID (4B) |
 
 #### param
 
 | Byte |  32 ~ 1  |      0      |
 | ---- | :------: | :---------: |
 | Data |   data   | data_length |
-| 説明 | 履歴タグ | タグの長さ  |
+| 說明 | 履歴タグ |  タグの長さ   |
 
-### if (is peek == true && flash に履歴がない場合)
 
-| Byte |    2     |       1        |       0        |
-| ---- | :------: | :------------: | :------------: |
-| Data |   res    | アイテムコード |     タイプ     |
-| 説明 | 処理状態 |  コマンド番号  | プッシュタイプ |
+### 履歴が存在しない場合
 
-タイプ : SSM2_OP_CODE_RESPONSE (0x07)
+| Byte |      2       |     1     |    0     |
+| ---- | :----------: | :-------: | :------: |
+| Data |     res      | item_code |   type   |
+| 說明 | 結果 | コマンド番号  | プッシュタイプ |
 
-アイテムコード : SSM2_ITEM_CODE_HISTORY(4)
+type : SSM2_OP_CODE_RESPONSE (0x07)
+
+item code : SSM2_ITEM_CODE_HISTORY(4)
 
 res : CMD_RESULT_NOT_FOUND (0x05)
+
+
+## データ構造 (C 定義)
 
 ```c
 
@@ -97,156 +117,76 @@ typedef struct {
 
 ```
 
-## iOS、Android、ESP32 の例
+## iOS、Android、ESP32　の例
+ 
 
- <CustomBashOSPlatformHistory ios='true' android='true'  esp32='true'/>
+### Android の例
 
-<!-- ## Androidの例
-
-```jsx | pure
-    private fun readHistoryCommand(result: CHResult<CHEmpty>) {
-        if (checkBle(result)) return
-
-        sendEncryptCommand(SSM2Payload(SSM2OpCode.read, SesameItemCode.history, if (isInternetAvailable()) byteArrayOf(0x01) else byteArrayOf(0x00))) { res ->
-            if (res.cmdResultCode == SesameResultCode.success.value) {
-                if (isInternetAvailable()) {
-//                    L.d("hcia", "deviceId.toString().uppercase():" + deviceId.toString().uppercase())
-                    CHAccountManager.postSS2History(deviceId.toString().uppercase(), res.payload.toHexString()) {}
-                }
-                val recordId = res.payload.sliceArray(0..3).toBigLong().toInt()
-                var historyType = Sesame2HistoryTypeEnum.getByValue(res.payload[4]) ?: Sesame2HistoryTypeEnum.NONE
-                val newTime = res.payload.sliceArray(5..12).toBigLong() //4
-//                L.d("hcia", "newTime:" + newTime)
-                val historyContent = res.payload.sliceArray(13..res.payload.count() - 1)
-
-                if (historyType == Sesame2HistoryTypeEnum.BLE_LOCK) {
-                    val payload22 = historyContent.sliceArray(18..39)
-                    val locktype = payload22[0] / 30
-                    if (locktype == 1) {
-                        historyType = Sesame2HistoryTypeEnum.WEB_LOCK
-                    }
-                    if (locktype == 2) {
-                        historyType = Sesame2HistoryTypeEnum.WEB_LOCK
-                    }
-                    historyContent[18] = (payload22[0] % 30).toByte()
-
-                }
-                if (historyType == Sesame2HistoryTypeEnum.BLE_UNLOCK) {
-                    val payload22 = historyContent.sliceArray(18..39)
-                    val locktype = payload22[0] / 30
-                    if (locktype == 1) {
-                        historyType = Sesame2HistoryTypeEnum.WEB_UNLOCK
-                    }
-                    if (locktype == 2) {
-                        historyType = Sesame2HistoryTypeEnum.WEB_UNLOCK
-                    }
-                    historyContent[18] = (payload22[0] % 30).toByte()
-                }
-
-                val chHistoryEvent: CHHistoryEvent = parseHistoryContent(historyType, historyContent, newTime, recordId)
-                val historyEventToUpload: ArrayList<CHHistoryEvent> = ArrayList()
-
-                historyEventToUpload.add(chHistoryEvent)
-                val chHistorysToUI = ArrayList<CHSesame2History>()
-                historyEventToUpload.forEach {
-                    val ss2historyType = Sesame2HistoryTypeEnum.getByValue(it.type) ?: Sesame2HistoryTypeEnum.NONE
-                    val ts = it.timeStamp
-                    val recordID = it.recordID
-                    val histag = it.historyTag?.base64decodeByteArray()
-                    val tmphis = eventToHistory(ss2historyType, ts, recordID, histag)
-                    if (tmphis != null) {
-                        chHistorysToUI.add(tmphis)
-                    }
-                }
-
-                historyCallback?.invoke(Result.success(CHResultState.CHResultStateBLE(Pair(chHistorysToUI.toList(), null))))
-                if (isInternetAvailable()) {
-                    this.readHistoryCommand {}
-                }
-            } else {
-                historyCallback?.invoke(Result.failure(NSError(res.cmdResultCode.toString(), "CBCentralManager", res.cmdResultCode.toInt())))
-            }
-        }
+```kotlin
+private fun readHistoryCommand() {
+    if (isReadHistoryCommandRunning) {
+        L.d("hcia", "[ss5][his][read] readHistoryCommand is already running")
+        return
     }
-
-```
-
-## iOSの例
-```jsx | pure
-    func readHistoryCommand(_ result: @escaping (CHResult<CHEmpty>))  {
-        if (self.checkBle(result)) { return }
-//        L.d("🌇 履歴を読む")
-        URLSession.isInternetReachable { isInternetReachable in
-            let deleteHistory = isInternetReachable == true ? "01":"00"
-
-            self.sendCommand(.init(.read, .history, deleteHistory.hexStringtoData())) { (result) in
-
-                if result.cmdResultCode == .success {
-
-                    let histitem = result.data.copyData
-
-                    guard let recordId = histitem[safeBound: 0...3]?.copyData,
-                          let type = histitem[safeBound: 4...4]?.copyData,
-                          let timeData = histitem[safeBound: 5...12]?.copyData else {
-                        return
-                    }
-                    let hisContent = histitem[13...].copyData
-
-                    let record_id_Int32: Int32 = recordId.withUnsafeBytes({ $0.bindMemory(to: Int32.self).first! })
-                    let timestampInt64: UInt64 = timeData.withUnsafeBytes({ $0.bindMemory(to: UInt64.self).first! })
-
-                    guard var historyType: Sesame2HistoryTypeEnum = Sesame2HistoryTypeEnum(rawValue: type.bytes[0]) else {
-                        return
-                    }
-
-                    var historyContent = hisContent
-
-                    if historyType == .BLE_LOCK || historyType == .BLE_UNLOCK {
-                        let histag = hisContent[18...]
-                        let tagcount_historyTag = histag.copyData
-                        let tagcount = UInt8(tagcount_historyTag[0])
-
-                        // ロックタイプを解析する
-                        let originalTagCount = tagcount % Sesame2HistoryLockOpType.BASE.rawValue
-                        let historyOpType = Sesame2HistoryLockOpType(rawValue: tagcount / Sesame2HistoryLockOpType.BASE.rawValue)
-                        if historyType == .BLE_LOCK, historyOpType == .WM2 {
-                            historyType = Sesame2HistoryTypeEnum.WM2_LOCK
-                        } else if historyType == .BLE_LOCK, historyOpType == .WEB {
-                            historyType = Sesame2HistoryTypeEnum.WEB_LOCK
-                        } else if historyType == .BLE_UNLOCK, historyOpType == .WM2 {
-                            historyType = Sesame2HistoryTypeEnum.WM2_UNLOCK
-                        } else if historyType == .BLE_UNLOCK, historyOpType == .WEB {
-                            historyType = Sesame2HistoryTypeEnum.WEB_UNLOCK
+    val isConnectNET = isInternetAvailable()
+    sendCommand(SesameOS3Payload(SesameItemCode.history.value, byteArrayOf(0x01)), DeviceSegmentType.cipher) { res -> // 01: 从设备读取最旧的历史记录
+        L.d("hcia", "[ss5][his][ResultCode]:" + res.cmdResultCode)
+        val hisPaylaod = res.payload
+        if (res.cmdResultCode == SesameResultCode.success.value) {
+            // 改为 uuid 格式的 hisTag， APP不再兼容旧固件的历史记录， 若有客诉历史记录问题， 请升级锁的固件。
+            if (isConnectNET && !isConnectedByWM2) {
+                CHAccountManager.postSS5History(deviceId.toString().uppercase(), hisPaylaod.toHexString()) {
+                    // 成功上传历史记录到云端后， 通过蓝牙删除这条历史记录， SS5固件会在它的Flash里删除掉这条历史记录。
+                    val recordId = hisPaylaod.sliceArray(0..3)
+                    it.onSuccess {
+                        L.d("hcia", "[+]SSM2_ITEM_CODE_HISTORY_DELETE: ${recordId.toBigLong().toInt()}")
+                        sendCommand(SesameOS3Payload(SesameItemCode.SSM2_ITEM_CODE_HISTORY_DELETE.value, recordId), DeviceSegmentType.cipher) { res ->
+                            L.d("hcia", "[-]SSM2_ITEM_CODE_HISTORY_DELETE: ${res.cmdResultCode}")
                         }
-
-                        if historyOpType == .WEB || historyOpType == .WM2 {
-                            if let type = Sesame2HistoryTypeEnum(rawValue: tagcount / 30) {
-                                historyType = type
-                            } else {
-                                historyType = .NONE
-                            }
-                        }
-
-                        historyContent = hisContent[...17].copyData + originalTagCount.data + hisContent[19...].copyData
                     }
-                    if isInternetReachable == true {
-                        self.readHistoryCommand() { _ in }
+                    it.onFailure { exception ->
+                        L.d("hcia", "[ss5][history]postSS5History: $exception")
                     }
-                } else {
                 }
             }
         }
+        isReadHistoryCommandRunning = false
     }
-```
-
-## ESPサンプル
-
-```jsx | pure
-void send_read_history_cmd_to_ssm(sesame * ssm) {
-    ESP_LOGI(TAG, "[send_read_history_cmd_to_ssm]");
-    ssm->c_offset = 2;
-    ssm->b_buf[0] = SSM_ITEM_CODE_HISTORY;
-    ssm->b_buf[1] = 1;
-    talk_to_ssm(ssm, SSM_SEG_PARSING_TYPE_CIPHERTEXT);
 }
 ```
+
+### iOS の例
+
+```swift
+    func readHistoryCommand(_ result: @escaping (CHResult<CHEmpty>))  {
+        L.d("[ss5][history] readHistoryCommand <=")
+        URLSession.isInternetReachable { isInternetReachable in
+//            L.d("[ss5][history] 連網?",isInternetReachable)
+            self.sendCommand(.init( .history, "01".hexStringtoData())) { (result) in // 01: 从设备读取最旧的历史记录
+                if result.cmdResultCode == .success {
+                    guard isInternetReachable && !self.isConnectedByWM2 else { return }
+                    self.postProcessHistory(result.data.copyData) { res in
+                        if case .success(_) = res  {
+                            let recordId = result.data.copyData[0...3].copyData
+                            self.sendCommand(.init(SesameItemCode.historyDelete, recordId)) { response in
+                                if response.cmdResultCode == .success  { L.d("[ss5][history]歷史删除成功") }
+                            }
+                        }
+                    }
+                } else {
+                    (self.delegate as? CHSesame5Delegate)?.onHistoryReceived(device: self, result: .failure(self.errorFromResultCode(result.cmdResultCode)))
+                    self.isHistory = false
+                }
+            }
+        }
+    }
+
+```
+
+
+### ESP の例
+
+```c
+// todo
+```
+
