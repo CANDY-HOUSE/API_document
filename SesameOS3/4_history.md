@@ -74,10 +74,36 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 #### param
 
-| Byte |  32 ~ 1  |      0      |
+| Byte |  可變   |      1 ~ 0      |
 | ---- | :------: | :---------: |
-| Data |   data   | data_length |
-| 說明 | 歷史標籤 |  標籤長度   |
+| Data |   Value   | tag |
+| 說明 | UUID等 |  History Tag 類型   |
+
+
+###  History Tag 類型 一覽
+
+| Tag  | Value      | 說明            |
+| :-----: | :---------------- | :-------------- |
+| 0x0000  | NFC 卡            | 卡片開鎖        |
+| 0x0001  | 指紋              | 指紋開鎖        |
+| 0x0002  | 密碼              | 密碼開鎖        |
+| 0x0003  | 人臉              | 人臉開鎖        |
+| 0x0004  | 手掌              | 手掌開鎖        |
+| 0x0005  | TouchPro 裝置 UUID | TouchPro 關鎖   |
+| 0x0006  | Touch 裝置 UUID    | Touch 關鎖      |
+| 0x0007  | Open Sensor 裝置 UUID | Open Sensor 關鎖 |
+| 0x0008  | FacePro 裝置 UUID | FacePro 關鎖    |
+| 0x0009  | Face 裝置 UUID    | Face 關鎖       |
+| 0x000A  | Remote 裝置 UUID  | Remote 開/關鎖  |
+| 0x000B  | Remote nano 裝置 UUID | Remote nano 開/關鎖 |
+| 0x000C  | Biz 使用者 UUID   | Biz 開/關鎖     |
+| 0x000D  | Web API 使用者 UUID | Web API 開/關鎖 |
+| 0x000E  | Android 使用者 BLE UUID | Android BLE 開/關鎖 |
+| 0x000F  | iOS 使用者 BLE UUID     | iOS BLE 開/關鎖 |
+| 0x0010  | Android 使用者 Wi-Fi UUID | Android IoT 開/關鎖 |
+| 0x0011  | iOS 使用者 Wi-Fi UUID     | iOS IoT 開/關鎖 |
+
+
 
 
 ### 沒有歷史時

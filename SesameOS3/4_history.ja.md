@@ -72,12 +72,38 @@ res : CMD_RESULT_SUCCESS (0x00)
 | Data |     param      | mech_status |    ts     |   type   |     id     |
 | 説明 | 履歴タグ・長さ |  機械状態   | タイムスタンプ | 履歴タイプ | レコード ID (4B) |
 
+
 #### param
 
-| Byte |  32 ~ 1  |      0      |
+| Byte |  可変長   |      1 ~ 0      |
 | ---- | :------: | :---------: |
-| Data |   data   | data_length |
-| 說明 | 履歴タグ |  タグの長さ   |
+| Data |   Value   | tag |
+| 説明 | UUID等 |  History Tag 種類   |
+
+
+###  History Tag 種類 一覽
+
+| Tag     |Value      | 説明            |
+| :-----: | :---------------- | :-------------- |
+| 0x0000  | NFC カード            | カードでの開錠        |
+| 0x0001  | 指紋              | 指紋での開錠        |
+| 0x0002  | パスワード              | パスワードでの開錠        |
+| 0x0003  | 顔              | 顔での開錠        |
+| 0x0004  | 手のひら静脈              | 手のひら静脈での開錠        |
+| 0x0005  | TouchPro UUID | TouchPro 施錠   |
+| 0x0006  | Touch UUID    | Touch 施錠      |
+| 0x0007  | Open Sensor UUID | Open Sensor 施錠 |
+| 0x0008  | FacePro UUID | FacePro 施錠    |
+| 0x0009  | Face UUID    | Face 施錠       |
+| 0x000A  | Remote UUID  | Remote 施錠/開錠  |
+| 0x000B  | Remote nano UUID | Remote nano 施錠/開錠 |
+| 0x000C  | Biz 使用者 UUID   | Biz 施錠/開錠     |
+| 0x000D  | Web API 使用者 UUID | Web API 施錠/開錠 |
+| 0x000E  | Android 使用者 BLE UUID | Android BLE 施錠/開錠 |
+| 0x000F  | iOS 使用者 BLE UUID     | iOS BLE 施錠/開錠 |
+| 0x0010  | Android 使用者 Wi-Fi UUID | Android IoT 施錠/開錠 |
+| 0x0011  | iOS 使用者 Wi-Fi UUID     | iOS IoT 施錠/開錠 |
+
 
 
 ### 履歴が存在しない場合
