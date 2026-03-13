@@ -1,10 +1,4 @@
-# 公开目录
 
-- **SESAME SDK**
-	- [重要概览](./hello.md)
-	- [iOS版](./ios.md)
-	- [Android版](./android.md)
-	- [ESP32版](./esp.md)
 
 ---
 
@@ -58,5 +52,4 @@
 		- [129_pw_mode_get (获取密码模式)](./129_pw_mode_get.md)
 		- [130_pw_mode_set (Password Mode Set)](./130_pw_mode_set.md)
 ---
-
 

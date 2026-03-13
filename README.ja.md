@@ -75,17 +75,19 @@ flowchart TB
 4. 完了後、Xcode -> SDKプロジェクト -> `Products`フォルダ内のSesameWatchKitSDK.frameworkを右クリックしてFinderで開き、`SesameWatchKitSDK.framework`を取得
 
 # 3. SesameSDKの統合方法
+- [iOS版](./SesameOS3/ios.ja.md)
+- [Android版](./SesameOS3/android.ja.md)
+- [ESP32版](./SesameOS3/esp.ja.md)
 
-# 4. SesameBLE通信暗号化レベル
-[SesameBLE通信暗号化レベルへ](./SesameOS3/communicate.md)
+# 4. Sesame BLE通信
+[Sesame BLE通信](./SesameOS3/bluetooth.ja.md)
 
-# 5. Sesame通信制御コマンド
-[Sesame通信制御コマンドへ](./SesameOS3/sesame_ble_cmd.md)
 
-# 6. Sesame APIインターフェースドキュメント
-[Sesame APIインターフェースドキュメントへ](./SesameOS3/sesame_api_service.md)
 
-# 7. アプリの詳細な解説
+# 5. Sesame APIインターフェースドキュメント
+[Sesame APIインターフェースドキュメントへ](./SesameOS3/index.ja.md)
+
+# 6. アプリの詳細な解説
 
 CHBluetoothCenterクラスの説明
 このアプリのCore Dataローカルストレージ管理センターで、`shared`でシングルトンを作成し、パフォーマンス向上のためにデータをキャッシュします。`CHDeviceKey`をCore Dataに保存する前に`CHDeviceMO`(MO = manage object)に変換する必要があります。`CHDeviceMO`はローカルデータベース内のSesameデバイスを表します。
@@ -129,7 +131,7 @@ func lastCachedevices() -> [CHDeviceMO]
 func logout()
 //刪除所有` CHDeviceMO` 對象並清空緩存
 ```
-# 8. CHDeviceプロトコル
+# 7. CHDeviceプロトコル
 
 すべてのSesameデバイスが実装する必要があるプロパティとメソッド
 
@@ -212,7 +214,7 @@ public protocol CHSesameConnector {
 https://github.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/tree/master/doc/重點數據結構
 
 
-# 9、APPフレームワーク/モジュール選択
+# 8、APPフレームワーク/モジュール選択
 
 - Bluetooth: CoreBluetooth
 

@@ -75,20 +75,20 @@ flowchart TB
 4. 完成後到 Xcode -> SDK project -> `Products` 資料夾底下 找到 SesameWatchKitSDK.framework 點擊右鍵 選擇在 Finder 打開, 取得 `SesameWatchKitSDK.framework`.
 
 # 3、SesameSDK集成方式
+- [iOS版](./SesameOS3/ios.md)
+- [Android版](./SesameOS3/android.md)
+- [ESP32版](./SesameOS3/esp.md)
 
-# 4、SesameBLE通讯加密层级
 
-[进入SesameBLE通讯加密层级](./SesameOS3/communicate.md)
+# 4、Sesame BLE通讯
 
-# 5、Sesame通讯控制指令
+[进入SesameBLE通讯](./SesameOS3/bluetooth.md)
 
-[进入Sesame通讯控制指令](./SesameOS3/sesame_ble_cmd.md)
+# 5、Sesame API 接口文档
 
-# 6、Sesame API 接口文档
+[进入Sesame API 接口文档](./SesameOS3/index.md)
 
-[进入Sesame API 接口文档](./SesameOS3/sesame_api_service.md)
-
-# 7、APP更多详细解读
+# 6、APP更多详细解读
 
 CHBluetoothCenter 類別說明
 此 APP 的 Core Data 本地儲存管理中心，以`shared` 建立單例，用來緩存數據以提高性能。將`CHDeviceKey` 存入 Core Data 前須轉換為 `CHDeviceMO`(MO = manage object)。 `CHDeviceMO` 即代表本地數據庫中的 Sesame 設備。
@@ -132,7 +132,7 @@ func lastCachedevices() -> [CHDeviceMO]
 func logout()
 //刪除所有` CHDeviceMO` 對象並清空緩存
 ```
-# 8 CHDevice 協議
+# 7、CHDevice 協議
 
 所有 Sesame 裝置都需要實現這些屬性和方法
 
@@ -215,7 +215,7 @@ public protocol CHSesameConnector {
 https://github.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/tree/master/doc/重點數據結構
 
 
-# 9、APP框架/模组选用
+# 8、APP框架/模组选用
 
 - 藍芽: CoreBluetooth
 
