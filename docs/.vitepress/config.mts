@@ -1,12 +1,14 @@
 import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
 import { buildSidebar } from "./sidebar.mts";
+import { BASE, localeRedirectScript } from "./locale.mts";
 
 export default withMermaid(
   defineConfig({
-    base: "/API_document/",
+    base: BASE,
     title: "CANDY HOUSE API Document",
     cleanUrls: true,
+    head: [["script", {}, localeRedirectScript]],
     // mermaid 依赖的 fastdom 等是 CommonJS 包，开发模式下需要整体预构建
     vite: { optimizeDeps: { include: ["mermaid"] } },
     themeConfig: {
