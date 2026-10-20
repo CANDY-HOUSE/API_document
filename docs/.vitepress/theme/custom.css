@@ -1,0 +1,31 @@
+/* 保持简洁：品牌色改为中性的蓝灰色 */
+:root {
+  --vp-c-brand-1: #3d5266;
+  --vp-c-brand-2: #4d6479;
+  --vp-c-brand-3: #5d758b;
+  --vp-c-brand-soft: rgba(93, 117, 139, 0.14);
+}
+
+.dark {
+  --vp-c-brand-1: #a9bccd;
+  --vp-c-brand-2: #92a7ba;
+  --vp-c-brand-3: #7d93a7;
+  --vp-c-brand-soft: rgba(125, 147, 167, 0.16);
+}
+
+/* 侧边栏：当前页面用浅色圆角底 + 品牌色文字标出，保持清爽 */
+.VPSidebarItem.is-link > .item {
+  margin: 0 -8px;
+  padding: 0 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.VPSidebarItem.is-link.is-active > .item {
+  background-color: var(--vp-c-brand-soft);
+}
+
+.VPSidebarItem.is-link.is-active > .item .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+}
