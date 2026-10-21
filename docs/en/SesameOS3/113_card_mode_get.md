@@ -1,7 +1,7 @@
 ---
-title: 113_card_mode_get
+title: 113. Card_mode_get
 ---
-# 113 Card Mode Get(Card Mode)
+# 113. Card Mode Get(Card Mode)
 
 A mobile phone sends a new command to get whether ssm_touch is currently in the add or card verification mode, and sesame5 replies with the successful command and mode.
 

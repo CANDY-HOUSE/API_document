@@ -13,29 +13,39 @@ export function localeFromPath(pathname: string, base = BASE) {
   return m ? m[1] : "zh";
 }
 
-/** 内联到 <head> 的脚本，在页面渲染前执行，避免先显示中文再跳转 */
-export const localeRedirectScript = `(function () {
-  var base = ${JSON.stringify(BASE)}, key = ${JSON.stringify(STORAGE_KEY)};
-  var path = location.pathname;
-  var saved = null;
-  try { saved = localStorage.getItem(key); } catch (e) {}
+/** 各语言首页都直接打开 SesameSDK 概览 */
+export const HOME_PAGE = "SesameOS3/hello";
 
-  if (path === base || path === base + "index.html") {
-    var target = saved;
+/** 是否为某个语言的首页（/、/en/、/ja/，含 index.html） */
+export function localeRootOf(pathname: string, base = BASE) {
+  const m = /^(?:(en|ja)\/?)?(?:index(?:\.html)?)?$/.exec(pathname.slice(base.length));
+  return m ? (m[1] ?? "") : null;
+}
+
+/** 内联到 <head> 的脚本，在页面渲染前执行：
+ *  - 访问各语言首页时直接跳到该语言的 SesameSDK 概览
+ *  - 访问站点根地址时，先按上次使用的语言 / 浏览器语言选择语言 */
+export const localeRedirectScript = `(function () {
+  var base = ${JSON.stringify(BASE)}, key = ${JSON.stringify(STORAGE_KEY)}, home = ${JSON.stringify(HOME_PAGE)};
+  var path = location.pathname;
+  var root = /^(?:(en|ja)\\/?)?(?:index(?:\\.html)?)?$/.exec(path.slice(base.length));
+  if (root) {
+    var target = root[1];
     if (!target) {
-      var langs = navigator.languages || [navigator.language || ""];
-      target = "en";
-      for (var i = 0; i < langs.length; i++) {
-        var l = String(langs[i]).toLowerCase();
-        if (l.indexOf("zh") === 0) { target = "zh"; break; }
-        if (l.indexOf("ja") === 0) { target = "ja"; break; }
-        if (l.indexOf("en") === 0) { target = "en"; break; }
+      try { target = localStorage.getItem(key); } catch (e) {}
+      if (!target) {
+        var langs = navigator.languages || [navigator.language || ""];
+        target = "en";
+        for (var i = 0; i < langs.length; i++) {
+          var l = String(langs[i]).toLowerCase();
+          if (l.indexOf("zh") === 0) { target = "zh"; break; }
+          if (l.indexOf("ja") === 0) { target = "ja"; break; }
+          if (l.indexOf("en") === 0) { target = "en"; break; }
+        }
       }
     }
-    if (target === "en" || target === "ja") {
-      location.replace(base + target + "/" + location.search + location.hash);
-      return;
-    }
+    location.replace(base + (target === "en" || target === "ja" ? target + "/" : "") + home + location.search + location.hash);
+    return;
   }
 
   var m = /^(en|ja)(\\/|$)/.exec(path.slice(base.length));

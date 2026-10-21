@@ -1,7 +1,7 @@
 ---
-title: 120_finger_first
+title: 120. Finger_first
 ---
-# Item: Finger Start
+# 120. Finger Start
 
 ssm_touch 收到 `117_finger_get` 後ssm_touch送出 Finger Start 指令，表示接下來要開始傳送卡片資料給手機了(詳見 `118_finger_notify`)。
 

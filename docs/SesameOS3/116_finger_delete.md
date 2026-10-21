@@ -1,7 +1,7 @@
 ---
-title: 116_finger_delete
+title: 116. Finger_delete
 ---
-# 116 Finger Delete(指纹删除)
+# 116. Finger Delete(指纹删除)
 
 手機端傳送要刪除的指紋 ID，ssm_touch 回傳成功訊息，刪除指定指紋。
 

@@ -1,7 +1,7 @@
 ---
-title: 116_finger_delete
+title: 116. Finger_delete
 ---
-# 116 Finger Delete (Fingerprint Deletion)
+# 116. Finger Delete (Fingerprint Deletion)
 
 The mobile terminal sends the fingerprint ID to be deleted, ssm_touch returns a successful message, deleting the designated fingerprint.
 
@@ -38,3 +38,35 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Examples
 
+### Android Example
+
+```kotlin
+    override fun cardModeGet(result: CHResult<Byte>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_CARD_MODE_GET.value, byteArrayOf())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(res.payload[0])))
+      }
+  }
+```
+
+### iOS Example
+
+```swift
+    func fingerPrintDelete(ID: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_DELETE,ID.hexStringtoData())) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP Example
+
+```c
+    func fingerPrintDelete(ID: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_DELETE,ID.hexStringtoData())) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

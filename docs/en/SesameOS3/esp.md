@@ -1,9 +1,7 @@
 ---
-title: ESP32 version
+title: ESP32
 ---
-# ESP32 version of SesameSDK
-
-![Sesame device](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/images/SesameSDK.png 'Sesame')
+# ESP32 SesameSDK
 
 ## Download Project Code
 

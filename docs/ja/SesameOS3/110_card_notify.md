@@ -1,7 +1,7 @@
 ---
-title: 110_card_notify
+title: 110. Card_notify
 ---
-# 110 Card Notify （通知カード）
+# 110. Card Notify （通知カード）
 
 ssm_touch はカード情報をスマートフォンに積極的に通知します。
 

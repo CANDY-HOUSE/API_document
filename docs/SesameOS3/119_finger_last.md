@@ -1,7 +1,7 @@
 ---
-title: 119_finger_last
+title: 119. Finger_last
 ---
-# Item: Finger Last
+# 119. Finger Last
 
 ssm_touch 送完指紋資料後，送Finger Last給手機，表示指紋資料已經送完了。
 

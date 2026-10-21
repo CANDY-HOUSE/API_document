@@ -1,7 +1,7 @@
 ---
-title: 8_time
+title: 8. Time
 ---
-# 8 Update Time
+# 8. Update Time
 
 The mobile phone actively sends out an update time command (item_code:0x08) and a mobile phone timestamp, ssm5 updates the timestamp and returns a success update.
 

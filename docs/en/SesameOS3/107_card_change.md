@@ -1,7 +1,7 @@
 ---
-title: 107_card_change
+title: 107. Card_change
 ---
-# 107 Card Change (Modification)
+# 107. Card Change (Modification)
 
 1. ssm_touch adds a new card, proactively pushing the new card ID and name to the mobile phone.
 2. The mobile phone sends id and new name to ssm_touch, ssm_touch returns the command received successfully, modifies the card name, and actively pushes the new card ID and name to the mobile phone (If the name exceeds 20Bytes, only the first 20Bytes is taken).

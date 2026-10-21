@@ -1,7 +1,7 @@
 ---
-title: 123_pw_change
+title: 123. Pw_change
 ---
-# 123 パスワード変更
+# 123. パスワード変更
 
 1. ssm_touch が新しいパスワードを追加し、新しいパスワードの ID と名前をスマホにプッシュします。
 2. スマホが id 及新名稱を ssm_touch に送信し、ssm_touch がコマンドを受け取り成功と応答した後でパスワード名を変更し、新しいパスワードの ID と名前をスマホにプッシュします（名前が 20Bytes を超える場合は、最初の 20Bytes のみ取得します）。
@@ -94,3 +94,41 @@ name_len = 4
 
 ## iOS、Android、ESP32 の例
 
+### Android の例
+
+```kotlin
+    override fun keyBoardPassCodeChange(ID: String, name: String, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_PASSCODE_CHANGE.value, byteArrayOf(ID.hexStringToByteArray().size.toByte()) + ID.hexStringToByteArray() + name.toByteArray())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func passCodeChange(ID: String, name: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      let idData = ID.hexStringtoData()
+      let payload = Data([UInt8(idData.count)]) + idData + name.bytes
+      sendCommand(.init(.SSM_OS3_PASSCODE_CHANGE, payload)) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP の例
+
+```c
+    func passCodeChange(ID: String, name: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      let idData = ID.hexStringtoData()
+      let payload = Data([UInt8(idData.count)]) + idData + name.bytes
+      sendCommand(.init(.SSM_OS3_PASSCODE_CHANGE, payload)) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

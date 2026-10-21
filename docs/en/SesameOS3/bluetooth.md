@@ -1,5 +1,5 @@
 ---
-title: Important Overview
+title: Overview
 ---
 # Preface
 
@@ -32,28 +32,39 @@ title: Important Overview
 
 - The 8th and 9th bytes in the Bluetooth broadcast express the model
 
-| 8th 9th Bytes |        Model           |
-| :-----------: | :--------------------: |
-|       0       |       Sesame 3         |
-|       1       |    WiFi Module 2       |
-|       2       |     Sesame Bot 1       |
-|       3       |    Sesame Bike 1       |
-|       4       |       Sesame 4         |
-|       5       |       Sesame 5         |
-|       6       |    Sesame Bike 2       |
-|       7       |     Sesame 5 Pro       |
-|       8       |    Open Sensor         |
-|       9       |  Sesame Touch 1 Pro    |
-|      10       |    Sesame Touch 1      |
-|      11       |    Ble Connector       |
-|      13       |        Hub 3           |
-|      14       |    Sesame Remote       |
-|      15       |     Remote Nano        |
-|      16       |     Sesame 5 US        |
-|      17       |     Sesame Bot 2       |
-|      18       |         F2             |
-|      19       |         F1             |
-|      20       | Bluetooth Optical Relay|
+| 8th 9th Bytes |          Model           |
+| :-----------: | :------------------------: |
+|       0       |         Sesame 3         |
+|       1       |      WiFi Module 2       |
+|       2       |       Sesame Bot 1       |
+|       3       |      Sesame Bike 1       |
+|       4       |         Sesame 4         |
+|       5       |         Sesame 5         |
+|       6       |      Sesame Bike 2       |
+|       7       |       Sesame 5 Pro       |
+|       8       |      Open Sensor 1       |
+|       9       |    Sesame Touch 1 Pro    |
+|       10      |      Sesame Touch 1      |
+|       11      |     BLE Connector 1      |
+|       13      |          Hub 3           |
+|       14      |          Remote          |
+|       15      |       Remote Nano        |
+|       16      |       Sesame 5 US        |
+|       17      |       Sesame Bot 2       |
+|       18      |    Sesame Face 1 Pro     |
+|       19      |      Sesame Face 1       |
+|       20      |         Sesame 6         |
+|       21      |       Sesame 6 Pro       |
+|       22      |   Sesame Face 1 Pro AI   |
+|       23      |     Sesame Face 1 AI     |
+|       24      |      Open Sensor 2       |
+|       25      |      Sesame Touch 2      |
+|       26      |    Sesame Touch 2 Pro    |
+|       27      |      Sesame Face 2       |
+|       28      |    Sesame Face 2 Pro     |
+|       30      |     Sesame Face 2 AI     |
+|       31      |   Sesame Face 2 Pro AI   |
+|       32      | Sesame 6 Pro SlidingDoor |
 
 ### Device Status
 

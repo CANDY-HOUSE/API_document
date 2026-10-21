@@ -1,7 +1,7 @@
 ---
-title: 111_card_last
+title: 111. Card_last
 ---
-# Item: Card Last
+# 111. Card Last
 
 ssm_touch 送完卡片資料後，送Card Last給手機，表示卡片資料已經送完了。
 

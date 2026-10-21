@@ -1,7 +1,7 @@
 ---
-title: 115_finger_change
+title: 115. Finger_change
 ---
-# 115 Finger Change (Fingerprint Update)
+# 115. Finger Change (Fingerprint Update)
 
 1. ssm_touch adds a new fingerprint and proactively pushes the new fingerprint ID and name to the phone.
 2. The mobile phone sends the id and new name to ssm_touch. After ssm_touch returns the command received successfully, it modifies the fingerprint name and proactively pushes the new fingerprint ID and name to the mobile phone (names longer than 20 Bytes, only the first 20 Bytes are taken).
@@ -92,3 +92,30 @@ name_len = 4
 
 ## iOS, Android, ESP32 Example
 
+### Android Example
+
+```kotlin
+    override fun fingerPrintsChange(ID: String, name: String, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_FINGERPRINT_CHANGE.value, byteArrayOf(ID.hexStringToByteArray().size.toByte()) + ID.hexStringToByteArray() + name.toByteArray())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS Example
+
+```swift
+    func fingerPrintsChange(ID: String, name: String, result: @escaping (CHResult<CHEmpty>) ) { //改名稱
+      if (self.checkBle(result)) { return }
+
+      let idData = ID.hexStringtoData()
+      L.d("idData???=>", idData)
+      let payload = Data([UInt8(idData.count)]) + idData + name.bytes
+      L.d("TouchDevice payload =>",payload.toHexLog())
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_CHANGE, payload)) { _ in
+          L.d("[TouchDevice][fingerPrintsChange][ok]")
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

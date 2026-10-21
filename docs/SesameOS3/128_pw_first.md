@@ -1,7 +1,7 @@
 ---
-title: 128_pw_first
+title: 128. Pw_first
 ---
-# Item: Password Start
+# 128. Password Start
 
 ssm_touch 收到 `125_pw_get` 後ssm_touch送出 Password Start 指令，表示接下來要開始傳密碼資料給手機了(詳見 `126_pw_notify`)。
 

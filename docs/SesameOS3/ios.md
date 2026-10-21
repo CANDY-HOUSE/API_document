@@ -1,9 +1,7 @@
 ---
-title: iOS 版
+title: iOS
 ---
-# iOS 版 SesameSDK
-
-![Sesame device](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# iOS SesameSDK
 
 ## 下载 App
 
@@ -45,13 +43,9 @@ dependencies: [
 
 ```
 
-![img](https://raw.githubusercontent.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/master/doc/src/resources/spm.png)
-
 #### 手動集成
 
 - 如果您不想使用任何依賴項管理器，您可以手動將 SesameSDK 集成到您的項目中。
-
-![img](https://github.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/raw/master/doc/src/resources/manually.png)
 
 ### 2. 添加授權
 
@@ -211,18 +205,8 @@ CHDeviceManager.shared.getCHDevices { result in
 
 - 手機通知[User Notifications](https://developer.apple.com/documentation/usernotifications)
 
-## BLE 產品代碼示例講解
-
-各`Class` 細節詳見 `Sesame SDK Class` 說明。
-
-- 查看詳細:[Sesame SDK Class](../index.md)
-
 ## 藍牙狀態機
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
 
 <!-- ![BleConnect](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/sesame_state_circle.png) -->
-
-## iOS 類圖
-
-![Class_diagram](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/class_diagram.png)

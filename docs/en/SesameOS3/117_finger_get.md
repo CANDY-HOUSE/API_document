@@ -1,7 +1,7 @@
 ---
-title: 117_finger_get
+title: 117. Finger_get
 ---
-# 117 Finger Get (Fingerprint Acquisition)
+# 117. Finger Get (Fingerprint Acquisition)
 
 The phone sends a command to get fingerprints to ssm_touch, ssm_touch responds with a successful command, and will then send fingerprint data to the phone.
 

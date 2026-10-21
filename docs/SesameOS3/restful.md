@@ -3,6 +3,10 @@ title: RESTful API
 ---
 # RESTful API
 
+::: info 即将废弃
+RESTful API 即将废弃，可参考 [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) 替代。
+:::
+
 ## API 介紹
 
 Sesame APP 通過使用 RESTful API 以及 Iot 物聯網技術實現多平臺多設備互聯互通的功能。

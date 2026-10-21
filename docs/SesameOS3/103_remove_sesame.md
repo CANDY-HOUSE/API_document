@@ -1,7 +1,7 @@
 ---
-title: 103_remove_sesame
+title: 103. Remove_sesame
 ---
-# 103 Remove Sesame (删除设备)
+# 103. Remove Sesame (删除设备)
 
 手機發送刪除指令及設備名稱，sesame5 回覆指令成功，ssm_touch 主動推送 Sesame 列表給手機。(Sesame 列表詳見 `102_pub_ssm_key`)
 

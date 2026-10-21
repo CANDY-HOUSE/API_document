@@ -11,7 +11,7 @@ To use Sesame RESTful webAPI, you need to acquire an `API KEY`. The API can do t
 - Get the history of Sesame
 - Unlock with Web API
 
-## The method to get `API KEY` is as follows: [SESAME Biz [Developer page]](https://biz.candyhouse.co/)
+## The method to get `API KEY` is as follows: [SESAME Biz [Developer page]](https://biz.candyhouse.co/biz/developer)
 
 ## API interface documentation
 
@@ -78,6 +78,44 @@ To use Sesame RESTful webAPI, you need to acquire an `API KEY`. The API can do t
 
 ```
 
+```c
+type :
+
+    0 none.
+    1 bleLock.                The Sesame device received a BLE lock command.
+    2 bleUnLock.              The Sesame device received a BLE unlock command.
+    3 timeChanged.            The Sesame device's internal clock was calibrated.
+    4 autoLockUpdated.        The auto-lock setting was changed.
+    5 mechSettingUpdated.     The lock / unlock angle setting was changed.
+    6 autoLock.               The Sesame device auto-locked.
+    7 manualLocked.           Locked manually (changed from case 2 or case 3 below to case 1)
+    8 manualUnlocked.         Unlocked manually (changed from case 1 or case 3 below to case 2)
+    9 manualElse.             The thumb turn moved out of the unlock or lock range (changed from case 1 to case 3, or from case 2 to case 3 below)
+   10 driveLocked.            The motor locked successfully.
+   11 driveUnlocked.          The motor unlocked successfully.
+   12 driveFailed.            The motor failed while locking / unlocking.
+   13 bleAdvParameterUpdated. The Interval and TXPower settings of the Sesame device's BLE advertising were changed.
+   14 wm2Lock.                The Sesame device was locked via the WiFi module.
+   15 wm2Unlock.              The Sesame device was unlocked via the WiFi module.
+   16 webLock.                The Sesame device was locked via the Web API.
+   17 webUnlock.              The Sesame device was unlocked via the Web API.
+
+
+Note 1: Currently there are only the following 3 states.
+  <Case 1: Locked>
+    When the thumb turn is within the lock range:
+    locked    1
+    unlocked  0
+  <Case 2: Unlocked>
+    When the thumb turn is within the unlock range:
+    locked    0
+    unlocked  1
+  <Case 3: Other (* currently shown as "Unlocked" in the UI)>
+    When the thumb turn is outside both ranges above:
+    locked    0
+    unlocked  0
+```
+
 ## 3、Unlock with Web API
 
 Use Sesame's key and timestamp to sign with AES-CMAC. Request to unlock Sesame connected to WiFi module 2.
@@ -85,7 +123,44 @@ Use Sesame's key and timestamp to sign with AES-CMAC. Request to unlock Sesame c
 - REST scheme
 - Get the status of Sesame
 - Command code list
+  - case lock = 82
+  - case unlock = 83
+  - case toggle = 88
+  - code for Bot2 / Bot3
+    - case RUN_SCRIPT_0 = 170
+    - case RUN_SCRIPT_1 = 171
+    - case RUN_SCRIPT_2 = 172
+    - case RUN_SCRIPT_3 = 173
+    - case RUN_SCRIPT_4 = 174
+    - case RUN_SCRIPT_5 = 175
+    - case RUN_SCRIPT_6 = 176
+    - case RUN_SCRIPT_7 = 177
+    - case RUN_SCRIPT_8 = 178
+    - case RUN_SCRIPT_9 = 179
 - How to use AES-CMAC
+
+#### REST scheme
+
+```javascript
+POST: "https://app.candyhouse.co/api/sesame2/${sesame_id}/cmd"
+BODY: {
+        cmd: cmd,
+        history: base64_history,
+        sign: sign
+}
+Parameters:
+    name = "x-api-key", location = "header",des="your api-key"
+    name = "sesame2_uuid", location = "path"
+    name = "cmd", location = "body",des="Lock / unlock command code"
+    name = "history", location = "body",des="History"
+    name = "sign", location = "body",des="Signature"
+```
+
+#### How to use AES-CMAC
+
+1. Encryption: AESCMAC(`key`, `message`)
+2. `key` is the Sesame key **_key-secret_** obtained with getkey
+3. `message` is the timestamp (SECONDS SINCE JAN 01 1970. (UTC)) --> 2.uint32 (little endian) --> 3.remove most-significant byte
 
 Code example:
 
@@ -112,6 +187,24 @@ let wm2_cmd = async () => {
     },
   })
 }
+
+function generateRandomTag(secret) {
+  // * key:key-secret_hex to data
+  let key = Buffer.from(secret, 'hex')
+
+  // message
+  // 1. timestamp  (SECONDS SINCE JAN 01 1970. (UTC))  // 1621854456905
+  // 2. timestamp to uint32  (little endian)   //f888ab60
+  // 3. remove most-significant byte    //0x88ab60
+  const date = Math.floor(Date.now() / 1000)
+  const dateDate = Buffer.allocUnsafe(4)
+  dateDate.writeUInt32LE(date)
+  const message = Buffer.from(dateDate.slice(1, 4))
+
+  return aesCmac(key, message)
+}
+
+wm2_cmd()
 
 ```
 
@@ -149,5 +242,15 @@ body = {
 }
 res = requests.post(url, json.dumps(body), headers=headers)
 print(res.status_code, res.text)
+
+# certifi==2021.5.30
+# chardet==4.0.0
+# clr==1.0.3
+# idna==2.10
+# Naked==0.1.31
+# pycryptodome==3.4.3
+# PyYAML==5.4.1
+# requests==2.25.1
+# urllib3==1.26.6
 
 ```

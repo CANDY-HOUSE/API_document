@@ -1,9 +1,7 @@
 ---
-title: ESP32 版
+title: ESP32
 ---
-# ESP32 版 SesameSDK
-
-![Sesame device](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/images/SesameSDK.png 'Sesame')
+# ESP32 SesameSDK
 
 ## 下載 项目代碼
 

@@ -1,9 +1,7 @@
 ---
-title: Android Version
+title: Android
 ---
-# Android Version SesameSDK
-
-![Sesame device](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# Android SesameSDK
 
 ## Download App
 
@@ -14,7 +12,7 @@ title: Android Version
 
 ### Platform Installation Requirements
 
-- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />.
+- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />
 - <img src="https://img.shields.io/badge/Bluetooth-4.0LE +-0082FC" />
 - <img src="https://img.shields.io/badge/Android-5.0 +-3DDC84" />
 - <img src="https://img.shields.io/badge/Android Studio-2022 +-3DDC84" />
@@ -188,78 +186,9 @@ For detailed interaction of each instruction, please refer to the description of
 
 - Detailed view:[BlueTooth Protocol](./bluetooth.md)
 
-### Android Project Structure Example
-
-The following is an example of an Android project structure used to organize the code and resource files.
-
-- `libs/`: This folder is usually used to store the binary files (such as .jar, .aar, etc.) of third-party libraries (libraries).
-- `java/`: Store Java code. Sub-packages are divided according to functional modules, such as `activities/` for storing activity classes, `adapters/` for storing adapter classes, etc.
-- `res/`: Store resource files, including layout files, strings, icons, etc. Store in different directories according to the type of resources, for example, `layout/` stores layout files, `drawable/` stores image resources, `values/` stores string and style resources.
-- `build.gradle`: The application-level Gradle configuration file is used to configure dependencies, plugins, and build settings.
-- `proguard-rules.pro`: ProGuard configuration file, used for code confusion and optimization. This is optional and is applicable when releasing versions.
-
 ### Bluetooth State Machine
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
-
-### Sesame Project Framework
-
-- Registration login:[Amazon Web Services](https://docs.amplify.aws/sdk/auth/getting-started/q/platform/android/)(Mobile)
-- Permission Framework:[Easypermissions](https://github.com/googlesamples/easypermissions)
-- Local Database Persistence:[Room](https://developer.android.com/training/data-storage/room?hl=zh-cn)
-- Cloud Data Hosting:[Amazon Web Services](https://docs.aws.amazon.com/iot/latest/developerguide/iot-sdks.html) (IOT)
-- UI Navigation:[Navigation ](https://developer.android.com/guide/navigation?hl=zh-cn)
-- UI Data Management:[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?hl=zh-cn)
-- Firmware Update Library:[Dfu](https://github.com/NordicSemiconductor/Android-DFU-Library)
-- Map Component:[Maps for Google](https://developers.google.com/maps/documentation/android-sdk/release-notes)
-- Local Storage:[Preference](https://developer.android.com/jetpack/androidx/releases/preference?hl=zh-cn)
-- Reactive Framework:[Rxjava](https://github.com/ReactiveX/RxJava)
-- QR Scanning: Depends on libs/qrcodecore\-release.aar&nbsp;&nbsp;&nbsp;[Zxing](https://mvnrepository.com/artifact/com.google.zxing/core)
-- Message Delivery:[Firebase-messaging](https://firebase.google.com/docs/cloud-messaging/android/client?hl=zh-cn)
-
-### UI Component Library List
-
-- Dropdown Refresh: [Swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout?hl=zh-cn)
-- Recyclerview Header Paste:[StickyHeaders](https://github.com/ShamylZakariya/StickyHeaders)
-- EditText Adaptation:[AutoResizeEditText](https://github.com/victorminerva/AutoResizeEditText)
-- Carousel: [LoopView](https://github.com/AWarmHug/androidWheelView)
-- Slider Library:[Indicatorseekbar](https://github.com/warkiz/IndicatorSeekBar)
-
-### App Interface Object Description
-
-**SesameApp:** Application process starts  
-**MainActivity:** Main application interface  
-**ScanQRcodeFG:** QR code scanning  
-**ScanNewDeviceFG:** Add new device  
-**WM2SettingFG:** WIFI Module settings interface  
-**SSM2SetAngleFG:** SS4, SS2 Angle setting interface  
-**SSM5SettingFG:** SS5, SS5PRO Settings interface  
-**SSM2SettingFG:** SS4, SS2 setting interface  
-**SesameBotSettingFG:** SesameBot1 Setting interface  
-**SesameBikeSettingFG:** BiKeLock1, BiKeLock2 set interface  
-**SesameKeyboardSettingFG:** Sesame5 Setting interface  
-**SesameOpenSensorNoBLESettingFG:** SSMOpenSensor Setting interface  
-**SesameTouchProSettingFG:** SSMTouchPro, SSMTouch, BLEConnector Setting interface  
-**SesameKeyboardCards:** NFC card setting interface  
-**SSMTouchProFingerprint:** Fingerprint setup interface  
-**SesameKeyboardPassCode:** Digital password setting interface  
-**SSMTouchProSelectLockerListFG:** SSMTouchPro device sharing interface  
-**GuestKeyListFG:** Guest list interface  
-**SSM2NoHandLockFG:** Fully automatic lock screen  
-**MeFG:** Homepage -> My interface  
-**MyQrCodeFG:** Homepage -> My interface -> My QR code interface  
-**LoginMailFG:** Homepage -> My interface -> Registration interface  
-**LoginVerifiCodeFG:** Homepage -> My interface -> Registration interface -> QR code verification interface
-**FriendListFG:** Homepage -> Directory interface  
-**FriendDetailFG:** Homepage -> Directory interface -> Friend details interface  
-**FriendSelectLockerListFG:** Homepage -> Directory interface -> Friend details interface -> Shared device interface
-**DeviceListFG:** Homepage -> Sesame list interface  
-**MainRoomFG:** Homepage -> Sesame list interface -> SS4, SS2 device details history record  
-**MainRoomSS5FG:** Homepage -> Sesame list interface -> SS5, SS5PRO device details history record  
-**AddMemberFG:** Homepage -> Sesame list interface -> Add member interface  
-**KeyQrCodeFG:** Homepage -> Sesame list interface -> Share sesame QR code QR interface  
-**WM2ScanSSIDListFG:** Homepage -> Sesame list interface -> WIFI details -> WIFI scan list interface  
-**WM2SelectLockerListFG:** Homepage -> Sesame list interface -> WIFI details -> Select sesame device interface
 
 ## Android Related Knowledge
 

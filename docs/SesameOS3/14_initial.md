@@ -1,7 +1,7 @@
 ---
-title: 14_initial
+title: 14. Initial
 ---
-# 14 Initial (初始化)
+# 14. Initial (初始化)
 
 手機與 Sesame5 建立連線後並開啟 notify，Sesame5 回傳 4Bytes random code
 

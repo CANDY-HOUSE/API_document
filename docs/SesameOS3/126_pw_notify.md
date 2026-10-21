@@ -1,7 +1,7 @@
 ---
-title: 126_pw_notify
+title: 126. Pw_notify
 ---
-# Item: Password Notify
+# 126. Password Notify
 
 ssm_touch 主動推送密碼資料給手機。
 

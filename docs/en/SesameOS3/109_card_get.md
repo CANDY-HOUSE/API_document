@@ -1,7 +1,7 @@
 ---
-title: 109_card_get
+title: 109. Card_get
 ---
-# 109 Card Get
+# 109. Card Get
 
 The mobile phone sends a command to pull a card to ssm_touch. After the command is successfully responded, the card data will be sent to the mobile phone.
 

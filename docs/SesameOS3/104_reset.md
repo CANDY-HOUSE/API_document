@@ -1,7 +1,7 @@
 ---
-title: 104_reset
+title: 104. Reset
 ---
-# 104 Reset (重置)
+# 104. Reset (重置)
 
 手機發送重置指令，sesame5 回覆指令成功，並清除資料和重新啟動。
 

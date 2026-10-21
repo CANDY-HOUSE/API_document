@@ -1,7 +1,7 @@
 ---
-title: 114_card_mode_set
+title: 114. Card_mode_set
 ---
-# 114 Card Mode Set(Mode)
+# 114. Card Mode Set(Mode)
 
 The phone sends a new command to get whether ssm_touch is currently in add or verify card mode, and sesame5 responds with a successful command and mode.
 

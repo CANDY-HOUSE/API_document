@@ -1,7 +1,7 @@
 ---
-title: 140_card_add
+title: 140. Card_add
 ---
-# 140 Card Add
+# 140. Card Add
 
 The smartphone sends a command via Bluetooth to ssm_touch to add a card.
 The data sent includes the card type, card ID, and card name.

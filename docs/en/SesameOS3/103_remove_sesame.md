@@ -1,7 +1,7 @@
 ---
-title: 103_remove_sesame
+title: 103. Remove_sesame
 ---
-# 103 Remove Sesame (Delete Device)
+# 103. Remove Sesame (Delete Device)
 
 The phone sends a delete command and device name, sesame5 responds that the command is successful, and ssm_touch actively pushes the Sesame list to the phone. (For details on the Sesame list, see `102_pub_ssm_key`.)
 

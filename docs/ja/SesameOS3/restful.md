@@ -3,6 +3,10 @@ title: RESTful API
 ---
 # RESTful API
 
+::: info 廃止予定
+RESTful API は近日中に廃止される予定です。代替として [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) を参照してください。
+:::
+
 ## API の紹介
 
 Sesame APP は、RESTful API と Iot 物連技術を利用して、マルチプラットフォームとマルチデバイス間に相互の連携とコミュニケーションを実現します。

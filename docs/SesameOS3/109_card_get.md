@@ -1,7 +1,7 @@
 ---
-title: 109_card_get
+title: 109. Card_get
 ---
-# 109 Card Get （获取卡片）
+# 109. Card Get （获取卡片）
 
 手機發送拿卡指令給 ssm_touch 回覆指令成功，之後會將卡片資料傳給手機。
 

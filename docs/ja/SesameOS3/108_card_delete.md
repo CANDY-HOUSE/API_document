@@ -1,7 +1,7 @@
 ---
-title: 108_card_delete
+title: 108. Card_delete
 ---
-# 108 Card Delete （カードの削除）
+# 108. Card Delete （カードの削除）
 
 モバイル端末から削除命令とカード ID が送られ、ssm_touch は成功指示を返信し指定されたカードを削除します。
 

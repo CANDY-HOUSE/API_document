@@ -1,7 +1,7 @@
 ---
-title: 124_pw_delete
+title: 124. Pw_delete
 ---
-# 124 Password Delete
+# 124. Password Delete
 
 The mobile end sends the password ID to be deleted, and ssm_touch returns a success message, deleting the specified password.
 

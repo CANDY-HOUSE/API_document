@@ -1,7 +1,9 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
 import { buildSidebar } from "./sidebar.mts";
 import { BASE, localeRedirectScript } from "./locale.mts";
+import { plantumlPlugin } from "./plantuml.mts";
 
 export default withMermaid(
   defineConfig({
@@ -9,9 +11,25 @@ export default withMermaid(
     title: "CANDY HOUSE API Document",
     cleanUrls: true,
     head: [["script", {}, localeRedirectScript]],
+    markdown: { config: (md) => md.use(plantumlPlugin) },
     // mermaid 依赖的 fastdom 等是 CommonJS 包，开发模式下需要整体预构建
-    vite: { optimizeDeps: { include: ["mermaid"] } },
+    vite: {
+      optimizeDeps: { include: ["mermaid"] },
+      resolve: {
+        // 用自定义的导航栏标题替换默认组件：Logo 跳官网，文字回文档首页
+        alias: [
+          {
+            find: /^.*\/VPNavBarTitle\.vue$/,
+            replacement: fileURLToPath(new URL("./theme/components/NavBarTitle.vue", import.meta.url)),
+          },
+        ],
+      },
+    },
     themeConfig: {
+      // 左上角：公司 Logo（点击在新标签打开官网）+「CANDY HOUSE API」（点击回文档首页），见 theme/components/NavBarTitle.vue
+      logo: { src: "/logo.png", alt: "CANDY HOUSE" },
+      logoLink: { link: "https://jp.candyhouse.co/", target: "_blank", rel: "noopener noreferrer" },
+      siteTitle: "CANDY HOUSE API",
       socialLinks: [{ icon: "github", link: "https://github.com/CANDY-HOUSE/API_document" }],
       outline: { level: [2, 3] },
       search: {

@@ -1,7 +1,7 @@
 ---
-title: 80_mechsetting
+title: 80. Mechsetting
 ---
-# 80 Mech Setting (機械設定)
+# 80. Mech Setting (機械設定)
 
 mechSetting 是 Sesame5 的機械設定，包含 autolock 秒數及 sesame5 開鎖及關鎖的角度。
 

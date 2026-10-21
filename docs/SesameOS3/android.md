@@ -1,9 +1,7 @@
 ---
-title: Android 版
+title: Android
 ---
-# Android 版 SesameSDK
-
-![Sesame device](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# Android SesameSDK
 
 ## 下載 App
 
@@ -14,7 +12,7 @@ title: Android 版
 
 ### 平台安装要求
 
-- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />.
+- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />
 - <img src="https://img.shields.io/badge/Bluetooth-4.0LE +-0082FC" />
 - <img src="https://img.shields.io/badge/Android-5.0 +-3DDC84" />
 - <img src="https://img.shields.io/badge/Android Studio-2022 +-3DDC84" />
@@ -188,78 +186,9 @@ bluetoothAdapter.bluetoothLeScanner.startScan(
 
 - 查看詳細:[BlueTooth 協議](./bluetooth.md)
 
-### Android 项目结构示例
-
-以下是 Android 项目结构示例，用于组织代码和资源文件。
-
-- `libs/`：文件夹通常用于存放第三方库（libraries）的二进制文件（如.jar、.aar 等）。
-- `java/`：存放 Java 代码。按照功能模块划分子包，例如 `activities/` 存放活动类，`adapters/` 存放适配器类等。
-- `res/`：存放资源文件，包括布局文件、字符串、图标等。按照资源类型分目录存放，例如 `layout/` 存放布局文件，`drawable/` 存放图片资源，`values/` 存放字符串和样式资源。
-- `build.gradle`：应用级别的 Gradle 配置文件，用于配置依赖项、插件和构建设置。
-- `proguard-rules.pro`：ProGuard 配置文件，用于代码混淆和优化。这是可选的，适用于发布版本时。
-
 ### 藍牙狀態機
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
-
-### Sesame 项目框架
-
-- 注册登录:[Amazon Web Services](https://docs.amplify.aws/sdk/auth/getting-started/q/platform/android/)(Mobile)
-- 权限框架:[Easypermissions](https://github.com/googlesamples/easypermissions)
-- 本地数据库持久化:[Room](https://developer.android.com/training/data-storage/room?hl=zh-cn)
-- 云数据托管:[Amazon Web Services](https://docs.aws.amazon.com/iot/latest/developerguide/iot-sdks.html) (IOT)
-- 界面导航:[Navigation ](https://developer.android.com/guide/navigation?hl=zh-cn)
-- 界面数据管理:[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?hl=zh-cn)
-- 固件升级库:[Dfu](https://github.com/NordicSemiconductor/Android-DFU-Library)
-- 地图组件:[Maps for Google](https://developers.google.com/maps/documentation/android-sdk/release-notes)
-- 本地存储:[Preference](https://developer.android.com/jetpack/androidx/releases/preference?hl=zh-cn)
-- 响应式框架:[Rxjava](https://github.com/ReactiveX/RxJava)
-- QR 扫描:依赖 libs/qrcodecore\-release.aar&nbsp;&nbsp;&nbsp;[Zxing](https://mvnrepository.com/artifact/com.google.zxing/core)
-- 消息传递:[Firebase-messaging](https://firebase.google.com/docs/cloud-messaging/android/client?hl=zh-cn)
-
-### UI 组件库列表
-
-- 下拉刷新: [Swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout?hl=zh-cn)
-- Recyclerview 头部粘贴:[StickyHeaders](https://github.com/ShamylZakariya/StickyHeaders)
-- EditText 自适应:[AutoResizeEditText](https://github.com/victorminerva/AutoResizeEditText)
-- 轮播图:[LoopView](https://github.com/AWarmHug/androidWheelView)
-- 滑动条库:[Indicatorseekbar](https://github.com/warkiz/IndicatorSeekBar)
-
-### App 界面对象说明
-
-**SesameApp:** Application 进程启动  
-**MainActivity:** 主应用程序界面  
-**ScanQRcodeFG:** 二维码扫描  
-**ScanNewDeviceFG:** 添加新设备  
-**WM2SettingFG:** WIFI Module 设置界面  
-**SSM2SetAngleFG:** SS4、SS2 角度设置界面  
-**SSM5SettingFG:** SS5、SS5PRO 设置界面  
-**SSM2SettingFG:** SS4、SS2 设置界面  
-**SesameBotSettingFG:** SesameBot1 设置界面  
-**SesameBikeSettingFG:** BiKeLock1、BiKeLock2 设置界面  
-**SesameKeyboardSettingFG:** Sesame5 设置界面  
-**SesameOpenSensorNoBLESettingFG:** SSMOpenSensor 设置界面  
-**SesameTouchProSettingFG:** SSMTouchPro、SSMTouch、BLEConnector 设置界面  
-**SesameKeyboardCards:** NFC 卡片设置界面  
-**SSMTouchProFingerprint:** 指纹设置界面  
-**SesameKeyboardPassCode:** 数字密码设置界面  
-**SSMTouchProSelectLockerListFG:** SSMTouchPro 设备分享界面  
-**GuestKeyListFG:** 访客列表界面  
-**SSM2NoHandLockFG:** 全自动上锁界面  
-**MeFG:** 首页->我的界面  
-**MyQrCodeFG:** 首页->我的界面->我的二维码界面  
-**LoginMailFG:** 首页->我的界面->注册界面  
-**LoginVerifiCodeFG:** 首页->我的界面->注册界面->二维码校验界面
-**FriendListFG:** 首页->通讯录界面  
-**FriendDetailFG:** 首页->通讯录界面->好友详情界面  
-**FriendSelectLockerListFG:** 首页->通讯录界面->好友详情界面->共享设备界面
-**DeviceListFG:** 首页->芝麻列表界面  
-**MainRoomFG:** 首页->芝麻列表界面->SS4、SS2 设备详情历史记录  
-**MainRoomSS5FG:** 首页->芝麻列表界面->SS5、SS5PRO 设备详情历史记录  
-**AddMemberFG:** 首页->芝麻列表界面->添加成员界面  
-**KeyQrCodeFG:** 首页->芝麻列表界面->分享芝麻二维码 QR 界面  
-**WM2ScanSSIDListFG:** 首页->芝麻列表界面->WIFI 详情->WIFI 扫面列表界面  
-**WM2SelectLockerListFG:** 首页->芝麻列表界面->WIFI 详情->选择芝麻设备界面
 
 ## Android 相关知识
 

@@ -1,7 +1,7 @@
 ---
-title: 107_card_change
+title: 107. Card_change
 ---
-# 107 Card Change（修改卡片）
+# 107. Card Change（修改卡片）
 
 1. ssm_touch 加入新卡，主動推送新卡 ID 及名字給手機。
 2. 手機將 id 及新名稱傳給 ssm_touch，ssm_touch 回傳命令接收成功後修改卡片名稱，並主動推送新卡 ID 及名字給手機(名字超過 20Bytes，只取前 20Bytes)。

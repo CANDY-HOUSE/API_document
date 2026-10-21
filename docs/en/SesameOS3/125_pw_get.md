@@ -1,7 +1,7 @@
 ---
-title: 125_pw_get
+title: 125. Pw_get
 ---
-# 125 Password Get
+# 125. Password Get
 
 The phone sends a get password command to ssm_touch, ssm_touch replies with a successful command, and then sends the password data to the phone.
 

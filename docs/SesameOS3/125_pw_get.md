@@ -1,7 +1,7 @@
 ---
-title: 125_pw_get
+title: 125. Pw_get
 ---
-# 125 Password Get(密码获取)
+# 125. Password Get(密码获取)
 
 手機發送拿密碼指令給 ssm_touch ，ssm_touch 回覆指令成功，之後會將密碼資料傳給手機。
 

@@ -1,7 +1,7 @@
 ---
-title: 90_doorOpen
+title: 90. DoorOpen
 ---
-# Item: Door Open (開門)
+# 90. Door Open (開門)
 
 Open Sensor跟Sesame5配對後，Open Sensor偵測到開門，會通知Sesame5。
 

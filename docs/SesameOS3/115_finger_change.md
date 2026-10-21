@@ -1,7 +1,7 @@
 ---
-title: 115_finger_change
+title: 115. Finger_change
 ---
-# 115 Finger Change(指纹更新)
+# 115. Finger Change(指纹更新)
 
 1. ssm_touch 加入新指紋，主動推送新指紋 ID 及名字給手機。
 2. 手機將 id 及新名稱傳給 ssm_touch，ssm_touch 回傳命令接收成功後修改指紋名稱，並主動推送新指紋 ID 及名字給手機(名字超過 20Bytes，只取前 20Bytes)。

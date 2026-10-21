@@ -1,7 +1,7 @@
 ---
-title: 17_megnet
+title: 17. Magnet
 ---
-# 17 Megnet (Angle Correction)
+# 17. Megnet (Angle Correction)
 
 The mobile phone sends a sesame5 angle correction command. After the correction is completed, it responds successfully, and the sesame5 actively sends mechstatus (mechanical status)
 

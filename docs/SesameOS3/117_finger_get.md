@@ -1,7 +1,7 @@
 ---
-title: 117_finger_get
+title: 117. Finger_get
 ---
-# 117 Finger Get(指纹获取)
+# 117. Finger Get(指纹获取)
 
 手機發送拿指紋指令給 ssm_touch ，ssm_touch 回覆指令成功，之後會將指紋資料傳給手機。
 

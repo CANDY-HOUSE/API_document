@@ -1,7 +1,7 @@
 ---
-title: 81_mechstatus
+title: 81. Mechstatus
 ---
-# 81 Mech Status (機械狀態)
+# 81. Mech Status (機械狀態)
 
 mechStatus 裡存放 sesame5 各個硬體的狀態。
 

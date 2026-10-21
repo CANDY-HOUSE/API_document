@@ -1,7 +1,7 @@
 ---
-title: 114_card_mode_set
+title: 114. Card_mode_set
 ---
-# 114 カードモード設定(モード)
+# 114. カードモード設定(モード)
 
 携帯電話が新規指示を送信し、ssm_touchが現在新規追加モードまたはカード確認モードにあるかを取得します。sesame5は、成功した指示とそのモードを返答します。
 
@@ -41,3 +41,37 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 の例
 
+### Android の例
+
+```kotlin
+    override fun cardModeSet(mode: Byte, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_CARD_MODE_SET.value, byteArrayOf(mode))) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func cardsModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_CARD_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP の例
+
+```c
+    func cardsModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_CARD_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

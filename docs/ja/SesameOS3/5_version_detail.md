@@ -1,7 +1,7 @@
 ---
-title: 5_version_detail
+title: 5. Version_detail
 ---
-# 5 バージョン詳細 (版本记录)
+# 5. バージョン詳細 (版本记录)
 
 携帯が積極的にバージョン詳細（item_code:0x05）の指令を送り、ssm5 は ssm5 のバージョン番号を返します。
 

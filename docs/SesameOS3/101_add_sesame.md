@@ -1,7 +1,7 @@
 ---
-title: 101_add_sesame
+title: 101. Add_sesame
 ---
-# 101 Add Sesame (新增)
+# 101. Add Sesame (新增)
 
 手機發送新增指令及 Token，sesame5 回覆指令成功，ssm_touch 主動推送 Sesame 列表給手機。(Sesame 列表詳見 `102_pub_ssm_key`)
 

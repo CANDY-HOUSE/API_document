@@ -1,7 +1,7 @@
 ---
-title: 11_autolock
+title: 11. Autolock
 ---
-# 11 Autolock (自动上锁)
+# 11. Autolock (自动上锁)
 
 手機主動送出更新時間(item_code:11)指令及 autolock 秒數，ssm5 開啟 autolock 定時器並回傳成功。
 

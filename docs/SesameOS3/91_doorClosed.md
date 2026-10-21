@@ -1,7 +1,7 @@
 ---
-title: 91_doorClosed
+title: 91. DoorClosed
 ---
-# Item: Door Closed (關門)
+# 91. Door Closed (關門)
 
 Open Sensor跟Sesame5配對後，Open Sensor偵測到關門，會通知Sesame5。
 

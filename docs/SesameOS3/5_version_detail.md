@@ -1,7 +1,7 @@
 ---
-title: 5_version_detail
+title: 5. Version_detail
 ---
-# 5 Version detail (版本记录)
+# 5. Version detail (版本记录)
 
 手機主動送出 Version detail(item_code:0x05)指令，ssm5 回傳 ssm5 的版本號。
 

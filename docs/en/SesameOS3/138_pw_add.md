@@ -1,7 +1,7 @@
 ---
-title: 138_pw_add
+title: 138. Pw_add
 ---
-# 140 Password Add
+# 138. Password Add
 
 The smartphone sends a command via Bluetooth to ssm_touch to add a password.
 The data sent includes the password, and password name. (If the name exceeds 20 bytes, only the first 20 bytes will be used.)

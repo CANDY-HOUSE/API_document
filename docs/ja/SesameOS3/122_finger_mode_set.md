@@ -1,7 +1,7 @@
 ---
-title: 122_finger_mode_set
+title: 122. Finger_mode_set
 ---
-# 114 指モード設定
+# 122. 指モード設定
 
 携帯電話は、新規指令を送信して、ssm_touch が新規モードか指紋認証モードかを取得します。sesame5 は指令成功とモードを返します。
 
@@ -41,3 +41,37 @@ res：CMD_RESULT_SUCCESS（0x00）
 
 ## iOS、Android、ESP32 のサンプル
 
+### Android の例
+
+```kotlin
+   override fun fingerPrintModeSet(mode: Byte, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_FINGERPRINT_MODE_SET.value, byteArrayOf(mode))) {
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func fingerPrintModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP の例
+
+```c
+    func fingerPrintModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
