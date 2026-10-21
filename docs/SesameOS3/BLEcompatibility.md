@@ -1,12 +1,15 @@
 ---
 title: 兼容性
 ---
-## Bluetooth Protocol Compatibility
-* 🟠 Device on SesameOS2
-* 🔵 Device on SesameOS3
-* ✅ Compatible
-* ❌ Non-compatible
-  
+# Bluetooth Protocol Compatibility
+
+此关系表展示当前各个 Sesame 产品可连接关系。
+
+- 🟠 SesameOS2 设备
+- 🔵 SesameOS3 设备
+- ✅ 可连接
+- ❌ 不可连接
+
 |Master➡️  Slave⬇️          | WiFi Module 2 🟠 | Open Sensor 1 🔵 | Open Sensor 2 🔵 | Sesame Touch 1 🔵 | Sesame Touch 1 Pro 🔵 | Sesame Touch 2 🔵 | Sesame Touch 2 Pro 🔵 | Sesame Face 1 🔵 | Sesame Face 1 Pro 🔵 | Sesame Face 1 AI 🔵 | Sesame Face 1 Pro AI 🔵 | Sesame Face 2 🔵 | Sesame Face 2 Pro 🔵 | Sesame Face 2 AI 🔵 | Sesame Face 2 Pro AI 🔵 | Remote 🔵 | Remote Nano 🔵 | Hub 3 🔵 |
 |---------------------------|:---------------:|:---------------:|:---------------:|:----------------:|:--------------------:|:----------------:|:--------------------:|:---------------:|:-------------------:|:------------------:|:----------------------:|:---------------:|:-------------------:|:------------------:|:----------------------:|:--------:|:-------------:|:-------:|
 |Sesame 3 🟠                 |        ✅        |        ❌        |        ❌        |        ✅         |          ✅           |        ❌         |          ❌           |        ❌        |          ❌          |         ❌          |           ❌            |        ❌        |          ❌          |         ❌          |           ❌            |    ❌     |       ❌       |    ❌    |

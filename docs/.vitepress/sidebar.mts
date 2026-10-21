@@ -78,6 +78,12 @@ export function buildSidebar(locale: "zh" | "en" | "ja") {
   const localized = new Set(listPages(prefix));
   const stems = listPages("");
 
+  // 缺少翻译的页面会链接到中文版，点击后语言会切换成中文；构建时提示，便于及时补齐
+  const untranslated = stems.filter((s) => !localized.has(s));
+  if (prefix && untranslated.length) {
+    console.warn(`[sidebar] ${locale} 缺少翻译，将链接到中文版：${untranslated.join(", ")}`);
+  }
+
   // 缺少翻译的页面链接到中文版
   const item = (stem: string) => {
     const p = localized.has(stem) ? prefix : "";
