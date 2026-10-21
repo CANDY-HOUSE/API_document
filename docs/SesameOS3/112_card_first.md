@@ -1,7 +1,7 @@
 ---
-title: 112_card_first
+title: 112. Card_first
 ---
-# Item: Card First
+# 112. Card First
 
 ssm_touch 收到 `109_card_get` 後ssm_touch送出 Card First 指令，表示接下來要開始傳送卡片資料給手機了(詳見 `110_card_notify`)。
 

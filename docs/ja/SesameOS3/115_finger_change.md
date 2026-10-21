@@ -1,7 +1,7 @@
 ---
-title: 115_finger_change
+title: 115. Finger_change
 ---
-# 115\_指紋変更（指紋更新）
+# 115. 指紋変更（指紋更新）
 
 1. ssm_touch で新指紋を登録し、新指紋 ID と名前をスマートフォンに自動送信します。
 2. スマートフォンから id と新しい名前が ssm_touch に送信され、ssm_touch はコマンド受信の成功を返信し、指紋の名前を変更します。また、新指紋の ID と名前をスマートフォンに自動送信します（名前が 20 バイトを超える場合、最初の 20 バイトだけを取得します）。
@@ -92,3 +92,30 @@ name_len = 4
 
 ## iOS、Android、ESP32 例
 
+### Android の例
+
+```kotlin
+    override fun fingerPrintsChange(ID: String, name: String, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_FINGERPRINT_CHANGE.value, byteArrayOf(ID.hexStringToByteArray().size.toByte()) + ID.hexStringToByteArray() + name.toByteArray())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func fingerPrintsChange(ID: String, name: String, result: @escaping (CHResult<CHEmpty>) ) { //改名稱
+      if (self.checkBle(result)) { return }
+
+      let idData = ID.hexStringtoData()
+      L.d("idData???=>", idData)
+      let payload = Data([UInt8(idData.count)]) + idData + name.bytes
+      L.d("TouchDevice payload =>",payload.toHexLog())
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_CHANGE, payload)) { _ in
+          L.d("[TouchDevice][fingerPrintsChange][ok]")
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

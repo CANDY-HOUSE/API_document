@@ -1,7 +1,7 @@
 ---
-title: 108_card_delete
+title: 108. Card_delete
 ---
-# 108 Card Delete （删除卡片）
+# 108. Card Delete （删除卡片）
 
 手機發送刪除指令及卡片 ID，ssm_touch 回覆指令成功並刪除指定卡片。
 

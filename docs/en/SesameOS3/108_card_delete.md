@@ -1,7 +1,7 @@
 ---
-title: 108_card_delete
+title: 108. Card_delete
 ---
-# 108 Card Delete
+# 108. Card Delete
 
 The phone sends a delete command and card ID, ssm_touch responds successfully and deletes the specified card.
 

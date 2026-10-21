@@ -1,7 +1,7 @@
 ---
-title: 1_registor
+title: 1. Register
 ---
-# 1 Register (註冊設備)
+# 1. Register (註冊設備)
 
 Register(註冊)是 APP 跟 Sesame5 配對的動作，只有配對過的 APP 才能控制該 Sesame5。
 

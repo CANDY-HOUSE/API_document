@@ -1,7 +1,7 @@
 ---
-title: 122_finger_mode_set
+title: 122. Finger_mode_set
 ---
-# 114 Finger Mode Set (Fingerprint Mode Settings)
+# 122. Finger Mode Set (Fingerprint Mode Settings)
 
 The phone sends an addition command to get whether ssm_touch is now in addition or fingerprint mode, sesame5 replies the command successfully and the mode.
 

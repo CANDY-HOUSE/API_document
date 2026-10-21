@@ -1,9 +1,7 @@
 ---
-title: iOS version
+title: iOS
 ---
-# iOS Version SesameSDK
-
-![Sesame device](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# iOS SesameSDK
 
 ## Download App
 
@@ -45,13 +43,9 @@ dependencies: [
 
 ```
 
-![img](https://raw.githubusercontent.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/master/doc/src/resources/spm.png)
-
 #### Manual Integration
 
 - If you don't want to use any dependency managers, you can manually integrate SesameSDK into your project.
-
-![img](https://github.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/raw/master/doc/src/resources/manually.png)
 
 ### 2. Add Authorization
 
@@ -211,18 +205,8 @@ For the design details of SesameSDK, please refer to the following design diagra
 
 - Mobile notifications: [User Notifications](https://developer.apple.com/documentation/usernotifications)
 
-## BLE Product Code Example Explanation
-
-For details of each `Class`, please refer to the description of `Sesame SDK Class`.
-
-- View Details: [Sesame SDK Class](../index.md)
-
 ## Bluetooth State Machine
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
 
 <!-- ![BleConnect](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/sesame_state_circle.png) -->
-
-## iOS Class Diagram
-
-![Class_diagram](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/class_diagram.png)

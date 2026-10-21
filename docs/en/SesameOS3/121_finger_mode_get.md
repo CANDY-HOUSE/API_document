@@ -1,7 +1,7 @@
 ---
-title: 121_finger_mode_get
+title: 121. Finger_mode_get
 ---
-# 121 Finger Mode Get (Fingerprint Mode)
+# 121. Finger Mode Get (Fingerprint Mode)
 
 The mobile phone sends a new command to get ssm_touch currently in the new or fingerprint verification mode, and sesame5 replies successfully and mode.
 

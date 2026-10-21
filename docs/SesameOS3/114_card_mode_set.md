@@ -1,7 +1,7 @@
 ---
-title: 114_card_mode_set
+title: 114. Card_mode_set
 ---
-# 114 Card Mode Set(模式)
+# 114. Card Mode Set(模式)
 
 手機發送新增指令獲取 ssm_touch 現在處於新增或是驗證卡片模式，sesame5 回覆指令成功及模式。
 

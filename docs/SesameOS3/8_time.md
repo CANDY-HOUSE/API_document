@@ -1,7 +1,7 @@
 ---
-title: 8_time
+title: 8. Time
 ---
-# 8 Update Time (更新時間)
+# 8. Update Time (更新時間)
 
 手機主動送出更新時間(item_code:0x08)指令及手機 timestamp，ssm5 更新時間戳並回傳更新成功。
 

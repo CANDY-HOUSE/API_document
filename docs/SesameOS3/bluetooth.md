@@ -1,5 +1,5 @@
 ---
-title: 重要概覽
+title: 概覽
 ---
 # 序言
 
@@ -12,70 +12,7 @@ title: 重要概覽
 
 ## 藍牙廣播（BLE Advertising）
 
-```mermaid
-block-beta
-  columns 10
-  title1["Flags Data"]:3 title2["Manufacturer Data"]:7
-  1 2 3 4 5 6 7 8 9 10
-  
-  loc1["2"] loc2["0x01"] loc3["0x06"] loc4["22"] loc5["0xFF"] loc6["0x5A"] loc7["0x05"] loc8["0x05"] loc9["0x00"] loc10["0x00"]
-  
-  ins1["长度"] ins2["类型:Flags\n Data"] ins3["此设备是BLE only,\n处于General \nDiscoverable Mode"] ins4["长度"] ins5["类型:Manufacturer\n Data"] ins6_7["Company ID:0x055A\n(代表CANDY HOUSE Inc.)"]:2 ins8_9["设备类型(厂家私有)"]:2 ins10["设备状态(厂家私有)"]
-
-classDef titledef1 fill:#E7E882
-class title1 titledef1
-classDef titledef2 fill:#38F5ED
-class title2 titledef2
-
-classDef privatedef fill: #f9fb0c
-class loc8,loc9,loc10 privatedef
-```
-```mermaid
-block-beta
-  columns 10
-  title2["Manufacturer Data"]:10
-  11 12 13 14 15 16 17 18 19 20
-  
-  loc1["0x01"] loc2["0x02"] loc3["0x03"] loc4["0x04"] loc5["0x05"] loc6["0x06"] loc7["0x07"] loc8["0x08"] loc9["0x09"] loc10["0x0A"]
-  
-  ins1["\n设备UUID(共16个Bytes)\n"]:10
-  
-classDef titledef2 fill:#38F5ED
-class title2 titledef2
-
-classDef privatedef fill: #f9fb0c
-class loc1,loc2,loc3,loc4,loc5,loc6,loc7,loc8,loc9,loc10 privatedef
-```
-```mermaid
-block-beta
-  columns 10
-  title2["Manufacturer Data (Continued)"]:6 title3["Service UUID"]:4
-  21 22 23 24 25 26 27 28 29 30
-  
-  loc1["0x11"] loc2["0x12"] loc3["0x13"] loc4["0x14"] loc5["0x15"] loc6["0x16"] loc7["3"] loc8["0x03"] loc9["0x81"] loc10["0xFD"]
-  
-  ins1_6["设备UUID(共16个Bytes)(续)"]:6 ins7["长度"] ins8["数据类型\n(0x03表示\nBLE Service UUID)"] ins9_10["BLE Service UUID\n(0xFD81代表\nSesame Service)"]:2
-  
-  
-classDef titledef1 fill:#E7E882
-class title3 titledef1
-classDef titledef2 fill:#38F5ED
-class title2 titledef2  
-
-classDef privatedef fill: #f9fb0c
-class loc1,loc2,loc3,loc4,loc5,loc6 privatedef
-```
-
-> 第一行：属于蓝牙规范，还是厂家定义
->
-> 第二行：序号
->
-> 第三行：十六进制值
->
-> 第四行：内容描述
-
-
-
+<p align="left"><a href="https://docs.google.com/drawings/d/1ntw26Zpr8aQMhy19h0SP__Wemjn_1UFzR4I--jwEfSg/"><img src="https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/images/BLEadvertisingSesameOS3.svg" alt="BLEadvertisingSesameOS3" title="BLE advertising of SesameOS3"></a></p>
 
 - Bluetooth LE 4.0 advertising 長度最長為 31 Bytes.
 - <span style="background-color: #fdea8e;color:#000000">黃底</span>或<span style="background-color: #e4dc7f;color:#000000">黃底</span>標記表示 CANDY HOUSE 定義的協議。<br>
@@ -95,28 +32,39 @@ class loc1,loc2,loc3,loc4,loc5,loc6 privatedef
 
 - 藍芽廣播裡的第 8th 9th Bytes 表達機種
 
-| 8th 9th Bytes |        機種        |
-| :-----------: | :----------------: |
-|       0       |      Sesame 3      |
-|       1       |   WiFi Module 2    |
-|       2       |    Sesame Bot 1    |
-|       3       |   Sesame Bike 1    |
-|       4       |      Sesame 4      |
-|       5       |      Sesame 5      |
-|       6       |   Sesame Bike 2    |
-|       7       |    Sesame 5 Pro    |
-|       8       |    Open Sensor     |
-|       9       | Sesame Touch 1 Pro |
-|      10       |   Sesame Touch 1   |
-|      11       |   Ble Connector    |
-|      13       |       Hub 3        |
-|      14       |   Sesame Remote    |
-|      15       |    Remote Nano     |
-|      16       |    Sesame 5 Usa    |
-|      17       |    Sesame Bot 2    |
-|      18       |        F2          |
-|      19       |        F1          |
-|      20       |Bluetooth半導體光繼電器|
+| 8th 9th Bytes |            機種            |
+| :-----------: | :------------------------: |
+|       0       |         Sesame 3         |
+|       1       |      WiFi Module 2       |
+|       2       |       Sesame Bot 1       |
+|       3       |      Sesame Bike 1       |
+|       4       |         Sesame 4         |
+|       5       |         Sesame 5         |
+|       6       |      Sesame Bike 2       |
+|       7       |       Sesame 5 Pro       |
+|       8       |      Open Sensor 1       |
+|       9       |    Sesame Touch 1 Pro    |
+|       10      |      Sesame Touch 1      |
+|       11      |     BLE Connector 1      |
+|       13      |          Hub 3           |
+|       14      |          Remote          |
+|       15      |       Remote Nano        |
+|       16      |       Sesame 5 US        |
+|       17      |       Sesame Bot 2       |
+|       18      |    Sesame Face 1 Pro     |
+|       19      |      Sesame Face 1       |
+|       20      |         Sesame 6         |
+|       21      |       Sesame 6 Pro       |
+|       22      |   Sesame Face 1 Pro AI   |
+|       23      |     Sesame Face 1 AI     |
+|       24      |      Open Sensor 2       |
+|       25      |      Sesame Touch 2      |
+|       26      |    Sesame Touch 2 Pro    |
+|       27      |      Sesame Face 2       |
+|       28      |    Sesame Face 2 Pro     |
+|       30      |     Sesame Face 2 AI     |
+|       31      |   Sesame Face 2 Pro AI   |
+|       32      | Sesame 6 Pro SlidingDoor |
 
 ### 設備狀態 Device Status
 
@@ -192,126 +140,14 @@ class loc1,loc2,loc3,loc4,loc5,loc6 privatedef
 
 ### 藍牙數據透傳(BLE Data Transmission)
 
-```mermaid
-block-beta
-
-columns 5
-
-space:4
-block:upper_right:1
-	columns 1
-    ur1["ciphertext"] 
-    ur2["plaintext"]
-end
-
-
-T1["Application Layer"]:1
-block:ID:2
-	columns 1
-	block
-		A [" Item Code "] 
-		B ["Parameter"]
-	end
-    G ["Application PDU"]
-end
-space:2
-style T1 fill:#0,stroke-width:0px
-
-
-T2["Security Layer"]:1
-T21	["Encrypted Application PDU
-    (AES加密后,密文与明文长度相同)"]:2
-T22	["Mic
-    (Message Integrity Code)"]:1
-space:1
-
-
-T3["Transport Layer"]:1
-block:Content3:4
-	columns 1
-	block:updonw
-        columns 4
-        block:ID31
-            A311 ["SEG0"]
-            B312 ["Segment0"]
-        end
-        block:ID32
-            A321 ["SEG1"]
-            B322 ["Segment1"]
-        end
-        temp ("......")
-        block:ID3n
-            A32n ["SEGn"]
-            B32n ["Segmentn"]
-        end        
-        
-    end
-	text3["Segment_0+Segment_1+...+Segment_n = Encrypted Application PDU + MIC"]
-end
-
-T4["Bearer"]:1
-%%Content4 ["GATT"]:4
-block:total_transfer:4
-    columns 1
-	Content4 ["GATT"]
-    total4["总共要传输的资料 = Segment_0+Segment_1+...+Segment_n = n x MTU"] 
-end
-
-classDef ciphertextDef fill:#f20000
-class ur1,T21 ciphertextDef
-
-classDef commentDef fill:#e8e8e8
-class total4,text3 commentDef
-
-classDef tDef fill:#cbcbdb
-class T1,T2,T3,T4 tDef
-```
-**单个SEG的定义:**
-
-```mermaid
-block-beta
-  columns 2
-  SEG["SEG"]:2
-  i00["bit7 - bit1"] i01["bit0"]
-  i10["parsing_type"] i11["is_start"]
-  
-    classDef titleDef fill:#55acaf
-    class SEG titleDef
-```
-```mermaid
-block-beta
-  columns 3
-  space i01["is_start==1"] i02["is_start==0"]
-  i10["parsing_type!=0"] i11["A single segment content.
-  是头也是尾(明文or密文)"]	i12["End of content
-  尾(明文or密文)"]
-  i20["parsing_type==0"] i21["Start of content.头"] i22["Middle of content.中"]
-  
-    classDef titleDef fill:#faea9a
-    class i01,i02 titleDef
-    
-    classDef rowDef fill:#e3db8b
-    class i10,i20 rowDef
-```
-
-
-
+<p align="left"><a href="https://docs.google.com/presentation/d/1TwGJjAWVgVVkeVxlmVibuQFGrb2XYEdaUk1yMW0V6h4/edit#slide=id.g38d4ff6190_0_158"><img src="https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/communication_layer.png" alt="BLEcommunication4Layers.jpg" title="4 layers of BLE communication"></a></p>
 - 受到 TCP/IP 模型的啟發, 我們將藍芽通信分成 4 層。
 - `明文的任意格式之信息` 經過 `加密`、`切割`後 `透過藍芽GATT收發`。4 個狀態分別稱 <u>Application Layer</u>, <u>Security Layer</u>, <u>Transport Layer</u>, <u>Gatt Bearer Layer</u>.
 - 這套切割信息的作法, 可以傳輸無限長度的任意格式之信息。
 
 ### 傳輸協議 Request, Response and Publish
 
-```mermaid
-sequenceDiagram
-    participant Central as iOS/Android/ESP32<br/>BLE Central app
-    participant Peripheral as Sesame<br/>BLE Peripheral
-    
-    Central->>Peripheral: Request<br/>(基於 BLE Write without response 實作)
-    Peripheral-->>Central: Response<br/>(基於 BLE Notify 實作)
-    Peripheral->>Peripheral: Process
-    Peripheral-->>Central: Publish<br/>(基於 BLE Notify 實作)
-```
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/request_response_publish.png)
 
 - 受到 RESTful API 增刪查改數據庫 POST 方法的啟發, 我們基於 `BLE write without response` 封裝了 1 命令方法：<br><span style="background-color: #fdea8e;color:#000000">・Request</span>
 - 受到 RESTful API async/sync 的啟發, 我們基於`BLE notify`封裝成 2 個收 Callback 方法：<br><span style="background-color: #fdea8e;color:#000000">・Response</span><br><span style="background-color: #fdea8e;color:#000000">・Publish</span>
@@ -328,222 +164,27 @@ sequenceDiagram
 ## Application Layer 裡的業務內容
 
 ### 1. Sesame 「註冊」活動圖
-```mermaid
-flowchart TD
-    subgraph Sesame5
-    a1[设备是否被注册?]--否-->a4[设备时间timestamp与手机手机timestamp相同]-->a5[secp256r1函数生成publicKeyS,privateKeyS]-->a6[Secret=secp256r1函数,Device secret的前16Bytes]-->a7["Token=AES_CMAC(Device secret,random code)"]-->a8["回复(注册成功,机械状态,机械设定,publicKeyS)"]
-    a1--是-->a2[回复已注册]-->a3(结束)
-    end
-	
-    subgraph "Sesame (APP)"
-    c1(#9899;)-->c2("secp256r1函数生成公钥与私钥{publicKeyA,privateKeyA} = secp256r1()")
-    c2-->c3("发送{发送publicKeyA,手机timestamp,注册命令}")
-    c4[设定设备机械状态,机械设定]-->c5["Secret = secp256r1(publicKeyS,privateKeyA)"]
-    end    
-	c3-->a1
-	a8-->c4
-```
-
-
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p01_register.png)
 
 ### 2. Sesame「註冊」循序圖
 
-```mermaid
-sequenceDiagram
-APP->>APP: {公钥A,私钥A}=secp256r1()
-APP->>bleprofile: 发送{公钥A,手机timestamp,注册命令}
-bleprofile-->>APP: ssm5是否被注册?未注册回复,已注册不回复
-bleprofile->>bleprofile: {公钥s,私钥s}=secp256r1()
-bleprofile->>bleprofile: Secret=secp256r1(公钥s,私钥s),Device secret=Secret前16bytes
-bleprofile->>bleprofile: Token=AES_CMAC(Device secret,random code)
-bleprofile-->>APP: 回复(注册成功,机械状态,机械设定,公钥S)
-APP->>APP: 设定ssm5机械状态,机械设定
-APP->>APP: Secret=secp256r1(公钥S,私钥A),Device secret = Secret前16bytes
-APP->>APP: Token = AES_CMAC(Device secret, random code)
-bleprofile-)APP: 上报设备时间误差
-```
-
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p02_login.png)
 
 ### 3. Sesame「登录」循序圖
 
-```mermaid
-
-sequenceDiagram
-critical [APP Login]
-    APP->>APP: 有public_key,手机secret_key_pair
-    Sesame5-->>APP: ADV(registered status)
-    APP->>Sesame5: BLE connect,connected,discover & enable notification
-    Sesame5-->>APP: publish(random,code[session token])
-    APP->>Sesame5: (plaintext) 手机app_public_key,手机timestamp
-    Sesame5-->>APP: (success) MechStatus
-end
-```
-
-
-
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p09_login.png)
 
 ### 4. Sesame「发送命令」循序圖
 
-```mermaid
-
-sequenceDiagram
-critical [Send command]
-    APP->>APP: Generate command data
-    APP->>Sesame5: Send command data
-    Sesame5-->>APP: Response,command,status
-    APP->>APP: Refresh user interface from device status
-    Note over Sesame5: Sesame5 directly disconnect on any error
-    Sesame5-->>APP: (success) MechStatus
-end
-```
-
-
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p10_command.png)
 
 ### 5. 對外封裝後的手機 SesameSDK 狀態機 State Machine
 
-```mermaid
-stateDiagram-v2
-
-    state Sesame(APP) {
-        [*] --> noBleSignal1
-        noBleSignal1 --> receviedBle
-        receviedBle --> bleConnecting
-        bleConnecting --> waitingGatt
-        waitingGatt --> isRegistered?
-        
-        locked --> unlocked 
-        unlocked --> [*]
-        
-        noBleSignal2 --> [*]
-        
-        noBleSignal1 : noBleSignal
-        noBleSignal2 : noBleSignal
-    }
-    
-    state Sesame5 {
-    	isRegistered? --> readyToRegister : No!
-    		readyToRegister --> registering
-    		registering --> locked
-    	isRegistered? --> bleLogining : Yes!
-    		bleLogining --> isLogin?
-    			isLogin? --> bleDisconnecting : No!
-    				bleDisconnecting --> noBleSignal2
-    			isLogin? --> moved : Yes!
-    				moved --> ready
-    					ready --> [*]
-    }
-```
-
-
-
-
-
-
-
-
-
-
+![Sesame](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
 
 ### 6. Sesame 時序圖
 
-```mermaid
-sequenceDiagram
-autonumber
-actor User
-participant SesameApp
-participant BleDevice
-
-note over User,BleDevice: Preparation
-alt BLE status == ON
-    SesameApp->>SesameApp: Scan for Bluetooth devices
-    SesameApp->>+BleDevice: Connect
-    SesameApp->>SesameApp: Discover services
-    SesameApp->>SesameApp: Discover characteristics
-    SesameApp->>BleDevice: 5.Enable notifications
-    BleDevice->>-SesameApp: 6.Initialization successful and a random code returned
-    SesameApp->>SesameApp: 7.Save random code (session token)
-    SesameApp->>SesameApp: 8.Generate key pair A
-else BLE status != ON
-	SesameApp->>SesameApp: Remind the user to turn on Bluetooth
-end
-
-
-note over User,BleDevice: Registration
-
-User->>+SesameApp: Add device
-
-par SesameS/Bike2/Open Sensor/Sesame Touch
-	SesameApp->>SesameApp: Generate command data using public key of key pair A + timestamp
-	SesameApp->>+BleDevice: Send command data
-	BleDevice->>BleDevice: Synchronize time
-	BleDevice->>BleDevice: Generate key pair B
-	BleDevice->>BleDevice: Generate key with public key of key pair A and private key of key pair B
-	BleDevice->>-SesameApp: Return status, settings, public key of key pair B
-and WiFiModule2
-    SesameApp->>SesameApp: Generate command data using public key of key pair A
-    SesameApp->>+BleDevice: Send command data
-    BleDevice->>BleDevice: Generate key pair B
-    BleDevice->>BleDevice: Generate key with public key of key pair A and private key of key pair B
-    BleDevice->>-SesameApp: Return public key of key pair B
-    SesameApp->>SesameApp: Scan WiFi, set password, connect WiFi
-end
-SesameApp->>SesameApp: Generate key with private key of key pair A and public key of key pair B
-SesameApp->>SesameApp: Update command encoder/decoder
-SesameApp->>SesameApp: Insert device information with key
-SesameApp->>SesameApp: Restore device state from shadow
-SesameApp->>-User: Add device Result
-
-
-Note over User,BleDevice: Login
-
-
-par SesameS/Bike2/Open Sensor/Sesame Touch
-    SesameApp->>SesameApp: Generate session authorization with signature
-    SesameApp->>SesameApp: Without signature, generate session authorization with session token and key
-    SesameApp->>SesameApp: Update command encoder/decoder
-    
-    SesameApp->>+BleDevice: Send command data
-    BleDevice->>SesameApp: Verify key consistency
-    BleDevice-->>-SesameApp: Return timestamp
-
-    alt abs(device timestamp - app timestamp) >= 3
-        SesameApp->>SesameApp: Get current time
-        SesameApp->>BleDevice: Send command data
-        BleDevice->>BleDevice: Synchronize time from App
-    end
-and WiFiModule2
-    SesameApp->>SesameApp: Update command encoder/decoder
-    SesameApp->>SesameApp: Generate command data with key and session token
-    SesameApp->>BleDevice: Send command data
-end
-BleDevice-->>SesameApp: Response successful
-BleDevice-->>SesameApp: Publish device status
-SesameApp->>SesameApp: Respond with device status
-
-
-
-Note over User,BleDevice: Send command
-User->>SesameApp: Tap Sesame
-par SesameS/Bike2/Open Sensor/Sesame Touch
-	alt BLE connected
-        SesameApp->>SesameApp: Generate command data
-        SesameApp->>+BleDevice: Send command data
-        BleDevice-->>-SesameApp: Publish device status
-        SesameApp->>SesameApp: Restore interface from device status
-    end
-and WiFiModule2
-    SesameApp->>SesameApp: Generate command data (key and public key when needed)
-    SesameApp->>+BleDevice: Send command data
-    BleDevice-->>-SesameApp: Publish device status
-    SesameApp->>SesameApp: Restore interface from device status
-end
-SesameApp->>User: Return Result
-```
-
-
-
-
-
+![Sequence_diagram](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/sequence_diagram.png)
 
 ## 手機藍牙跟 Sesame 兩種溝通方式
 
@@ -881,15 +522,6 @@ Segment Layer 標記有 8bits，其中 bit 7 ~ 1 表示是否為結束封包及�
 
 資料: A A B B
 
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A B B
-发送->>发送: 资料: A A B B
-发送->>接收: 加上封包头 3 A A B B
-接收->>接收: 收到: 3 A A B B
-接收->>接收: 去除封包头还原资料: A A B B
-```
-
 發送:
 
     1. 收到資料 : A A B B
@@ -904,23 +536,6 @@ sequenceDiagram
 #### 2.2 中明文封包
 
 資料: A A A A B B B B
-
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A A A B B B B
-
-发送->>发送: 拆解资料: A A A A
-发送->>接收: 加上封包头: 1 A A A A
-接收->>接收: 收到: 1 A A A A
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: B B B B
-发送->>接收: 加上封包头: 2 B B B B
-接收->>接收: 收到: 2 B B B B
-接收->>接收: 资料接收完成,组合封包
-接收->>接收: 去除封包头还原资料: A A A A B B B B
-```
-
 
 發送:
 
@@ -941,29 +556,6 @@ sequenceDiagram
 #### 2.3 長明文封包
 
 資料 : A A A A B B B B C C C C
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A A A B B B B C C C C
-
-发送->>发送: 拆解资料: A A A A
-发送->>接收: 加上封包头: 1 A A A A
-接收->>接收: 收到: 1 A A A A
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: B B B B
-发送->>接收: 加上封包头: 0 B B B B
-接收->>接收: 收到: 0 B B B B
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: C C C C
-发送->>接收: 加上封包头: 2 C C C C
-接收->>接收: 收到: 2 C C C C
-接收->>接收: 资料接收完成,组合封包
-接收->>接收: 去除封包头还原资料: A A A A B B B B C C C C
-```
-
-
-
 
 發送:
 
@@ -991,22 +583,6 @@ sequenceDiagram
 
 資料加密後 : X X Y Y
 
-
-
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A B B
-发送->>发送: 资料加密后: X X Y Y
-发送->>接收: 加上封包头 5 X X Y Y
-接收->>接收: 收到: 5 X X Y Y
-接收->>接收: 去除封包头还原资料: X X Y Y
-接收->>接收: 解密: A A B B
-```
-
-
-
-
-
 發送:
 
     1. 收到資料 : A A B B
@@ -1024,25 +600,6 @@ sequenceDiagram
 資料: A A A A B B B B
 
 資料加密後 : X X X X Y Y Y Y
-
-
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A A A B B B B
-发送->>发送: 资料加密后: X X X X Y Y Y Y
-发送->>发送: 拆解资料: X X X X
-发送->>接收: 加上封包头: 1 X X X X
-接收->>接收: 收到: 1 X X X X
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: Y Y Y Y
-发送->>接收: 加上封包头: 4 Y Y Y Y
-接收->>接收: 收到: 4 Y Y Y Y
-接收->>接收: 资料接收完成,组合封包
-接收->>接收: 去除封包头还原资料: X X X X Y Y Y Y
-接收->>接收: 资料解密: A A A A B B B B
-```
-
 
 發送:
 
@@ -1067,31 +624,6 @@ sequenceDiagram
 資料 : A A A A B B B B C C C C
 
 資料加密後 : X X X X Y Y Y Y Z Z Z Z
-
-
-```mermaid
-sequenceDiagram
-发送->>发送: 收到资料: A A A A B B B B C C C C
-发送->>发送: 资料加密: X X X X Y Y Y Y Z Z Z Z
-
-发送->>发送: 拆解资料: X X X X
-发送->>接收: 加上封包头: 1 X X X X
-接收->>接收: 收到: 1 X X X X
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: Y Y Y Y
-发送->>接收: 加上封包头: 0 Y Y Y Y
-接收->>接收: 收到: 0 Y Y Y Y
-接收->>接收: 判断资料还没送完,等待下一个封包
-
-发送->>发送: 拆解资料: Z Z Z Z
-发送->>接收: 加上封包头: 4 Z Z Z Z
-接收->>接收: 收到: 4 Z Z Z Z
-接收->>接收: 资料接收完成,组合封包
-接收->>接收: 去除封包头还原资料: X X X X Y Y Y Y Z Z Z Z
-接收->>接收: 资料解密: A A A A B B B B C C C C
-```
-
 
 發送:
 

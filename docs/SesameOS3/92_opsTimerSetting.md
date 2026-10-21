@@ -1,7 +1,7 @@
 ---
-title: 92_opsTimerSetting
+title: 92. OpsTimerSetting
 ---
-# Item: OpenSensor timer setting
+# 92. OpenSensor timer setting
 
 OpenSensor 關門自動上鎖延遲時間
 

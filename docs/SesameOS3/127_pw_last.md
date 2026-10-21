@@ -1,7 +1,7 @@
 ---
-title: 127_pw_last
+title: 127. Pw_last
 ---
-# Item: Password Last
+# 127. Password Last
 
 ssm_touch 送完密碼資料後，送Password Last給手機，表示密碼資料已經送完了。
 

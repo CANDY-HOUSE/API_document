@@ -1,7 +1,7 @@
 ---
-title: 130_pw_mode_set
+title: 130. Pw_mode_set
 ---
-# 130 パスワードモード設定 (Password Mode Set)
+# 130. パスワードモード設定 (Password Mode Set)
 
 携帯電話が新たな指示を送信して ssm_touch が現在新規追加モードなのかパスワード確認モードなのかを取得し、sesame5 が指示の成功とモードを返信します。
 

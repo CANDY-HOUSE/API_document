@@ -1,7 +1,7 @@
 ---
-title: 130_pw_mode_set
+title: 130. Pw_mode_set
 ---
-# 130 Password Mode Set(Password Mode Set)
+# 130. Password Mode Set(Password Mode Set)
 
 The phone sends a new command to get whether the ssm_touch is currently in the new or verify password mode. Sesame5 replies with the successful command and mode.
 
@@ -41,5 +41,39 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS, Android, ESP32 Example
 
+### Android Example
+
+```kotlin
+    override fun keyBoardPassCodeModeSet(mode: Byte, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_PASSCODE_MODE_SET.value, byteArrayOf(mode))) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS Example
+
+```swift
+    func passCodeModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_PASSCODE_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP Example
+
+```c
+    func passCodeModeSet(mode: UInt8, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      sendCommand(.init(.SSM_OS3_PASSCODE_MODE_SET,Data([mode]))) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
  
 

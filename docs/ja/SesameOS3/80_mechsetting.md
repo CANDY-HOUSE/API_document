@@ -1,7 +1,7 @@
 ---
-title: 80_mechsetting
+title: 80. Mechsetting
 ---
-# 80 Mech Setting (メカニカル設定)
+# 80. Mech Setting (メカニカル設定)
 
 mechSetting は Sesame5 のメカニカル設定で、autolock の秒数と sesame5 の開錠と閉錠の角度を含んでいます。
 

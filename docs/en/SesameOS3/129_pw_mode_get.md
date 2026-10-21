@@ -1,7 +1,7 @@
 ---
-title: 129_pw_mode_get
+title: 129. Pw_mode_get
 ---
-# 129 Password Mode Get
+# 129. Password Mode Get
 
 The phone sends a new instruction to obtain the current addition or verification password mode from ssm_touch, and sesame5 responds with the successful instruction and the mode.
 

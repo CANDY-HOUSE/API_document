@@ -6,15 +6,14 @@ SesameSDK / SesameOS3 的 API 文档（中文 / English / 日本語）。
 
 | | 中文 | English | 日本語 |
 | --- | --- | --- | --- |
-| 概述 Overview | [docs/index.md](./docs/index.md) | [docs/en/index.md](./docs/en/index.md) | [docs/ja/index.md](./docs/ja/index.md) |
-| API 目录 API Index | [docs/SesameOS3/index.md](./docs/SesameOS3/index.md) | [docs/en/SesameOS3/index.md](./docs/en/SesameOS3/index.md) | [docs/ja/SesameOS3/index.md](./docs/ja/SesameOS3/index.md) |
+| 概览 Overview | [docs/SesameOS3/hello.md](./docs/SesameOS3/hello.md) | [docs/en/SesameOS3/hello.md](./docs/en/SesameOS3/hello.md) | [docs/ja/SesameOS3/hello.md](./docs/ja/SesameOS3/hello.md) |
 | Webhook | [webhook.md](./docs/SesameOS3/webhook.md) | [webhook.md](./docs/en/SesameOS3/webhook.md) | [webhook.md](./docs/ja/SesameOS3/webhook.md) |
 
 ## 目录结构
 
 ```
 docs/
-├── index.md              # 中文首页
+├── index.md              # 首页（跳转到 SesameSDK 概览）
 ├── SesameOS3/*.md        # 中文文档
 ├── en/                   # 英文（结构与中文相同）
 ├── ja/                   # 日文（结构与中文相同）

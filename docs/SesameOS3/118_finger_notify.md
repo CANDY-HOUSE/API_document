@@ -1,7 +1,7 @@
 ---
-title: 118_finger_notify
+title: 118. Finger_notify
 ---
-# Item: Finger Notify
+# 118. Finger Notify
 
 ssm_touch 主動推送指紋資料給手機。
 

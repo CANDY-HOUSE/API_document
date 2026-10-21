@@ -1,7 +1,7 @@
 ---
-title: 122_finger_mode_set
+title: 122. Finger_mode_set
 ---
-# 114 Finger Mode Set(指纹模式设置)
+# 122. Finger Mode Set(指纹模式设置)
 
 手機發送新增指令獲取 ssm_touch 現在處於新增或是驗證指紋模式，sesame5 回覆指令成功及模式。
 

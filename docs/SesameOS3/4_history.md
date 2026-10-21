@@ -1,7 +1,7 @@
 ---
-title: 4_history
+title: 4. History
 ---
-# 4 History (歷史)
+# 4. History (歷史)
 
 手機向 Sesame5 發送歷史請求命令後，裝置會從 Flash 中回傳 **最舊的一筆歷史紀錄**。  
 若需要刪除該筆歷史，必須在讀取後再發送 **刪除命令**。  

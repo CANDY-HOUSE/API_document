@@ -1,7 +1,7 @@
 ---
-title: 130_pw_mode_set
+title: 130. Pw_mode_set
 ---
-# 130 Password Mode Set(Password Mode Set)
+# 130. Password Mode Set(Password Mode Set)
 
 手機發送新增指令獲取 ssm_touch 現在處於新增或是驗證密碼模式，sesame5 回覆指令成功及模式。
 

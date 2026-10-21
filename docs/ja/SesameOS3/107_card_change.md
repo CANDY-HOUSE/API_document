@@ -1,7 +1,7 @@
 ---
-title: 107_card_change
+title: 107. Card_change
 ---
-# 107 カード変更（修正）
+# 107. カード変更（修正）
 
 1. ssm_touch が新しいカードを追加し、新しいカード ID と名前を携帯電話に自動的に送信します。
 2. 携帯電話は id と新しい名前を ssm_touch に送信し、ssm_touch は命令の受信を成功した後でカード名を変更し、新しいカード ID と名前を携帯電話に自動的に送信します（名前が 20 バイトを超える場合、最初の 20 バイトだけを取ります）。
@@ -92,3 +92,57 @@ name_len = 4
 
 ## iOS、Android、ESP32 の例
 
+### Android の例
+
+```kotlin
+   override fun cardChange(ID: String, name: String, result: CHResult<CHEmpty>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_CARD_CHANGE.value, byteArrayOf(ID.hexStringToByteArray().size.toByte()) + ID.hexStringToByteArray() + name.toByteArray())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(CHEmpty())))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func cardsChange(ID: String, name: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+
+      let idData = ID.hexStringtoData()
+      let payload = Data([UInt8(idData.count)]) + idData + name.bytes
+      L.d("TouchDevice",payload.toHexLog())
+      sendCommand(.init(.SSM_OS3_CARD_CHANGE, payload)) { _ in
+          L.d("[TouchDevice][fingerPrintsChange][ok]")
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP の例
+
+```c
+if (cmd_it_code == SSM2_ITEM_CODE_MECH_SETTING) {
+      log_info_array_ex("mech_setting", ss5->b_buf, ss5->c_offset)
+      memcpy(&ss5->mechSetting, ss5->b_buf, 6);   //mech_setting 6bytes
+  }
+
+static void ssm_set_angle(sesame *ssm) {
+  if (ssm->ss2_device_status >= SSM2_LOGGIN) {
+      log_info("[ss5][ss5_set_angle]")
+      ssm->c_offset = 7;
+      ssm->b_buf[0] = SSM2_ITEM_CODE_MECH_SETTING;
+      memcpy(ssm->b_buf + 1, ssm->mechSetting, 6);
+      talk_to_ssm(ssm, SSM2_SEG_PARSING_TYPE_CIPHERTEXT);
+  }
+}
+void tell_mobile_mech_setting(mobile_app *mobile) {
+  ss5_publish *ss5_pub = (ss5_publish *) ble_tx_buf;
+  ss5_pub->type = SSM2_OP_CODE_PUBLISH;
+  ss5_pub->it = SSM2_ITEM_CODE_MECH_SETTING;
+  ss5_pub->payload.mech_setting = g_device_config.mech_setting;
+//    memcpy(&ble_tx_buf[2], &g_device_config.mech_setting, sizeof(mech_setting_t));
+  talk_to_mobile(mobile, SSM2_SEG_PARSING_TYPE_CIPHERTEXT, (uint8_t *) ss5_pub,
+                 (sizeof(mech_setting_t) + offsetof(ss5_publish, payload)));
+}
+```

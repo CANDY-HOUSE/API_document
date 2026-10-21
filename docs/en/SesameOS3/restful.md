@@ -3,6 +3,10 @@ title: RESTful API
 ---
 # RESTful API
 
+::: info Deprecated soon
+The RESTful API will be deprecated soon. Refer to [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) as an alternative.
+:::
+
 ## API Introduction
 
 The Sesame APP uses the RESTful API and IoT technology to achieve multi-platform and multi-device interconnection.

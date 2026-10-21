@@ -1,7 +1,7 @@
 ---
-title: 2_login
+title: 2. Login
 ---
-# 2 Login (登入)
+# 2. Login (登入)
 
 已經跟 Sesame5 註冊過的設備需要在連線之後進行登入，才能進行控制。
 

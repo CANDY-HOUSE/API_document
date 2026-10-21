@@ -1,7 +1,7 @@
 ---
-title: 121_finger_mode_get
+title: 121. Finger_mode_get
 ---
-# 121 Finger Mode Get(指纹模式)
+# 121. Finger Mode Get(指纹模式)
 
 手機發送新增指令獲取 ssm_touch 現在處於新增或是驗證指紋模式，sesame5 回覆指令成功及模式。
 

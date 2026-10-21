@@ -1,7 +1,7 @@
 ---
-title: 5_version_detail
+title: 5. Version_detail
 ---
-# 5 Version detail (Version Record)
+# 5. Version detail (Version Record)
 
 The phone actively sends out the Version detail command (item_code:0x05) and ssm5 returns the version number of ssm5.
 

@@ -1,7 +1,7 @@
 ---
-title: 102_pub_ssm_key
+title: 102. Pub_ssm_key
 ---
-# Item: Publish Sesame Key
+# 102. Publish Sesame Key
 
 ssm_touch 主動推送 Sesame 列表給手機。
 

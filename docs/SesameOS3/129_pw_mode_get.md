@@ -1,7 +1,7 @@
 ---
-title: 129_pw_mode_get
+title: 129. Pw_mode_get
 ---
-# 129 Password Mode Get(获取密码模式)
+# 129. Password Mode Get(获取密码模式)
 
 手機發送新增指令獲取 ssm_touch 現在處於新增或是驗證密碼模式，sesame5 回覆指令成功及模式。
 

@@ -1,9 +1,7 @@
 ---
-title: Android版
+title: Android
 ---
-# Android版 SesameSDK
-
-![Sesame device](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# Android SesameSDK
 
 ## アプリのダウンロード
 
@@ -14,7 +12,7 @@ title: Android版
 
 ### プラットフォームのインストール要件
 
-- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />.
+- <img src="https://img.shields.io/badge/Kotlin-1.4-7F52FF" />
 - <img src="https://img.shields.io/badge/Bluetooth-4.0LE +-0082FC" />
 - <img src="https://img.shields.io/badge/Android-5.0 +-3DDC84" />
 - <img src="https://img.shields.io/badge/Android Studio-2022 +-3DDC84" />
@@ -188,78 +186,9 @@ bleScannerでスキャンしたデバイスをCHDeviceMapに格納します。
 
 - 詳細を見る:[BlueTooth プロトコル](./bluetooth.md)
 
-### Androidプロジェクトの構造例
-
-以下は、Androidプロジェクトの構造例で、ソースコードとリソースファイルを整理します。
-
-- `libs/`：フォルダは、通常、第三者ライブラリ（libraries）のバイナリファイル（.jar、.aarなど）を格納するために用いられます。
-- `java/`：Javaコードを格納します。機能モジュールごとにサブパッケージを分けます。例えば、`activities/`はアクティビティクラスを格納し、`adapters/`はアダプタクラスを格納します。
-- `res/`：リソースファイルを格納します。これには、レイアウトファイル、文字列、アイコンなどが含まれます。リソースの種類によりディレクトリを分割し、`layout/`にはレイアウトファイルを、`drawable/`には画像リソースを、`values/`には文字列とスタイルリソースを格納します。
-- `build.gradle`：アプリケーションレベルのGradle設定ファイル。依存関係、プラグイン、ビルド設定を設定します。
-- `proguard-rules.pro`：ProGuard設定ファイル。コードの難読化や最適化を行います。これはオプションで、リリース版で使用します。
-
 ### Bluetoothステータスマシン
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
-
-### Sesameプロジェクトフレームワーク
-
-- 登録ログイン：[Amazon Web Services](https://docs.amplify.aws/sdk/auth/getting-started/q/platform/android/)(Mobile)
-- 権限フレームワーク：[Easypermissions](https://github.com/googlesamples/easypermissions)
-- ローカルデータベース永続化：[Room](https://developer.android.com/training/data-storage/room?hl=ja)
-- クラウドデータホスティング：[Amazon Web Services](https://docs.aws.amazon.com/iot/latest/developerguide/iot-sdks.html) (IOT)
-- 画面ナビゲーション：[Navigation ](https://developer.android.com/guide/navigation?hl=ja)
-- 画面データ管理：[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?hl=ja)
-- ファームウェアアップグレードライブラリ：[Dfu](https://github.com/NordicSemiconductor/Android-DFU-Library)
-- マップコンポーネント：[Maps for Google](https://developers.google.com/maps/documentation/android-sdk/release-notes)
-- ローカルストレージ：[Preference](https://developer.android.com/jetpack/androidx/releases/preference?hl=ja)
-- リアクティブフレームワーク：[Rxjava](https://github.com/ReactiveX/RxJava)
-- QRスキャン：依存 libs/qrcodecore-release.aar、[Zxing](https://mvnrepository.com/artifact/com.google.zxing/core)
-- メッセージ送信：[Firebase-messaging](https://firebase.google.com/docs/cloud-messaging/android/client?hl=ja)
-
-### UIコンポーネントライブラリリスト
-
-- プルダウンリフレッシュ：[Swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout?hl=ja)
-- Recyclerviewヘッダー固定：[StickyHeaders](https://github.com/ShamylZakariya/StickyHeaders)
-- EditText自動調整：[AutoResizeEditText](https://github.com/victorminerva/AutoResizeEditText)
-- スライドショー：[LoopView](https://github.com/AWarmHug/androidWheelView)
-- スライダーライブラリ：[Indicatorseekbar](https://github.com/warkiz/IndicatorSeekBar)
-
-### App画面オブジェクトの説明
-
-**SesameApp:** Applicationプロセススタート  
-**MainActivity:**  主App画面  
-**ScanQRcodeFG:**  二次元コードスキャン  
-**ScanNewDeviceFG:**  新規デバイス追加  
-**WM2SettingFG:**  WIFIモジュールの設定画面  
-**SSM2SetAngleFG:**  SS4、SS2 角度設定画面  
-**SSM5SettingFG:**  SS5、SS5PRO の設定画面  
-**SSM2SettingFG:**  SS4、SS2 の設定画面  
-**SesameBotSettingFG:**  SesameBot1 の設定画面  
-**SesameBikeSettingFG:**  BiKeLock1、BiKeLock2 の設定画面  
-**SesameKeyboardSettingFG:**  Sesame5 の設定画面  
-**SesameOpenSensorNoBLESettingFG:**  SSMOpenSensor の設定画面  
-**SesameTouchProSettingFG:**  SSMTouchPro、SSMTouch、BLEConnector の設定画面  
-**SesameKeyboardCards:** NFCカード設定画面  
-**SSMTouchProFingerprint:**  指紋設定画面  
-**SesameKeyboardPassCode:**  数字パスワード設定画面  
-**SSMTouchProSelectLockerListFG:**  SSMTouchProデバイス共有画面  
-**GuestKeyListFG:**  ビジターリスト画面  
-**SSM2NoHandLockFG:**  全自動ロック画面  
-**MeFG:**  ホーム->マイページ画面  
-**MyQrCodeFG:**  ホーム->マイページ画面->マイQRコード画面  
-**LoginMailFG:**  ホーム->マイページ画面->登録画面  
-**LoginVerifiCodeFG:**  ホーム->マイページ画面->登録画面->二次元コードの確認画面
-**FriendListFG:**  ホーム->連絡先画面
-**FriendDetailFG:**  ホーム->連絡先画面->友達の詳細画面
-**FriendSelectLockerListFG:**  ホーム->連絡先画面->友達の詳細画面->共有デバイス画面
-**DeviceListFG:**  ホーム->セサミリスト画面
-**MainRoomFG:**  ホーム->セサミリスト画面->SS4、SS2 デバイス詳細の履歴レコード
-**MainRoomSS5FG:**  ホーム->セサミリスト画面->SS5、SS5PRO デバイス詳細の履歴レコード
-**AddMemberFG:**  ホーム->セサミリスト画面->メンバー追加画面
-**KeyQrCodeFG:**  ホーム->セサミリスト画面->セサミ二次元コードQR共有画面
-**WM2ScanSSIDListFG:**  ホーム->セサミリスト画面->WIFI詳細->WIFIスキャンリスト画面
-**WM2SelectLockerListFG:**  ホーム->セサミリスト画面->WIFI詳細->セサミデバイス選択画面
 
 ## Android関連の知識
 

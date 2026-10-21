@@ -1,7 +1,7 @@
 ---
-title: 116_finger_delete
+title: 116. Finger_delete
 ---
-# 116 指紋削除
+# 116. 指紋削除
 
 スマートフォンから削除する指紋 ID を送信し、ssm_touch が成功メッセージを返し、指定した指紋を削除します。
 
@@ -38,3 +38,35 @@ res : CMD_RESULT_SUCCESS (0x00)
 
 ## iOS、Android、ESP32 例示
 
+### Android の例
+
+```kotlin
+    override fun cardModeGet(result: CHResult<Byte>) {
+      if (checkBle(result)) return
+      sendCommand(SesameOS3Payload(SesameItemCode.SSM_OS3_CARD_MODE_GET.value, byteArrayOf())) { res ->
+          result.invoke(Result.success(CHResultState.CHResultStateBLE(res.payload[0])))
+      }
+  }
+```
+
+### iOS の例
+
+```swift
+    func fingerPrintDelete(ID: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_DELETE,ID.hexStringtoData())) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```
+
+### ESP の例
+
+```c
+    func fingerPrintDelete(ID: String, result: @escaping (CHResult<CHEmpty>)) {
+      if (self.checkBle(result)) { return }
+      sendCommand(.init(.SSM_OS3_FINGERPRINT_DELETE,ID.hexStringtoData())) { _ in
+          result(.success(CHResultStateNetworks(input: CHEmpty())))
+      }
+  }
+```

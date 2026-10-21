@@ -1,7 +1,7 @@
 ---
-title: 110_card_notify
+title: 110. Card_notify
 ---
-# 110 Card Notify (Push Card)
+# 110. Card Notify (Push Card)
 
 ssm_touch actively pushes card information to mobile phone.
 

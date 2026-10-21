@@ -1,9 +1,7 @@
 ---
-title: iOS 版
+title: iOS
 ---
-# iOS版 SesameSDK
-
-![Sesameデバイス](https://github.com/CANDY-HOUSE/.github/blob/main/profile/images/SesameSDK.png?raw=true 'Sesame')
+# iOS SesameSDK
 
 ## Appをダウンロード
 
@@ -45,13 +43,9 @@ dependencies: [
 
 ```
 
-![img](https://raw.githubusercontent.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/master/doc/src/resources/spm.png)
-
 #### 手動統合
 
 - 任何の依存関係マネージャを使用したくない場合は、SesameSDKを手動でプロジェクトに統合することも可能です。
-
-![img](https://github.com/CANDY-HOUSE/SesameSDK_iOS_with_DemoApp/raw/master/doc/src/resources/manually.png)
 
 ### 2. 認可の追加
 
@@ -211,18 +205,8 @@ SesameSDKの詳細設計については、以下の設計図とフローチャ�
 
 - 通知：[User Notifications](https://developer.apple.com/documentation/usernotifications)
 
-## BLE 製品コードのサンプル解説
-
-各 `Class` の詳細は `Sesame SDK Class` を参照してください。
-
-- 詳細を見る：[Sesame SDK Class](../index.md)
-
 ## Bluetooth状態マシン
 
 ![State Machine](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/p08_statemechine.png)
 
 <!-- ![BleConnect](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/sesame_state_circle.png) -->
-
-## iOS クラス図
-
-![Class_diagram](https://raw.githubusercontent.com/CANDY-HOUSE/.github/main/profile/uml/uml_output/class_diagram.png)

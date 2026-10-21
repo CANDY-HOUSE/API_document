@@ -1,7 +1,7 @@
 ---
-title: 110_card_notify
+title: 110. Card_notify
 ---
-# 110 Card Notify （推送卡片）
+# 110. Card Notify （推送卡片）
 
 ssm_touch 主動推送卡片資料給手機。
 

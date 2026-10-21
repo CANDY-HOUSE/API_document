@@ -1,7 +1,7 @@
 ---
-title: 202_battery
+title: 202. Battery
 ---
-# 202 Battery Voltage 电池电压
+# 202. Battery Voltage 电池电压
 
 battery_data 电池电压数据。
 

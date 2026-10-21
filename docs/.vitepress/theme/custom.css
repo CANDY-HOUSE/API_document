@@ -29,3 +29,37 @@
   color: var(--vp-c-brand-1);
   font-weight: 500;
 }
+
+/* 大屏幕（≥1440px）：布局铺满窗口宽度，右侧目录贴近右边，中间正文尽量宽；
+   正文最宽 1280px，避免超宽屏上每行过长。1440px 以下保持 VitePress 默认布局。 */
+@media (min-width: 1440px) {
+  :root {
+    --vp-layout-max-width: 100vw;
+  }
+
+  /* VitePress 自带的宽度规则带组件作用域，优先级更高，这里需要 !important */
+  .VPDoc.has-aside .container {
+    max-width: none !important;
+  }
+
+  .VPDoc.has-aside .content {
+    max-width: none !important;
+  }
+
+  .VPDoc.has-aside .content-container {
+    max-width: 1280px !important;
+  }
+}
+
+/* 侧边栏里的标记（如「即将废弃」）与文字垂直居中 */
+.VPSidebarItem .text:has(> .VPBadge) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.VPSidebarItem .text > .VPBadge {
+  margin-left: 0;
+  line-height: 18px;
+  transform: none;
+}

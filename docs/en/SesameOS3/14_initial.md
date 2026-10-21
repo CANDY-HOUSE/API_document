@@ -1,7 +1,7 @@
 ---
-title: 14_initial
+title: 14. Initial
 ---
-# 14 Initial (Initialization)
+# 14. Initial (Initialization)
 
 After the mobile phone establishes a connection with Sesame5 and opens notify, Sesame5 returns a 4Bytes random code.
 

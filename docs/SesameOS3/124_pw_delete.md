@@ -1,7 +1,7 @@
 ---
-title: 124_pw_delete
+title: 124. Pw_delete
 ---
-# 124 Password Delete(密码删除)
+# 124. Password Delete(密码删除)
 
 手機端傳送要刪除的密碼 ID，ssm_touch 回傳成功訊息，刪除指定密碼。
 

@@ -1,7 +1,7 @@
 ---
-title: 4_history
+title: 4. History
 ---
-# 4 History
+# 4. History
 
 When a smartphone sends a history request command to Sesame5, the device returns **the oldest history record stored in Flash**.  
 If you need to delete that record, you must send a **delete command** after reading it.  

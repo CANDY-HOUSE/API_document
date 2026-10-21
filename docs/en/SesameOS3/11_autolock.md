@@ -1,7 +1,7 @@
 ---
-title: 11_autolock
+title: 11. Autolock
 ---
-# 11 Autolock (Automatic Lock)
+# 11. Autolock (Automatic Lock)
 
 The phone actively sends the update time (item_code:11) command and autolock seconds. SSM5 starts the autolock timer and returns success.
 

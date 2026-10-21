@@ -1,7 +1,7 @@
 ---
-title: 123_pw_change
+title: 123. Pw_change
 ---
-# 123 Password Change(密码更新)
+# 123. Password Change(密码更新)
 
 1. ssm_touch 加入新密碼，主動推送新密碼 ID 及名字給手機。
 2. 手機將 id 及新名稱傳給 ssm_touch，ssm_touch 回傳命令接收成功後修改密碼名稱，並主動推送新密碼 ID 及名字給手機(名字超過 20Bytes，只取前 20Bytes)。

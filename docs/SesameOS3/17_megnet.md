@@ -1,7 +1,7 @@
 ---
-title: 17_megnet
+title: 17. Magnet
 ---
-# 17 Megnet (角度校正)
+# 17. Megnet (角度校正)
 
 手機發送 sesame5 角度校正指令，校正完成後回覆成功，sesame5 主動發送 mechstatus(機械狀態)
 

@@ -1,7 +1,7 @@
 ---
-title: 8_time
+title: 8. Time
 ---
-# 8 更新時間
+# 8. 更新時間
 
 携帯電話が更新時間（item_code:0x08）の命令と携帯電話の timestamp を主動的に送信し、ssm5 が timestamp を更新し、更新が成功したことを返信します。
 
