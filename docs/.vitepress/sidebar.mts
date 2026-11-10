@@ -7,7 +7,7 @@ const DOCS = path.resolve(__dirname, "..");
 const API_DIR = "SesameOS3";
 
 const SDK_PAGES = ["hello", "ios", "android", "esp"];
-const CLOUD_PAGES = ["restful", "webapi", "webhook"];
+const CLOUD_PAGES = ["restful", "webapi", "webhook", "mcp"];
 const BLE_PAGES = ["bluetooth", "BLEcompatibility"];
 const HIDDEN_PAGES: string[] = [];
 
