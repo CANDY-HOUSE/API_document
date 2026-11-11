@@ -1,15 +1,15 @@
 ---
-title: Web API
+title: RESTful API
 ---
-# Web API
+# RESTful API
 
 ## API Introduction
 
-To use Sesame RESTful webAPI, you need to acquire an `API KEY`. The API can do the following:
+To use Sesame RESTful API, you need to acquire an `API KEY`. The API can do the following:
 
 - Get the status of Sesame
 - Get the history of Sesame
-- Unlock with Web API
+- Unlock with RESTful API
 
 ## The method to get `API KEY` is as follows: [SESAME Biz [Developer page]](https://biz.candyhouse.co/biz/developer)
 
@@ -97,8 +97,8 @@ type :
    13 bleAdvParameterUpdated. The Interval and TXPower settings of the Sesame device's BLE advertising were changed.
    14 wm2Lock.                The Sesame device was locked via the WiFi module.
    15 wm2Unlock.              The Sesame device was unlocked via the WiFi module.
-   16 webLock.                The Sesame device was locked via the Web API.
-   17 webUnlock.              The Sesame device was unlocked via the Web API.
+   16 webLock.                The Sesame device was locked via the RESTful API.
+   17 webUnlock.              The Sesame device was unlocked via the RESTful API.
 
 
 Note 1: Currently there are only the following 3 states.
@@ -116,7 +116,7 @@ Note 1: Currently there are only the following 3 states.
     unlocked  0
 ```
 
-## 3、Unlock with Web API
+## 3、Unlock with RESTful API
 
 Use Sesame's key and timestamp to sign with AES-CMAC. Request to unlock Sesame connected to WiFi module 2.
 
