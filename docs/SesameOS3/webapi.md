@@ -1,15 +1,15 @@
 ---
-title: Web API
+title: RESTful API
 ---
-# Web API
+# RESTful API
 
 ## API 介紹
 
-爲了使用 Sesame RESTful webAPI，你需要獲取`API KEY`，API 能做的事情包括：
+爲了使用 Sesame RESTful API，你需要獲取`API KEY`，API 能做的事情包括：
 
 - 獲取 Sesame 的狀態
 - 獲取 Sesame 的歷史
-- Web API 解鎖
+- RESTful API 解鎖
 
 ## 獲取`API KEY`的方式如下：[SESAME Biz [開發者頁]](https://biz.candyhouse.co/biz/developer)
 
@@ -97,8 +97,8 @@ type :
    13 bleAdvParameterUpdated. Sesame 设备发出的 BLE 广播的 Interval 和 TXPower 设置已变更。
    14 wm2Lock.                经由 WiFi 模块上锁了 Sesame 设备。
    15 wm2Unlock.              经由 WiFi 模块开锁了 Sesame 设备。
-   16 webLock.                经由 Web API 上锁了 Sesame 设备。
-   17 webUnlock.              经由 Web API 开锁了 Sesame 设备。
+   16 webLock.                经由 RESTful API 上锁了 Sesame 设备。
+   17 webUnlock.              经由 RESTful API 开锁了 Sesame 设备。
 
 
 补充 1：目前状态只有以下 3 种。
@@ -116,7 +116,7 @@ type :
     开锁　0
 ```
 
-## 3、通过 Web API 开锁
+## 3、通过 RESTful API 开锁
 
 用 Sesame 的密钥和时间戳，AES-CMAC 签名。向与 WiFi 模块 2 相连的 Sesame 请求开锁。
 

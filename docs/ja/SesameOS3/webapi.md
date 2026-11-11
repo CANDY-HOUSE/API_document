@@ -1,15 +1,15 @@
 ---
-title: Web API
+title: RESTful API
 ---
-# Web API
+# RESTful API
 
 ## API 介紹
 
-Sesame RESTful webAPI を利用するためには、`API KEY`が必要です。API を使用して以下のことができます：
+Sesame RESTful API を利用するためには、`API KEY`が必要です。API を使用して以下のことができます：
 
 - Sesame のステータスを取得
 - Sesame の履歴を取得
-- Web API で解錠
+- RESTful API で解錠
 
 ## `API KEY`の取得方法はこちら：[SESAME Biz [開発者向けページ]](https://biz.candyhouse.co/biz/developer)
 
@@ -94,8 +94,8 @@ type :
    13 bleAdvParameterUpdated. セサミデバイスが発信しているBLEアドバタイシング の Interval と TXPower の設定が変更されました。
    14 wm2Lock.                Wifiモジュールを経由してセサミデバイスを施錠しました。
    15 wm2Unlock.              Wifiモジュールを経由してセサミデバイスを解錠しました。
-   16 webLock.                Web APIを経由してセサミデバイスを施錠しました。
-   17 webUnlock.              Web APIを経由してセサミデバイスを解錠しました。
+   16 webLock.                RESTful API を経由してセサミデバイスを施錠しました。
+   17 webUnlock.              RESTful API を経由してセサミデバイスを解錠しました。
 
 
 補足１：現時点では状態は以下の３つのみとなっています。
@@ -113,7 +113,7 @@ type :
     解錠　0
 ```
 
-## 3、Web API で開錠
+## 3、RESTful API で開錠
 
 Sesame の秘密鍵とタイムスタンプを使用し、AES-CMAC で署名。WiFi モジュール 2 に接続されている Sesame に対して開錠をリクエスト。
 

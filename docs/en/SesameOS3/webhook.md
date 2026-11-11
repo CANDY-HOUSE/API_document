@@ -85,7 +85,7 @@ Return **HTTP 200 within 5 seconds** of receiving a request. Any status other th
 - **No retries.** Failed notifications are discarded. Put time-consuming work in a queue and return 200 immediately.
 - **One operation produces multiple notifications.** While locking or unlocking, a notification is sent every time `position` changes. If you only care about the lock state, compare against the previous `CHSesame2Status`.
 - **After you rotate the API Key, signatures use the new key.**
-- **Keep the API Key safe (for example, in an environment variable on the receiving server).** The same key is used for [Web API](./webapi.md) authentication, so a leaked key could be used to operate your devices. If it leaks, rotate it on the developer page immediately.
+- **Keep the API Key safe (for example, in an environment variable on the receiving server).** The same key is used for [RESTful API](./webapi.md) authentication, so a leaked key could be used to operate your devices. If it leaks, rotate it on the developer page immediately.
 
 ## Implementation Example
 

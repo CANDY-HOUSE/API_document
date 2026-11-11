@@ -7,7 +7,7 @@ const DOCS = path.resolve(__dirname, "..");
 const API_DIR = "SesameOS3";
 
 const SDK_PAGES = ["hello", "ios", "android", "esp"];
-const CLOUD_PAGES = ["webapi", "bizapi", "webhook", "mcp", "restful"];
+const CLOUD_PAGES = ["bizapi", "webapi", "webhook", "mcp", "restful"];
 // WebSocket API 的详细页（来自 biz.candyhouse.co，文件名 bizapi*）：侧边栏只列「WebSocket API」概览，详细页从概览进入
 const BIZ_API_PAGES = ["bizapi_devices", "bizapi_control", "bizapi_members"];
 const BLE_PAGES = ["bluetooth", "BLEcompatibility"];

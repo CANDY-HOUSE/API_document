@@ -10,7 +10,12 @@ export default withMermaid(
     base: BASE,
     title: "CANDY HOUSE API Document",
     cleanUrls: true,
-    head: [["script", {}, localeRedirectScript]],
+    head: [
+      // 浏览器标签图标：使用公司 Logo（docs/public/logo.png），head 中的路径需要带上 base
+      ["link", { rel: "icon", type: "image/png", href: `${BASE}logo.png` }],
+      ["link", { rel: "apple-touch-icon", href: `${BASE}logo.png` }],
+      ["script", {}, localeRedirectScript],
+    ],
     markdown: { config: (md) => md.use(plantumlPlugin) },
     // mermaid 依赖的 fastdom 等是 CommonJS 包，开发模式下需要整体预构建
     vite: {
