@@ -3,8 +3,8 @@ title: RESTful API
 ---
 # RESTful API
 
-::: info 廃止予定
-RESTful API は近日中に廃止される予定です。代替として [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) を参照してください。
+::: info 廃止済み
+RESTful API は廃止されました。代替として [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) を参照してください。インターフェースの説明は [WebSocket API](./bizapi.md) を参照してください。
 :::
 
 ## API の紹介

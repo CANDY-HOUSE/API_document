@@ -3,8 +3,8 @@ title: RESTful API
 ---
 # RESTful API
 
-::: info Deprecated soon
-The RESTful API will be deprecated soon. Refer to [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) as an alternative.
+::: info Deprecated
+The RESTful API is deprecated. Refer to [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) as an alternative. See [WebSocket API](./bizapi.md) for the interface.
 :::
 
 ## API Introduction

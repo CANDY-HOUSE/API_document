@@ -7,7 +7,9 @@ const DOCS = path.resolve(__dirname, "..");
 const API_DIR = "SesameOS3";
 
 const SDK_PAGES = ["hello", "ios", "android", "esp"];
-const CLOUD_PAGES = ["restful", "webapi", "webhook", "mcp"];
+const CLOUD_PAGES = ["webapi", "bizapi", "webhook", "mcp", "restful"];
+// WebSocket API 的详细页（来自 biz.candyhouse.co，文件名 bizapi*）：侧边栏只列「WebSocket API」概览，详细页从概览进入
+const BIZ_API_PAGES = ["bizapi_devices", "bizapi_control", "bizapi_members"];
 const BLE_PAGES = ["bluetooth", "BLEcompatibility"];
 const HIDDEN_PAGES: string[] = [];
 
@@ -32,9 +34,9 @@ const OS2_PAGES: (string | [string, string[]])[] = [
 const isCommand = (stem: string) => /^\d+_/.test(stem);
 
 // 只有中文版的页面，在英文 / 日文侧边栏里显示的名称
-// 即将废弃的页面：侧边栏名称后加灰色标记（VitePress 自带的 info Badge 样式，不太醒目）
+// 已废弃的页面：侧边栏名称后加灰色标记（VitePress 自带的 info Badge 样式，不太醒目）
 const DEPRECATED: Record<string, Record<"zh" | "en" | "ja", string>> = {
-  restful: { zh: "即将废弃", en: "Deprecated", ja: "廃止予定" },
+  restful: { zh: "已废弃", en: "Deprecated", ja: "廃止済み" },
 };
 
 const LABEL_OVERRIDES: Record<string, { en: string; ja: string }> = {
@@ -95,7 +97,7 @@ export function buildSidebar(locale: "zh" | "en" | "ja") {
   const pick = (names: string[]) => names.filter((n) => stems.includes(n)).map(item);
 
   const commands = stems.filter(isCommand).sort((a, b) => parseInt(a) - parseInt(b));
-  const listed = new Set([...SDK_PAGES, ...CLOUD_PAGES, ...BLE_PAGES, ...commands, ...HIDDEN_PAGES]);
+  const listed = new Set([...SDK_PAGES, ...CLOUD_PAGES, ...BIZ_API_PAGES, ...BLE_PAGES, ...commands, ...HIDDEN_PAGES]);
   const others = stems.filter((s) => !listed.has(s)).sort();
   const labels = SECTION_LABELS[locale];
 
