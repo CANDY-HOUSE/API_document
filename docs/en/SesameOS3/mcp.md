@@ -1,4 +1,4 @@
-# MCP Integration Guide
+# MCP
 
 ::: warning In design, not yet available
 This page is a design draft for reviewing the public interface. It may change, and the endpoint is not yet available. The following items are not finalized and appear as placeholders:

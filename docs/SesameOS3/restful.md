@@ -3,8 +3,8 @@ title: RESTful API
 ---
 # RESTful API
 
-::: info 即将废弃
-RESTful API 即将废弃，可参考 [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) 替代。
+::: info 已废弃
+RESTful API 已废弃，可参考 [https://github.com/CANDY-HOUSE/biz.candyhouse.co](https://github.com/CANDY-HOUSE/biz.candyhouse.co) 替代。接口说明见 [WebSocket API](./bizapi.md)。
 :::
 
 ## API 介紹
