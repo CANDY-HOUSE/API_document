@@ -1,304 +1,230 @@
 # MCP
 
-::: warning In design, not yet available
-This page is a design draft for reviewing the public interface. It may change, and the endpoint is not yet available. The following items are not finalized and appear as placeholders:
-
-| Placeholder | Meaning |
-| --- | --- |
-| `<MCP_ENDPOINT>` | MCP endpoint URL; also the OAuth resource identifier (`resource`) |
-| `<SCOPE_READ>` | Scope name for read-only access |
-| `<SCOPE_CONTROL>` | Scope name for control access |
-:::
-
 ## Overview
 
-With [MCP (Model Context Protocol)](https://modelcontextprotocol.io/), you can use your Sesame devices from AI apps that support remote MCP connectors, such as Claude and ChatGPT:
+With [MCP (Model Context Protocol)](https://modelcontextprotocol.io/), you can use your own SESAME devices from AI apps that support remote MCP servers, such as Claude and Codex:
 
 - View your device list and device status;
-- Lock and unlock;
-- Create, list, and cancel scheduled lock / unlock actions.
+- Lock, unlock, and update firmware;
+- Create, view, and cancel scheduled lock / unlock / firmware updates;
+- Look up product usage and the after-sales policy.
 
-When connecting, you sign in on the CANDY HOUSE sign-in page and approve access. The AI app can only act as you, within the permissions you granted. The AI app never receives your password.
+You need a SESAME Biz API key to connect. After connecting, sign in to your SESAME account in the conversation with a verification code sent to your email, and the AI can then operate the devices in your account on your behalf. The AI app never receives your password.
 
-## Connection Details
+## Connection details
 
-| Item | Details |
+| Item | Value |
 | --- | --- |
-| Endpoint | `<MCP_ENDPOINT>` |
+| Endpoint | `https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp` |
 | Transport | Streamable HTTP, `POST` only |
-| Protocol version | `2026-07-28`; 2025 clients (`2025-06-18`, `2025-11-25`) are also supported |
-| State | Stateless: no sessions (`Mcp-Session-Id`) are issued; each request is handled independently |
-| Authorization | OAuth 2.1; every request must carry `Authorization: Bearer <access token>` |
-| Response | `application/json`, or `text/event-stream` containing a single result; clients must support both |
+| Protocol version | `2026-07-28`; also compatible with `2025-11-25`, `2025-06-18`, `2025-03-26` |
+| State | Stateless: no session is issued (`Mcp-Session-Id`); each request is handled independently |
+| Response | `application/json`, or `text/event-stream` containing a single result |
 
 ### Request headers
 
-| Header | Requirement |
-| --- | --- |
-| `Authorization` | `Bearer <access token>`, required on every request. Never put the token in the URL query string |
-| `Content-Type` | `application/json` |
-| `Accept` | Must list both `application/json` and `text/event-stream` |
-| `MCP-Protocol-Version` | Protocol version, e.g. `2026-07-28`. Must match `io.modelcontextprotocol/protocolVersion` in the request body's `params._meta` |
-| `Mcp-Method` | Must match the body's `method` (required in `2026-07-28`) |
-| `Mcp-Name` | Must match `params.name` (`tools/call`) or `params.uri` (`resources/read`) (required for these two requests in `2026-07-28`) |
+| Header | Required | Description |
+| --- | --- | --- |
+| `x-api-key` | Yes | Your SESAME Biz API key. Get it from [SESAME Biz [Developer page]](https://biz.candyhouse.co/biz/developer) |
+| `x-mcp-client` | No | A name that separates sign-in states: 1–32 lowercase letters, digits, or `-`, such as `claude-code` or `codex`. Without this header it is `default`; if present but empty or invalid, the request returns `400` |
 
-If a header does not match the request body, or a required header is missing, the server returns HTTP `400` with JSON-RPC error `-32020`.
+### API key and `x-mcp-client`
 
-### Supported methods
+- Sign-in state is stored per "Biz account that owns the API key + `x-mcp-client`". It persists across conversations until `auth_logout` is called.
+- Members of the same Biz account share one API key. **Each member must set a different `x-mcp-client`**; otherwise they share one sign-in state and end up using a SESAME account someone else signed in with.
+- `x-mcp-client` is set by the client itself and is **not a permission boundary**: anyone who has the same key and knows another member's `x-mcp-client` can use that member's sign-in state. Only give the API key to members you trust.
+- After you change your API key, the old key can no longer call tools.
 
-| Method | Description |
-| --- | --- |
-| `server/discover` | Get the server's supported protocol versions, capabilities, and identity (`2026-07-28`) |
-| `tools/list` | List tools with their input and output schemas |
-| `tools/call` | Call a tool |
-| `resources/list` / `resources/read` | Read the CANDY HOUSE after-sales and purchase policy (`policy://candyhouse/support-policy`, Markdown) |
-| `initialize` / `notifications/initialized` | Handshake for 2025 clients only. The notification returns `202` with no body |
+## Connecting from an AI app
 
-- The tool list is static. The server declares `listChanged: false` and does not provide `subscriptions/listen`.
-- `2026-07-28` requests do not go through `initialize`; each request carries the protocol version and client capabilities in `params._meta`.
-- `GET` and `DELETE` return `405`. `Mcp-Session-Id` and `Last-Event-ID` headers are ignored.
+After connecting, the AI app reads the tool list and the server's usage instructions (`instructions`) and calls tools according to those rules.
 
-### Request example
+### claude.ai (custom connector)
 
-Calling `device_status` with `2026-07-28`:
+1. In claude.ai's connector settings, choose "Add custom connector".
+2. Enter the endpoint as the URL, and add an `x-api-key` request header with your API key.
+3. Once added, the connector is also available in the Claude mobile app and Claude Code.
 
-```http
-POST <MCP_ENDPOINT>
-Authorization: Bearer <ACCESS_TOKEN>
-Content-Type: application/json
-Accept: application/json, text/event-stream
-MCP-Protocol-Version: 2026-07-28
-Mcp-Method: tools/call
-Mcp-Name: device_status
+::: warning x-mcp-client
+Adding `x-mcp-client` to a claude.ai custom connector requires review by claude.ai. Without it, the value is `default`: every connection under the same Biz account that has no `x-mcp-client` shares one sign-in state. If several people share a key, have the other members set their own `x-mcp-client` in clients such as Claude Code or Codex.
+:::
 
+### Claude Code
+
+Add it from the command line:
+
+```bash
+claude mcp add --transport http candyhouse \
+  https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp \
+  --header "x-api-key: <YOUR_API_KEY>" \
+  --header "x-mcp-client: claude-code"
+```
+
+Or configure it in the project's `.mcp.json`. `headers` supports `${VAR}` environment variable references, so the key stays out of the repository:
+
+```json
 {
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "device_status",
-    "arguments": { "deviceId": "<DEVICE_ID>" },
-    "_meta": {
-      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-      "io.modelcontextprotocol/clientInfo": { "name": "ExampleClient", "version": "1.0.0" },
-      "io.modelcontextprotocol/clientCapabilities": {}
+  "mcpServers": {
+    "candyhouse": {
+      "type": "http",
+      "url": "https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp",
+      "headers": {
+        "x-api-key": "${CANDYHOUSE_API_KEY}",
+        "x-mcp-client": "claude-code"
+      }
     }
   }
 }
 ```
 
-## Connecting from an AI App
+See the [Claude Code MCP documentation](https://code.claude.com/docs/en/mcp) for details.
 
-The general steps are below. App-specific instructions will be added at launch.
+### Codex
 
-1. In the AI app, add a custom MCP connector with the URL `<MCP_ENDPOINT>`.
-2. The AI app opens the CANDY HOUSE sign-in page. Sign in with the account you use in the Sesame app.
-3. Review the requested access and approve. The first connection usually grants read-only access (viewing devices and schedules).
-4. The first time you ask the AI to lock / unlock or create a schedule, the AI app asks you to grant control access as well.
-5. To revoke access, remove or disconnect the connector in the AI app.
+1. Open "Plugins", switch to the "MCP" tab, and click "Add".
+2. Enter the endpoint as the URL.
+3. Add the headers `x-api-key` (your API key) and `x-mcp-client` (such as `codex`).
 
-## Authorization
+See the [Codex plugins documentation](https://www.codex-docs.com/docs/plugins) for details.
 
-This section is for developers building their own MCP clients. Major AI apps already implement this flow.
+### Other clients
 
-### Discovering the authorization server
+Any MCP client that supports Streamable HTTP and custom request headers can connect. Clients that cannot set custom headers (such as ChatGPT connectors) are not supported at this time.
 
-1. A request to `<MCP_ENDPOINT>` without a token returns `401`. The `WWW-Authenticate` header gives the URL of the protected resource metadata (RFC 9728) and the required scope:
+## Signing in
 
-   ```http
-   HTTP/1.1 401 Unauthorized
-   WWW-Authenticate: Bearer resource_metadata="<protected resource metadata URL>", scope="<SCOPE_READ>"
-   ```
+1. Ask the AI to view or operate a device. If you are not signed in, the AI asks for the email address you use in the SESAME app.
+2. The AI calls `auth_start`, and a verification code is sent to that address.
+3. Tell the AI the code; it calls `auth_verify` to complete sign-in.
 
-2. Fetch that metadata, take the authorization server from `authorization_servers`, then fetch the authorization server metadata via RFC 8414 / OpenID Connect Discovery.
-
-### Client registration
-
-- **Client ID Metadata Documents (CIMD)** are the primary method: use the HTTPS URL of a metadata document you host as the `client_id`. The document must include at least `client_id`, `client_name`, and `redirect_uris`. The authorization server metadata has `client_id_metadata_document_supported` set to `true`.
-- Whether other registration methods are offered will be announced at launch.
-
-### Obtaining a token
-
-- Use the authorization code flow with PKCE (`S256`).
-- Include `resource=<MCP_ENDPOINT>` in both the authorization request and the token request (RFC 8707). Issued tokens are valid only for this endpoint; tokens with a mismatched `aud` are rejected.
-- If the authorization response includes an `iss` parameter, compare it with the authorization server's `issuer` before exchanging the code for a token (RFC 9207).
-
-### Scopes
-
-| Scope | Allows | Tools |
-| --- | --- | --- |
-| `<SCOPE_READ>` | Viewing devices and schedules | `device_list`, `device_status`, `schedule_list` |
-| `<SCOPE_CONTROL>` | Changing device state, including scheduled actions | `lock`, `unlock`, `schedule_create`, `schedule_cancel` |
-
-Neither scope includes the other. If you only need to view, request only `<SCOPE_READ>`.
-
-### Insufficient scope and step-up authorization
-
-Calling a control tool with a token that has only `<SCOPE_READ>` returns `403`:
-
-```http
-HTTP/1.1 403 Forbidden
-WWW-Authenticate: Bearer error="insufficient_scope", scope="<SCOPE_CONTROL>", resource_metadata="<protected resource metadata URL>"
-```
-
-The client should combine its existing scopes with the scopes in `scope`, re-authorize, and retry the original request with the new token.
-
-### Using the token
-
-- Send `Authorization: Bearer <access token>` on every request.
-- An invalid, expired, or wrong-`aud` token returns `401`; refresh it or re-authorize.
-- The token is for `<MCP_ENDPOINT>` only. Do not forward it to other services; this server also rejects tokens issued for other services.
+- The verification code expires, and the number of incorrect attempts is limited. After it expires or the limit is reached, call `auth_start` again. After too many failures in a short time, the account is temporarily locked for up to about an hour.
+- To switch SESAME accounts, have the AI call `auth_logout` first.
 
 ## Tools
 
 - `deviceId` must come from `device_list`, and `scheduleId` from `schedule_list`. Do not construct them yourself.
-- You can only act on devices and schedules in your own account. Someone else's ID is treated as "not found", and nothing is executed.
-- `tools/list` always lists all 7 tools; scopes are checked when a tool is called.
+- You can only operate devices and schedules in your own account; devices you hold a guest key for are not included. Passing someone else's ID is treated as "not found", and nothing is executed.
 
-### Devices
+### Sign-in
 
-| Tool | Parameters | Required scope | Annotations | Description |
-| --- | --- | --- | --- | --- |
-| `device_list` | None | `<SCOPE_READ>` | `readOnlyHint` | Device list; devices you hold only a guest key for are excluded |
-| `device_status` | `deviceId` | `<SCOPE_READ>` | `readOnlyHint` | Device status: online, lock state, battery, firmware version |
-| `lock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`, `idempotentHint`, `openWorldHint` | Lock; lock devices only |
-| `unlock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`, `idempotentHint`, `openWorldHint` | Unlock; lock devices only |
+| Tool | Parameters | Description |
+| --- | --- | --- |
+| `auth_start` | `email` | Send a verification code to the email address |
+| `auth_verify` | `code` | Check the code and complete sign-in |
+| `auth_logout` | None | Sign out and clear the sign-in state |
 
-- A successful `lock` / `unlock` only means the command was accepted and sent; it does not guarantee the device has reached the target state. To confirm, call `device_status`, or use [Webhook](./webhook.md) to receive state change notifications.
-- Sending the same action to the same device again within a short time may return `ACTION_IN_PROGRESS`.
+### Devices (sign-in required)
 
-### Scheduled actions
+| Tool | Parameters | Description |
+| --- | --- | --- |
+| `device_list` | None | Device list |
+| `device_status` | `deviceId` | Latest known device status: lock state, online, battery, firmware version, etc. |
+| `lock` | `deviceId` | Lock |
+| `unlock` | `deviceId` | Unlock |
+| `upgrade_firmware` | `deviceId` | Start a firmware update |
 
-| Tool | Parameters | Required scope | Annotations | Description |
-| --- | --- | --- | --- | --- |
-| `schedule_create` | See below | `<SCOPE_CONTROL>` | `destructiveHint`, `openWorldHint` | Create a scheduled lock / unlock |
-| `schedule_list` | None | `<SCOPE_READ>` | `readOnlyHint` | List schedules with their latest run result |
-| `schedule_cancel` | `scheduleId` | `<SCOPE_CONTROL>` | `destructiveHint`, `idempotentHint` | Cancel a schedule |
+- `lock`, `unlock`, and `upgrade_firmware` return as soon as the command is accepted. They do not guarantee the device has moved, and no result is pushed afterwards. The status right after a command may still be the old one; check again after a few seconds.
+- Calling `upgrade_firmware` again on the same device within 30 seconds returns `ACTION_IN_PROGRESS`.
+
+### Schedules (sign-in required)
+
+| Tool | Parameters | Description |
+| --- | --- | --- |
+| `schedule_create` | See below | Create a schedule |
+| `schedule_list` | None | One-time schedules not yet fired, and active recurring schedules |
+| `schedule_cancel` | `scheduleId` | Cancel a schedule; a cancelled recurring schedule stops firing |
 
 `schedule_create` parameters:
 
 | Parameter | Type | Required when | Description |
 | --- | --- | --- | --- |
-| `action` | `lock` / `unlock` | Always | Action to run at the scheduled time |
-| `deviceId` | string | Always | Target device; must be a lock device |
-| `timezone` | string | Always | IANA time zone name, e.g. `Asia/Tokyo`, `America/New_York`. `atIso`, `hour`, and `minute` are interpreted in this time zone |
+| `action` | string | Always | `lock`, `unlock`, or `upgrade_firmware` |
+| `deviceId` | string | Always | Target device |
 | `timingType` | `delay` / `at` / `recurring` | Always | Once after a delay / once at a time / recurring |
-| `delaySeconds` | integer | `timingType` is `delay` | Seconds from now, 60 to 31536000 |
-| `atIso` | string | `timingType` is `at` | ISO 8601 local time without a time zone suffix, e.g. `2026-12-01T08:00:00`; must be in the future. Do not append `Z` or `+09:00` |
-| `pattern` | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` is `recurring` | Recurrence pattern |
-| `hour` | integer | `timingType` is `recurring` | 0 to 23 |
-| `minute` | integer | `timingType` is `recurring` | 0 to 59 |
-| `dayOfWeek` | integer | `pattern` is `weekly` | 1 to 7; 1 is Monday, 7 is Sunday |
-| `dayOfMonth` | integer | `pattern` is `monthly` | 1 to 31; months without that day are skipped |
+| `delaySeconds` | integer | `timingType` is `delay` | Seconds from now, 60–31536000 |
+| `atIso` | string | `timingType` is `at` | Local time without a time zone suffix, such as `2026-12-01T08:00:00`; must be in the future. Do not append `Z` or `+09:00` |
+| `pattern` | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` is `recurring` | Every day / weekdays / weekends / weekly / monthly |
+| `hour` | integer | `timingType` is `recurring` | 0–23 |
+| `minute` | integer | `timingType` is `recurring` | 0–59 |
+| `dayOfWeek` | integer | `pattern` is `weekly` | 1–7, 1 is Monday and 7 is Sunday |
+| `dayOfMonth` | integer | `pattern` is `monthly` | 1–31; skipped in months without that day |
+| `timezone` | string | Optional | IANA time zone name, such as `America/New_York`. `atIso`, `hour`, and `minute` are interpreted in this zone; if omitted, Japan time (`Asia/Tokyo`). An invalid name returns `PARAMETER_FAILED` |
 
-- At the scheduled time the server runs the action, after re-checking that the device still belongs to you.
-- Results are not pushed to you; check `lastFireStatus` with `schedule_list`.
+- Time zones with daylight saving time: if a recurring schedule's time does not exist on the day DST starts, that day is skipped; if it occurs twice on the day DST ends, it fires once. If a one-time schedule's time does not exist, it moves forward by the DST shift; if it occurs twice, the first one is used.
+- The server executes the action at the scheduled time and does not push the result. A fired one-time schedule disappears from `schedule_list`; call `device_status` to check the outcome.
 
-## Tool Result Format
+### Knowledge base and after-sales policy (no sign-in required)
 
-Tool results follow MCP's `CallToolResult`:
+| Tool | Parameters | Description |
+| --- | --- | --- |
+| `knowledge_search` | `query`; optional `product`, `topK` | Search help center articles and support replies; returns relevant snippets, not an answer |
+| `support_policy` | None | Full after-sales and purchase policy (warranty, repair fees, exchanges and returns, adapter prices, shipping, receipts, order cancellation, lockout compensation), plus rules for answering policy questions |
 
-| Field | Description |
-| --- | --- |
-| `resultType` | Always `complete` |
-| `content` | Text content. On success, the JSON serialization of `structuredContent`, for clients that do not read structured results |
-| `structuredContent` | Structured result. On success, conforms to the tool's `outputSchema` (available from `tools/list`); on failure, `{ "reason", "message" }` |
-| `isError` | `true` means a business failure (e.g. device not found, invalid argument). The AI can use `reason` and `message` to correct itself and retry |
+The after-sales policy is also available as a resource: `policy://candyhouse/support-policy` (Markdown), readable with `resources/list` and `resources/read`.
 
-Success example (`device_status`):
+## Tool result format
 
-```json
-{
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "{\"deviceId\":\"<DEVICE_ID>\", ...}" }],
-  "structuredContent": {
-    "deviceId": "<DEVICE_ID>",
-    "deviceName": "Front door",
-    "deviceModel": "sesame_5",
-    "online": true,
-    "lockState": "locked",
-    "batteryPercent": 82,
-    "currentFirmwareVersion": "<VERSION>",
-    "latestFirmwareVersion": "<VERSION>"
-  },
-  "isError": false
-}
-```
+- `content` has a single `text` item: the tool result as JSON text, with fields such as `ok`, `message`, and `data`. The result is meant for the AI to read; its field structure is not guaranteed to be stable, so do not depend on it in code.
+- On a business failure (not signed in, device not found, invalid parameters, etc.), `isError` is `true` and `data.reason` gives the reason. The AI can correct the call and retry.
 
-Failure example:
-
-```json
-{
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "Device not found. Call device_list to get a valid deviceId." }],
-  "structuredContent": {
-    "reason": "DEVICE_NOT_FOUND",
-    "message": "Device not found. Call device_list to get a valid deviceId."
-  },
-  "isError": true
-}
-```
-
-Main `structuredContent` fields on success:
-
-| Tool | Main fields |
-| --- | --- |
-| `device_list` | `devices[]`: `deviceId`, `deviceName`, `deviceModel` |
-| `device_status` | `deviceId`, `deviceName`, `deviceModel`, `online`, `lockState`, `batteryPercent`, `currentFirmwareVersion`, `latestFirmwareVersion` |
-| `lock` / `unlock` | `deviceId`, `deviceName`, `action`, `accepted` |
-| `schedule_create` | `scheduleId`, `nextFireAt` (ISO 8601 with offset), `timezone` |
-| `schedule_list` | `schedules[]`: `scheduleId`, `action`, `deviceName`, `timingType`, `timezone`, `state`, `nextFireAt`, `lastFiredAt`, `lastFireStatus`, `fireCount` |
-| `schedule_cancel` | `scheduleId`, `state` |
-
-`lockState` values: `locked` / `unlocked` / `moved`, the same as `CHSesame2Status` in [Webhook](./webhook.md).
-
-`state` values: `PENDING` (one-time schedule waiting to run), `ACTIVE` (recurring schedule in effect), `COMPLETED`, `FAILED` (one-time schedule has run, succeeded / failed), `CANCELLED`. `lastFireStatus` values: `success`, `failure`; empty if it has not run yet.
-
-`reason` values:
+Common `data.reason` values:
 
 | Value | Meaning |
 | --- | --- |
-| `INVALID_ARGUMENT` | Invalid argument, e.g. a missing required field, an invalid time zone name, or `atIso` in the past |
-| `DEVICE_NOT_FOUND` | Device not found, not yours, or not a lock device |
-| `ACTION_IN_PROGRESS` | The same action on the same device is already in progress |
-| `SCHEDULE_NOT_FOUND` | Schedule not found, or not yours |
-| `SCHEDULE_LIMIT_EXCEEDED` | You have reached the limit of active schedules |
-| `UPSTREAM_ERROR` | A downstream service call failed; retry later |
-| `INTERNAL_ERROR` | Other server error |
+| `NOT_AUTHENTICATED` | Not signed in, or the sign-in has expired |
+| `DEVICE_NOT_FOUND` | Device not found, or not yours |
+| `SCHEDULE_NOT_FOUND` | Schedule not found: already fired, cancelled, or not yours |
+| `PARAMETER_FAILED` | Invalid parameters, such as an invalid time zone name, an `atIso` in the past, or an `action` that cannot be scheduled |
+| `ACTION_IN_PROGRESS` | A firmware update on the same device is in progress |
 
-## Error Handling
+Failure example (`content[0].text`):
+
+```json
+{
+  "ok": false,
+  "resultType": "DEVICE_LIST",
+  "message": "You are not logged in or your session has expired. Please log in first.",
+  "data": { "action": "device_list", "reason": "NOT_AUTHENTICATED", "chatType": "user" }
+}
+```
+
+## Error handling
 
 ### HTTP status codes
 
-| Status | When | What to do |
-| --- | --- | --- |
-| `400` | Header does not match the body or a required header is missing (`-32020`); a required client capability is missing (`-32021`); unsupported protocol version (`-32022`, the response lists supported versions); the body is not a valid JSON-RPC message | Fix the request; for an unsupported version, use one of the listed versions |
-| `401` | No token, or the token is invalid, expired, or has a mismatched `aud` | Re-authorize or refresh the token as indicated by `WWW-Authenticate` |
-| `403` | Insufficient scope (`error="insufficient_scope"`); the `Origin` header is not allowed | Add scopes via [step-up authorization](#insufficient-scope-and-step-up-authorization) |
-| `404` | Method not found (JSON-RPC `-32601`) | Check `method` |
-| `405` | A method other than `POST`, such as `GET` or `DELETE` | Use `POST` only |
-| `429` | Too many requests (endpoint rate limit or per-account limit) | Retry later; if `Retry-After` is present, wait as indicated |
+| Status | Source | Situation | What to do |
+| --- | --- | --- | --- |
+| `400` | Server | `x-mcp-client` is empty or invalid (`INVALID_MCP_CLIENT`); batch request (`BATCH_NOT_SUPPORTED`); request violates the MCP protocol, such as headers not matching the body | Fix the request; send batch items one at a time |
+| `401` | Gateway | No `x-api-key` | Add the header |
+| `403` | Gateway | Invalid API key | Check the key |
+| `403` | Server | The API key has been replaced (`API_KEY_REJECTED`) | Use the new key |
+| `405` | Server | A method other than `POST` | Use `POST` only |
+| `429` | Server | Monthly quota used up (`QUOTA_EXCEEDED`); no `Retry-After` | Retrying will not help; wait for the monthly reset or upgrade your plan |
+| `429` | Gateway | Too many requests | Retry later |
+| `503` | Server | Quota check temporarily unavailable (`QUOTA_UNAVAILABLE`) | Retry later |
+
+Gateway errors are not in JSON-RPC format. When the server rejects a request before processing it as MCP, it returns a JSON-RPC error, with `error.data.reason` giving the reason:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "error": { "code": -32000, "message": "Monthly API usage quota exceeded", "data": { "reason": "QUOTA_EXCEEDED" } }
+}
+```
 
 ### JSON-RPC error codes
 
 | `error.code` | Meaning |
 | --- | --- |
-| `-32700` | The request body is not valid JSON |
-| `-32600` | Not a valid JSON-RPC request |
-| `-32601` | Method not found |
-| `-32602` | Invalid params, e.g. the tool or resource does not exist |
-| `-32603` | Internal server error |
-| `-32020` | `HeaderMismatch`: headers do not match the body, or a required header is missing |
-| `-32021` | `MissingRequiredClientCapability`: a required client capability is missing |
-| `-32022` | `UnsupportedProtocolVersion`: the protocol version is not supported |
+| `-32600` | Invalid request, including `INVALID_MCP_CLIENT` and `BATCH_NOT_SUPPORTED` |
+| `-32601` | Method or tool not found |
+| `-32602` | Tool arguments do not match the `inputSchema` |
+| `-32603` | Server error while running the tool |
+| `-32000` | Rejected by the server before processing; see `error.data.reason` |
 
-Business failures during tool execution do not use JSON-RPC errors; they return a tool result with `isError: true`. See [Tool Result Format](#tool-result-format).
+## Quota and limits
 
-## Usage Limits
-
-- You can only access the devices and schedules of the authorized account; devices you hold only a guest key for are excluded.
-- Request rates are limited (per endpoint and per account); the values will be published at launch. Exceeding them returns `429`.
-- The number of active schedules per account is limited; the value will be published at launch.
-- Schedule results are not pushed; check them with `schedule_list`.
-- Tool list change notifications are not provided.
-- The following are not available through this endpoint: firmware upgrade, help center search, and group operations.
+- Each `tools/call` counts toward the API key's usage quota, shared with the Web API; other requests such as `initialize` and `tools/list` do not count. See [SESAME Biz [Developer page]](https://biz.candyhouse.co/biz/developer) for quotas and plans.
+- The endpoint has an overall request rate limit; exceeding it returns `429`.
+- Not provided: group features, image search, tool list change notifications.

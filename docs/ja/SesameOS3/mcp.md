@@ -1,304 +1,238 @@
-# MCP
-
-::: warning 設計中・未公開
-このページは公開インターフェースをレビューするための設計稿です。内容は変更される可能性があり、現時点では接続できません。次の項目は未確定のため、プレースホルダーで表記しています。
-
-| プレースホルダー | 意味 |
-| --- | --- |
-| `<MCP_ENDPOINT>` | MCP エンドポイントの URL。OAuth のリソース識別子（`resource`）も兼ねます |
-| `<SCOPE_READ>` | 読み取り権限の scope 名 |
-| `<SCOPE_CONTROL>` | 操作権限の scope 名 |
-:::
+# MCP 接続ガイド
 
 ## 概要
 
-[MCP（Model Context Protocol）](https://modelcontextprotocol.io/)を使うと、Claude や ChatGPT などリモート MCP コネクタに対応した AI アプリから、ご自身の Sesame デバイスを利用できます。
+[MCP（Model Context Protocol）](https://modelcontextprotocol.io/)を使うと、Claude、Codex などリモート MCP サーバーに対応した AI アプリから、ご自身の SESAME デバイスを利用できます。
 
 - デバイス一覧とデバイスの状態の確認
-- 施錠・解錠
-- 定時の施錠・解錠の作成・確認・キャンセル
+- 施錠・解錠・ファームウェア更新
+- 施錠・解錠・ファームウェア更新のスケジュールの作成・確認・キャンセル
+- 製品の使い方とアフターサポートポリシーの確認
 
-接続時は CANDY HOUSE のログイン画面でログインし、アクセスを許可します。AI アプリはあなたとして、許可された権限の範囲内でのみ操作できます。AI アプリにパスワードが渡ることはありません。
+接続には SESAME Biz の API キーが必要です。接続後、会話の中で SESAME アカウントのメールアドレスに届く確認コードでログインすると、AI がお客様の代わりにアカウント内のデバイスを操作できます。AI アプリにパスワードが渡ることはありません。
 
 ## 接続情報
 
-| 項目 | 内容 |
-| --- | --- |
-| エンドポイント | `<MCP_ENDPOINT>` |
-| トランスポート | Streamable HTTP（`POST` のみ） |
-| プロトコルバージョン | `2026-07-28`。2025 年版のクライアント（`2025-06-18`、`2025-11-25`）にも対応 |
-| 状態 | ステートレス：セッション（`Mcp-Session-Id`）は発行せず、リクエストごとに独立して処理します |
-| 認可 | OAuth 2.1。すべてのリクエストに `Authorization: Bearer <access token>` が必要です |
-| レスポンス | `application/json`、または結果を 1 件だけ含む `text/event-stream`。クライアントは両方に対応する必要があります |
+| 項目                 | 内容                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| エンドポイント       | `https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp`                     |
+| トランスポート       | Streamable HTTP（`POST` のみ）                                                             |
+| プロトコルバージョン | `2026-07-28`。`2025-11-25`、`2025-06-18`、`2025-03-26` にも対応                            |
+| 状態                 | ステートレス：セッション（`Mcp-Session-Id`）は発行せず、リクエストごとに独立して処理します |
+| レスポンス           | `application/json`、または結果を 1 件だけ含む `text/event-stream`                          |
 
 ### リクエストヘッダー
 
-| ヘッダー | 要件 |
-| --- | --- |
-| `Authorization` | `Bearer <access token>`。すべてのリクエストで必須。URL のクエリパラメータには入れないでください |
-| `Content-Type` | `application/json` |
-| `Accept` | `application/json` と `text/event-stream` の両方を列挙 |
-| `MCP-Protocol-Version` | プロトコルバージョン（例：`2026-07-28`）。リクエストボディの `params._meta` 内の `io.modelcontextprotocol/protocolVersion` と一致させます |
-| `Mcp-Method` | ボディの `method` と一致（`2026-07-28` では必須） |
-| `Mcp-Name` | `params.name`（`tools/call`）または `params.uri`（`resources/read`）と一致（`2026-07-28` では、この 2 種類のリクエストで必須） |
+| ヘッダー       | 必須   | 説明                                                                                                                                                                           |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `x-api-key`    | はい   | SESAME Biz の API キー。取得方法は [SESAME Biz [開発者向けページ]](https://biz.candyhouse.co/biz/developer) を参照                                                             |
+| `x-mcp-client` | いいえ | ログイン状態を区別する名前。小文字の英字・数字・`-` の 1〜32 文字（例：`claude-code`、`codex`）。このヘッダーがない場合は `default`。空または不正な値の場合は `400` を返します |
 
-ヘッダーとボディが一致しない場合や必須ヘッダーがない場合は、HTTP `400` と JSON-RPC エラー `-32020` を返します。
+### API キーと `x-mcp-client`
 
-### 対応メソッド
+- ログイン状態は「API キーの所有者である Biz アカウント + `x-mcp-client`」ごとに保存され、`auth_logout` を呼ぶまで会話をまたいで保持されます。
+- 同じ Biz アカウントのメンバーは 1 つの API キーを共用します。**メンバーごとに異なる `x-mcp-client` を設定してください。** 同じ値のままだとログイン状態を共有し、他の人がログインした SESAME アカウントを使うことになります。
+- `x-mcp-client` はクライアント側が自由に設定する値で、**権限の境界ではありません**。同じキーを持ち、他のメンバーの `x-mcp-client` を知っていれば、そのメンバーのログイン状態を使えます。API キーは信頼できるメンバーにだけ渡してください。
+- API キーを変更すると、古いキーではツールを呼び出せなくなります。
 
-| メソッド | 説明 |
-| --- | --- |
-| `server/discover` | サーバーが対応するプロトコルバージョン・機能・識別情報を取得（`2026-07-28`） |
-| `tools/list` | ツールと、その入力・出力 schema の一覧 |
-| `tools/call` | ツールの呼び出し |
-| `resources/list` / `resources/read` | CANDY HOUSE のアフターサポート・ご購入に関するご案内（`policy://candyhouse/support-policy`、Markdown）の取得 |
-| `initialize` / `notifications/initialized` | 2025 年版クライアントのハンドシェイク専用。通知には `202`（ボディなし）を返します |
+## AI アプリからの接続
 
-- ツール一覧は固定です。サーバーは `listChanged: false` を宣言し、`subscriptions/listen` は提供しません。
-- `2026-07-28` のリクエストは `initialize` を経由せず、各リクエストの `params._meta` にプロトコルバージョンとクライアント機能を含めます。
-- `GET` と `DELETE` には `405` を返します。`Mcp-Session-Id` と `Last-Event-ID` ヘッダーは無視します。
+接続すると、AI アプリはツール一覧とサーバーの利用ルール（`instructions`）を読み込み、そのルールに従ってツールを呼び出します。
 
-### リクエスト例
+### claude.ai（カスタムコネクタ）
 
-`2026-07-28` で `device_status` を呼び出す例：
+1. claude.ai のコネクタ設定で「カスタムコネクタを追加」を選びます。
+2. URL にエンドポイントを入力し、リクエストヘッダー `x-api-key` に API キーを追加します。
+3. 追加すると、Claude のモバイルアプリと Claude Code でも同じコネクタが使えます。
 
-```http
-POST <MCP_ENDPOINT>
-Authorization: Bearer <ACCESS_TOKEN>
-Content-Type: application/json
-Accept: application/json, text/event-stream
-MCP-Protocol-Version: 2026-07-28
-Mcp-Method: tools/call
-Mcp-Name: device_status
+::: warning x-mcp-client
+claude.ai のカスタムコネクタに `x-mcp-client` を追加するには claude.ai の審査が必要です。未設定の場合は `default` となり、同じ Biz アカウントで `x-mcp-client` を設定していない接続はすべて 1 つのログイン状態を共有します。複数人でキーを共用する場合は、他のメンバーには Claude Code や Codex などのクライアントでそれぞれの `x-mcp-client` を設定してもらってください。
+:::
 
+### Claude Code
+
+コマンドラインで追加します。
+
+```bash
+claude mcp add --transport http candyhouse \
+  https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp \
+  --header "x-api-key: <YOUR_API_KEY>" \
+  --header "x-mcp-client: claude-code"
+```
+
+またはプロジェクトの `.mcp.json` で設定します。`headers` では `${VAR}` で環境変数を参照できるので、キーをリポジトリに書かずに済みます。
+
+```json
 {
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "device_status",
-    "arguments": { "deviceId": "<DEVICE_ID>" },
-    "_meta": {
-      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-      "io.modelcontextprotocol/clientInfo": { "name": "ExampleClient", "version": "1.0.0" },
-      "io.modelcontextprotocol/clientCapabilities": {}
+  "mcpServers": {
+    "candyhouse": {
+      "type": "http",
+      "url": "https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp",
+      "headers": {
+        "x-api-key": "${CANDYHOUSE_API_KEY}",
+        "x-mcp-client": "claude-code"
+      }
     }
   }
 }
 ```
 
-## AI アプリからの接続
+詳しくは [Claude Code の MCP ドキュメント](https://code.claude.com/docs/en/mcp)を参照してください。
 
-一般的な手順は以下のとおりです。AI アプリごとの具体的な手順は公開時に追記します。
+### Codex
 
-1. AI アプリでカスタム MCP コネクタを追加し、URL に `<MCP_ENDPOINT>` を入力します。
-2. AI アプリが CANDY HOUSE のログイン画面を開きます。Sesame アプリで使っているアカウントでログインします。
-3. 要求されたアクセス内容を確認して許可します。初回の接続では通常、読み取り権限（デバイスとスケジュールの確認）だけが付与されます。
-4. 初めて AI に施錠・解錠やスケジュール作成を依頼したときに、AI アプリから操作権限の追加付与を求められます。
-5. アクセスを取り消すには、AI アプリでそのコネクタを削除または切断します。
+1. 「プラグイン」を開き、「MCP」タブに切り替えて「追加」をクリックします。
+2. URL にエンドポイントを入力します。
+3. ヘッダーに `x-api-key`（API キー）と `x-mcp-client`（例：`codex`）を追加します。
 
-## 認可
+詳しくは [Codex のプラグインドキュメント](https://www.codex-docs.com/docs/plugins)を参照してください。
 
-このセクションは、独自に MCP クライアントを開発する方向けです。主要な AI アプリには以下のフローが実装済みです。
+### その他のクライアント
 
-### 認可サーバーの検出
+Streamable HTTP に対応し、リクエストヘッダーを自由に設定できる MCP クライアントであれば接続できます。リクエストヘッダーを設定できないクライアント（ChatGPT のコネクタなど）には現在対応していません。
 
-1. トークンなしで `<MCP_ENDPOINT>` にアクセスすると `401` が返り、`WWW-Authenticate` ヘッダーで保護リソースメタデータ（RFC 9728）の URL と必要な scope が示されます。
+## ログイン
 
-   ```http
-   HTTP/1.1 401 Unauthorized
-   WWW-Authenticate: Bearer resource_metadata="<保護リソースメタデータの URL>", scope="<SCOPE_READ>"
-   ```
+1. AI にデバイスの確認や操作を頼みます。ログインしていない場合、AI が SESAME アプリで使っているメールアドレスを尋ねます。
+2. AI が `auth_start` を呼び出し、そのメールアドレスに確認コードが届きます。
+3. 確認コードを AI に伝えると、AI が `auth_verify` を呼び出してログインが完了します。
 
-2. そのメタデータを取得し、`authorization_servers` から認可サーバーを特定したうえで、RFC 8414 / OpenID Connect Discovery で認可サーバーのメタデータを取得します。
-
-### クライアント登録
-
-- **Client ID Metadata Document（CIMD）** を基本とします。ご自身でホストするメタデータ文書の HTTPS URL を `client_id` として使います。文書には少なくとも `client_id`、`client_name`、`redirect_uris` が必要です。認可サーバーのメタデータでは `client_id_metadata_document_supported` が `true` です。
-- その他の登録方式を提供するかどうかは、公開時にお知らせします。
-
-### トークンの取得
-
-- 認可コードフローと PKCE（`S256`）を使います。
-- 認可リクエストとトークンリクエストの両方に `resource=<MCP_ENDPOINT>` を含めます（RFC 8707）。発行されたトークンはこのエンドポイントでのみ有効で、`aud` が一致しないトークンは拒否されます。
-- 認可レスポンスに `iss` パラメータが含まれる場合は、認可サーバーの `issuer` と照合してから認可コードをトークンに交換します（RFC 9207）。
-
-### 権限（scope）
-
-| scope | 許可される操作 | 対応ツール |
-| --- | --- | --- |
-| `<SCOPE_READ>` | デバイスとスケジュールの確認 | `device_list`、`device_status`、`schedule_list` |
-| `<SCOPE_CONTROL>` | デバイスの状態変更（スケジュール実行を含む） | `lock`、`unlock`、`schedule_create`、`schedule_cancel` |
-
-2 つの scope は互いを含みません。確認だけが必要な場合は `<SCOPE_READ>` のみを要求してください。
-
-### 権限不足時の追加認可
-
-`<SCOPE_READ>` だけのトークンで操作系ツールを呼び出すと `403` が返ります。
-
-```http
-HTTP/1.1 403 Forbidden
-WWW-Authenticate: Bearer error="insufficient_scope", scope="<SCOPE_CONTROL>", resource_metadata="<保護リソースメタデータの URL>"
-```
-
-クライアントは既存の scope と `scope` に示された scope を合わせて再認可し、新しいトークンで元のリクエストを再送してください。
-
-### トークンの扱い
-
-- すべてのリクエストに `Authorization: Bearer <access token>` を付けます。
-- 無効・期限切れ・`aud` 不一致のトークンには `401` を返します。トークンを更新するか、再認可してください。
-- このトークンは `<MCP_ENDPOINT>` 専用です。他のサービスに転送しないでください。本サービスも、他のサービス向けに発行されたトークンは受け付けません。
+- 確認コードには有効期限があり、入力ミスの回数にも上限があります。期限切れや上限に達した場合は、`auth_start` からやり直してください。短時間に失敗が続くと、アカウントが一時的に（最長で約 1 時間）ロックされます。
+- SESAME アカウントを切り替えるときは、先に AI に `auth_logout` を呼び出してもらってください。
 
 ## ツール一覧
 
-- `deviceId` は `device_list` から、`scheduleId` は `schedule_list` から取得した値を使ってください。独自に組み立てないでください。
-- 操作できるのはご自身のアカウントのデバイスとスケジュールだけです。他人の ID を渡した場合は「見つからない」として扱い、何も実行しません。
-- `tools/list` は常に 7 つのツールをすべて返します。scope はツール呼び出し時に確認します。
+- `deviceId` は `device_list`、`scheduleId` は `schedule_list` から取得した値を使ってください。自分で組み立てないでください。
+- 操作できるのはご自身のアカウントのデバイスとスケジュールだけです。ゲストキーのデバイスは含まれません。他人の ID を渡した場合は「見つからない」として扱われ、何も実行されません。
 
-### デバイス
+### ログイン
 
-| ツール | パラメータ | 必要な scope | アノテーション | 説明 |
-| --- | --- | --- | --- | --- |
-| `device_list` | なし | `<SCOPE_READ>` | `readOnlyHint` | デバイス一覧。ゲストキーのみのデバイスは含みません |
-| `device_status` | `deviceId` | `<SCOPE_READ>` | `readOnlyHint` | デバイスの状態：オンラインかどうか、施錠状態、電池残量、ファームウェアバージョン |
-| `lock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint`、`openWorldHint` | 施錠。錠前タイプのデバイスのみ |
-| `unlock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint`、`openWorldHint` | 解錠。錠前タイプのデバイスのみ |
+| ツール        | パラメーター | 説明                             |
+| ------------- | ------------ | -------------------------------- |
+| `auth_start`  | `email`      | メールアドレスに確認コードを送信 |
+| `auth_verify` | `code`       | 確認コードを照合してログイン     |
+| `auth_logout` | なし         | ログアウトしてログイン状態を消去 |
 
-- `lock` / `unlock` の成功は、指令が受け付けられ送信されたことを意味するだけで、デバイスが目的の状態になったことは保証しません。確認が必要な場合は `device_status` を呼び出すか、[Webhook](./webhook.md) で状態変化の通知を受け取ってください。
-- 同じデバイスに同じ動作を短時間に再送すると、`ACTION_IN_PROGRESS` が返る場合があります。
+### デバイス（ログインが必要）
 
-### スケジュール
+| ツール             | パラメーター | 説明                                                                               |
+| ------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| `device_list`      | なし         | デバイス一覧                                                                       |
+| `device_status`    | `deviceId`   | デバイスの最新の状態：施錠状態、オンライン、電池残量、ファームウェアバージョンなど |
+| `lock`             | `deviceId`   | 施錠                                                                               |
+| `unlock`           | `deviceId`   | 解錠                                                                               |
+| `upgrade_firmware` | `deviceId`   | ファームウェア更新を開始                                                           |
 
-| ツール | パラメータ | 必要な scope | アノテーション | 説明 |
-| --- | --- | --- | --- | --- |
-| `schedule_create` | 下表参照 | `<SCOPE_CONTROL>` | `destructiveHint`、`openWorldHint` | 定時の施錠・解錠を作成 |
-| `schedule_list` | なし | `<SCOPE_READ>` | `readOnlyHint` | スケジュール一覧と直近の実行結果 |
-| `schedule_cancel` | `scheduleId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint` | スケジュールのキャンセル |
+- `lock`、`unlock`、`upgrade_firmware` は指令が受け付けられた時点で返ります。デバイスが動作したことは保証されず、結果が後から通知されることもありません。指令の直後は古い状態が返ることがあるので、数秒後に確認してください。
+- 同じデバイスに `upgrade_firmware` を呼び出してから 30 秒以内にもう一度呼び出すと、`ACTION_IN_PROGRESS` を返します。
 
-`schedule_create` のパラメータ：
+### スケジュール（ログインが必要）
 
-| パラメータ | 型 | 必須条件 | 説明 |
-| --- | --- | --- | --- |
-| `action` | `lock` / `unlock` | 必須 | 指定時刻に実行する動作 |
-| `deviceId` | string | 必須 | 対象デバイス。錠前タイプのデバイスに限ります |
-| `timezone` | string | 必須 | IANA タイムゾーン名（例：`Asia/Tokyo`、`America/New_York`）。`atIso`・`hour`・`minute` はこのタイムゾーンで解釈します |
-| `timingType` | `delay` / `at` / `recurring` | 必須 | 遅延して 1 回 / 指定時刻に 1 回 / 繰り返し |
-| `delaySeconds` | integer | `timingType` が `delay` | 現在からの遅延秒数。60 ～ 31536000 |
-| `atIso` | string | `timingType` が `at` | タイムゾーン接尾辞なしの ISO 8601 ローカル時刻（例：`2026-12-01T08:00:00`）。現在より後である必要があります。`Z` や `+09:00` は付けないでください |
-| `pattern` | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` が `recurring` | 繰り返しパターン |
-| `hour` | integer | `timingType` が `recurring` | 0 ～ 23 |
-| `minute` | integer | `timingType` が `recurring` | 0 ～ 59 |
-| `dayOfWeek` | integer | `pattern` が `weekly` | 1 ～ 7（1 が月曜、7 が日曜） |
-| `dayOfMonth` | integer | `pattern` が `monthly` | 1 ～ 31。その日がない月はスキップします |
+| ツール            | パラメーター | 説明                                                                               |
+| ----------------- | ------------ | ---------------------------------------------------------------------------------- |
+| `schedule_create` | 下表を参照   | スケジュールを作成                                                                 |
+| `schedule_list`   | なし         | 未実行の 1 回限りのスケジュールと、有効な繰り返しスケジュール                      |
+| `schedule_cancel` | `scheduleId` | スケジュールをキャンセル。繰り返しスケジュールはキャンセル後に実行されなくなります |
 
-- 指定時刻になるとサーバー側で実行します。実行前に、デバイスが引き続きあなたのものであることを再確認します。
-- 実行結果は通知されません。`schedule_list` の `lastFireStatus` で確認してください。
+`schedule_create` のパラメーター：
 
-## ツールの返却形式
+| パラメーター   | 型                                                       | 必須となる条件              | 説明                                                                                                                                                                                        |
+| -------------- | -------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`       | string                                                   | 必須                        | `lock`、`unlock`、`upgrade_firmware` のいずれか                                                                                                                                             |
+| `deviceId`     | string                                                   | 必須                        | 対象デバイス                                                                                                                                                                                |
+| `timingType`   | `delay` / `at` / `recurring`                             | 必須                        | 時間経過後に 1 回 / 指定時刻に 1 回 / 繰り返し                                                                                                                                              |
+| `delaySeconds` | integer                                                  | `timingType` が `delay`     | 現在からの秒数。60〜31536000                                                                                                                                                                |
+| `atIso`        | string                                                   | `timingType` が `at`        | タイムゾーンの接尾辞を付けない現地時刻（例：`2026-12-01T08:00:00`）。現在より後であること。`Z` や `+09:00` は付けないでください                                                             |
+| `pattern`      | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` が `recurring` | 毎日 / 平日 / 週末 / 毎週 / 毎月                                                                                                                                                            |
+| `hour`         | integer                                                  | `timingType` が `recurring` | 0〜23                                                                                                                                                                                       |
+| `minute`       | integer                                                  | `timingType` が `recurring` | 0〜59                                                                                                                                                                                       |
+| `dayOfWeek`    | integer                                                  | `pattern` が `weekly`       | 1〜7（1 が月曜、7 が日曜）                                                                                                                                                                  |
+| `dayOfMonth`   | integer                                                  | `pattern` が `monthly`      | 1〜31。その日がない月はスキップ                                                                                                                                                             |
+| `timezone`     | string                                                   | 任意                        | IANA タイムゾーン名（例：`America/New_York`）。`atIso`、`hour`、`minute` はこのタイムゾーンで解釈します。省略時は日本時間（`Asia/Tokyo`）。無効な名前の場合は `PARAMETER_FAILED` を返します |
 
-ツールの結果は MCP の `CallToolResult` に従います。
+- 夏時間のあるタイムゾーン：繰り返しスケジュールの時刻が夏時間開始日に存在しない場合、その日はスキップします。夏時間終了日に 2 回ある場合は 1 回だけ実行します。1 回限りのスケジュールの時刻が存在しない場合は夏時間の差だけ後ろにずらし、2 回ある場合は 1 回目を使います。
+- 指定時刻になるとサーバーが実行します。実行結果は通知されません。実行済みの 1 回限りのスケジュールは `schedule_list` から消えるので、結果は `device_status` で確認してください。
 
-| フィールド | 説明 |
-| --- | --- |
-| `resultType` | 常に `complete` |
-| `content` | テキスト。成功時は `structuredContent` を JSON 文字列にしたもので、構造化結果を読まないクライアント向けです |
-| `structuredContent` | 構造化された結果。成功時はそのツールの `outputSchema`（`tools/list` で取得可能）に従います。失敗時は `{ "reason", "message" }` です |
-| `isError` | `true` は業務上の失敗（デバイスが見つからない、パラメータ不正など）を表します。AI は `reason` と `message` をもとに自ら修正して再試行できます |
+### ナレッジベースとアフターサポートポリシー（ログイン不要）
 
-成功例（`device_status`）：
+| ツール             | パラメーター                      | 説明                                                                                                                                                                             |
+| ------------------ | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `knowledge_search` | `query`。任意で `product`、`topK` | ヘルプセンターの記事とサポートの回答を検索し、関連する抜粋を返します（回答は生成しません）                                                                                       |
+| `support_policy`   | なし                              | アフターサポート・ご購入に関するポリシーの全文（保証、修理費、交換・返品、アダプター価格、発送、領収書、注文キャンセル、締め出し時の補償）と、ポリシーに関する質問への回答ルール |
+
+アフターサポートポリシーは resource としても提供しています：`policy://candyhouse/support-policy`（Markdown）。`resources/list`、`resources/read` で読み取れます。
+
+## ツールの戻り値
+
+- `content` には `text` が 1 件だけあり、ツール結果の JSON テキスト（`ok`、`message`、`data` などのフィールドを含む）です。結果は AI が読むためのもので、フィールド構成は安定を保証しません。プログラムで依存しないでください。
+- 業務上の失敗（未ログイン、デバイスが見つからない、パラメーター不正など）の場合は `isError` が `true` になり、`data.reason` に理由が入ります。AI はこれをもとに修正して再試行できます。
+
+主な `data.reason`：
+
+| 値                   | 意味                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| `NOT_AUTHENTICATED`  | ログインしていない、またはログインの有効期限切れ                                               |
+| `DEVICE_NOT_FOUND`   | デバイスが見つからない、またはご自身のデバイスではない                                         |
+| `SCHEDULE_NOT_FOUND` | スケジュールが見つからない：実行済み、キャンセル済み、またはご自身のものではない               |
+| `PARAMETER_FAILED`   | パラメーターが不正（無効なタイムゾーン名、過去の `atIso`、スケジュールできない `action` など） |
+| `ACTION_IN_PROGRESS` | 同じデバイスのファームウェア更新が進行中                                                       |
+
+失敗の例（`content[0].text`）：
 
 ```json
 {
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "{\"deviceId\":\"<DEVICE_ID>\", ...}" }],
-  "structuredContent": {
-    "deviceId": "<DEVICE_ID>",
-    "deviceName": "玄関",
-    "deviceModel": "sesame_5",
-    "online": true,
-    "lockState": "locked",
-    "batteryPercent": 82,
-    "currentFirmwareVersion": "<VERSION>",
-    "latestFirmwareVersion": "<VERSION>"
-  },
-  "isError": false
+  "ok": false,
+  "resultType": "DEVICE_LIST",
+  "message": "You are not logged in or your session has expired. Please log in first.",
+  "data": {
+    "action": "device_list",
+    "reason": "NOT_AUTHENTICATED",
+    "chatType": "user"
+  }
 }
 ```
-
-失敗例：
-
-```json
-{
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "Device not found. Call device_list to get a valid deviceId." }],
-  "structuredContent": {
-    "reason": "DEVICE_NOT_FOUND",
-    "message": "Device not found. Call device_list to get a valid deviceId."
-  },
-  "isError": true
-}
-```
-
-成功時の `structuredContent` の主なフィールド：
-
-| ツール | 主なフィールド |
-| --- | --- |
-| `device_list` | `devices[]`：`deviceId`、`deviceName`、`deviceModel` |
-| `device_status` | `deviceId`、`deviceName`、`deviceModel`、`online`、`lockState`、`batteryPercent`、`currentFirmwareVersion`、`latestFirmwareVersion` |
-| `lock` / `unlock` | `deviceId`、`deviceName`、`action`、`accepted` |
-| `schedule_create` | `scheduleId`、`nextFireAt`（時差付き ISO 8601）、`timezone` |
-| `schedule_list` | `schedules[]`：`scheduleId`、`action`、`deviceName`、`timingType`、`timezone`、`state`、`nextFireAt`、`lastFiredAt`、`lastFireStatus`、`fireCount` |
-| `schedule_cancel` | `scheduleId`、`state` |
-
-`lockState` の値：`locked` / `unlocked` / `moved`。[Webhook](./webhook.md) の `CHSesame2Status` と同じです。
-
-`state` の値：`PENDING`（1 回限りのスケジュールが実行待ち）、`ACTIVE`（繰り返しスケジュールが有効）、`COMPLETED`・`FAILED`（1 回限りのスケジュールが実行済み、成功 / 失敗）、`CANCELLED`。`lastFireStatus` の値：`success`、`failure`。未実行の場合は空です。
-
-`reason` の値：
-
-| 値 | 意味 |
-| --- | --- |
-| `INVALID_ARGUMENT` | パラメータが不正（必須項目の欠落、無効なタイムゾーン名、`atIso` が過去の時刻など） |
-| `DEVICE_NOT_FOUND` | デバイスが見つからない、あなたのデバイスではない、または錠前タイプではない |
-| `ACTION_IN_PROGRESS` | 同じデバイスの同じ動作を処理中 |
-| `SCHEDULE_NOT_FOUND` | スケジュールが見つからない、またはあなたのスケジュールではない |
-| `SCHEDULE_LIMIT_EXCEEDED` | 有効なスケジュール数が上限に達している |
-| `UPSTREAM_ERROR` | 下流サービスの呼び出しに失敗。しばらくしてから再試行してください |
-| `INTERNAL_ERROR` | その他のサーバーエラー |
 
 ## エラー処理
 
 ### HTTP ステータスコード
 
-| ステータス | 発生する状況 | 対処 |
-| --- | --- | --- |
-| `400` | ヘッダーとボディの不一致、または必須ヘッダーの欠落（`-32020`）、必要なクライアント機能の欠落（`-32021`）、非対応のプロトコルバージョン（`-32022`。対応バージョンをレスポンスに列挙）、ボディが正しい JSON-RPC メッセージではない | リクエストを修正。バージョン非対応の場合は列挙されたバージョンを使用 |
-| `401` | トークンがない、またはトークンが無効・期限切れ・`aud` 不一致 | `WWW-Authenticate` に従って再認可するか、トークンを更新 |
-| `403` | scope 不足（`error="insufficient_scope"`）、または `Origin` ヘッダーが許可されていない | [追加認可](#権限不足時の追加認可)で scope を追加 |
-| `404` | メソッドが存在しない（JSON-RPC `-32601`） | `method` を確認 |
-| `405` | `GET`・`DELETE` など `POST` 以外のメソッド | `POST` のみを使用 |
-| `429` | リクエストが多すぎる（入口のレート制限、またはアカウント単位の制限） | しばらくしてから再試行。`Retry-After` がある場合はその時間だけ待つ |
+| ステータス | 発生元       | 状況                                                                                                                                                            | 対処                                                             |
+| ---------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `400`      | サーバー     | `x-mcp-client` が空または不正（`INVALID_MCP_CLIENT`）、バッチリクエスト（`BATCH_NOT_SUPPORTED`）、ヘッダーとボディの不一致など MCP プロトコルに反するリクエスト | リクエストを修正。バッチは 1 件ずつ送信                          |
+| `401`      | ゲートウェイ | `x-api-key` がない                                                                                                                                              | ヘッダーを追加                                                   |
+| `403`      | ゲートウェイ | API キーが無効                                                                                                                                                  | キーを確認                                                       |
+| `403`      | サーバー     | API キーが変更済み（`API_KEY_REJECTED`）                                                                                                                        | 新しいキーを使用                                                 |
+| `405`      | サーバー     | `POST` 以外のメソッド                                                                                                                                           | `POST` のみを使用                                                |
+| `429`      | サーバー     | 今月の利用枠を使い切った（`QUOTA_EXCEEDED`）。`Retry-After` なし                                                                                                | 再試行しても無効。翌月のリセットを待つか、プランをアップグレード |
+| `429`      | ゲートウェイ | リクエストが多すぎる                                                                                                                                            | 時間をおいて再試行                                               |
+| `503`      | サーバー     | 利用枠の確認が一時的に利用できない（`QUOTA_UNAVAILABLE`）                                                                                                       | 時間をおいて再試行                                               |
+
+ゲートウェイのエラーは JSON-RPC 形式ではありません。サーバーが MCP として処理する前に拒否した場合は JSON-RPC エラーを返し、`error.data.reason` で理由を区別します。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "error": {
+    "code": -32000,
+    "message": "Monthly API usage quota exceeded",
+    "data": { "reason": "QUOTA_EXCEEDED" }
+  }
+}
+```
 
 ### JSON-RPC エラーコード
 
-| `error.code` | 意味 |
-| --- | --- |
-| `-32700` | リクエストボディが正しい JSON ではない |
-| `-32600` | 正しい JSON-RPC リクエストではない |
-| `-32601` | メソッドが存在しない |
-| `-32602` | パラメータが不正（ツールやリソースが存在しないなど） |
-| `-32603` | サーバー内部エラー |
-| `-32020` | `HeaderMismatch`：ヘッダーとボディの不一致、または必須ヘッダーの欠落 |
-| `-32021` | `MissingRequiredClientCapability`：必要なクライアント機能がない |
-| `-32022` | `UnsupportedProtocolVersion`：非対応のプロトコルバージョン |
+| `error.code` | 意味                                                                   |
+| ------------ | ---------------------------------------------------------------------- |
+| `-32600`     | 不正なリクエスト（`INVALID_MCP_CLIENT`、`BATCH_NOT_SUPPORTED` を含む） |
+| `-32601`     | メソッドまたはツールが存在しない                                       |
+| `-32602`     | ツールの引数が `inputSchema` に合わない                                |
+| `-32603`     | ツール実行中のサーバーエラー                                           |
+| `-32000`     | 処理前にサーバーが拒否。`error.data.reason` を参照                     |
 
-ツール実行中の業務上の失敗には JSON-RPC エラーを使わず、`isError: true` のツール結果を返します。[ツールの返却形式](#ツールの返却形式)を参照してください。
+## 利用枠と制限
 
-## 利用制限
-
-- アクセスできるのは、認可したアカウント自身のデバイスとスケジュールだけです。ゲストキーのみのデバイスは含みません。
-- リクエスト頻度には上限があります（入口単位・アカウント単位）。具体的な値は公開時にお知らせします。超えた場合は `429` を返します。
-- アカウントごとの有効なスケジュール数には上限があります。具体的な値は公開時にお知らせします。
-- スケジュールの実行結果は通知されません。`schedule_list` で確認してください。
-- ツール一覧の変更通知は提供しません。
-- 次の機能はこのエンドポイントでは提供しません：ファームウェア更新、ヘルプセンター検索、グループ関連の操作。
+- `tools/call` 1 回ごとに API キーの利用枠を 1 回消費します（Web API と共通）。`initialize`、`tools/list` などその他のリクエストは数えません。利用枠とプランは [SESAME Biz [開発者向けページ]](https://biz.candyhouse.co/biz/developer) を参照してください。
+- エンドポイント全体にリクエスト頻度の上限があり、超えると `429` を返します。
+- 提供していない機能：グループ関連の機能、画像検索、ツール一覧の変更通知。
