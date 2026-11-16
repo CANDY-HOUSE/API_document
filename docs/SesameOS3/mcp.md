@@ -1,304 +1,230 @@
 # MCP
 
-::: warning 设计中，尚未上线
-本页是设计稿，用于评审对外接口，内容可能变化，目前还不能连接。下列项尚未确定，文中用占位符表示：
-
-| 占位符 | 含义 |
-| --- | --- |
-| `<MCP_ENDPOINT>` | MCP 端点 URL，同时也是 OAuth 的资源标识（`resource`） |
-| `<SCOPE_READ>` | 只读权限的 scope 名称 |
-| `<SCOPE_CONTROL>` | 控制权限的 scope 名称 |
-:::
-
 ## 概要
 
-通过 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/)，你可以在 Claude、ChatGPT 等支持远程 MCP 连接器的 AI 应用里使用自己的 Sesame 设备：
+通过 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/)，你可以在 Claude、Codex 等支持远程 MCP 服务器的 AI 应用里使用自己的 SESAME 设备：
 
 - 查看设备列表和设备状态；
-- 上锁、开锁；
-- 创建、查看、取消定时上锁 / 开锁。
+- 上锁、开锁、升级固件；
+- 创建、查看、取消定时上锁 / 开锁 / 固件升级；
+- 查询产品使用方法和售后政策。
 
-连接时，你在 CANDY HOUSE 的登录页登录并同意授权，AI 应用只能以你的身份、在你授予的权限范围内操作你的设备。AI 应用不会拿到你的密码。
+接入需要 SESAME Biz 的 API key。连接后，在对话里用 SESAME 账号的邮箱验证码登录，AI 就能以你的身份操作你账号下的设备。AI 应用拿不到你的密码。
 
 ## 接入信息
 
 | 项目 | 内容 |
 | --- | --- |
-| 端点 | `<MCP_ENDPOINT>` |
+| 端点 | `https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp` |
 | 传输方式 | Streamable HTTP，只接受 `POST` |
-| 协议版本 | `2026-07-28`；同时兼容 2025 版客户端（`2025-06-18`、`2025-11-25`） |
+| 协议版本 | `2026-07-28`；兼容 `2025-11-25`、`2025-06-18`、`2025-03-26` |
 | 状态 | 无状态：不签发会话（`Mcp-Session-Id`），每个请求独立处理 |
-| 鉴权 | OAuth 2.1，每个请求都要带 `Authorization: Bearer <access token>` |
-| 响应 | `application/json`，或只含一条结果的 `text/event-stream`，客户端需要两种都支持 |
+| 响应 | `application/json`，或只含一条结果的 `text/event-stream` |
 
 ### 请求头
 
-| 请求头 | 要求 |
-| --- | --- |
-| `Authorization` | `Bearer <access token>`，所有请求必填。不得放在 URL 查询参数里 |
-| `Content-Type` | `application/json` |
-| `Accept` | 同时列出 `application/json` 和 `text/event-stream` |
-| `MCP-Protocol-Version` | 协议版本，如 `2026-07-28`。必须与请求体 `params._meta` 里的 `io.modelcontextprotocol/protocolVersion` 一致 |
-| `Mcp-Method` | 与请求体的 `method` 一致（`2026-07-28` 版必填） |
-| `Mcp-Name` | 与 `params.name`（`tools/call`）或 `params.uri`（`resources/read`）一致（`2026-07-28` 版，这两种请求必填） |
+| 请求头 | 必填 | 说明 |
+| --- | --- | --- |
+| `x-api-key` | 是 | SESAME Biz 的 API key，获取方式见 [SESAME Biz [开发者页]](https://biz.candyhouse.co/biz/developer) |
+| `x-mcp-client` | 否 | 区分登录状态的名字，取值为 1～32 位小写字母、数字或 `-`，如 `claude-code`、`codex`。不带这个请求头时为 `default`；带了但为空或不合法时返回 `400` |
 
-请求头与请求体不一致、或缺少必填的请求头时，返回 HTTP `400` 和 JSON-RPC 错误 `-32020`。
+### API key 与 `x-mcp-client`
 
-### 支持的方法
+- 登录状态按「API key 所属的 Biz 账号 + `x-mcp-client`」保存，跨对话保留，直到调用 `auth_logout`。
+- 同一个 Biz 账号的成员共用一把 API key。**每个成员必须配置不同的 `x-mcp-client`**，否则会共用同一个登录状态，用到别人登录的 SESAME 账号。
+- `x-mcp-client` 由客户端自己填写，**不是权限边界**：知道同一把 key 和别人的 `x-mcp-client`，就能使用对方的登录状态。只把 API key 交给可以信任的成员。
+- 换 API key 后，旧 key 立即不能调用工具。
 
-| 方法 | 说明 |
-| --- | --- |
-| `server/discover` | 获取服务端支持的协议版本、能力和身份信息（`2026-07-28` 版） |
-| `tools/list` | 列出工具及其参数和输出 schema |
-| `tools/call` | 调用工具 |
-| `resources/list` / `resources/read` | 读取 CANDY HOUSE 售后与购买政策（`policy://candyhouse/support-policy`，Markdown） |
-| `initialize` / `notifications/initialized` | 仅供 2025 版客户端握手。通知返回 `202`，无响应体 |
+## 在 AI 应用中连接
 
-- 工具清单是固定的，服务端声明 `listChanged: false`，不提供 `subscriptions/listen`。
-- `2026-07-28` 版的请求不经过 `initialize`，每个请求在 `params._meta` 里带协议版本和客户端能力。
-- `GET` 和 `DELETE` 返回 `405`；请求里的 `Mcp-Session-Id` 和 `Last-Event-ID` 会被忽略。
+连接后，AI 应用会读取工具列表和服务端的使用说明（`instructions`），按其中的规则调用工具。
 
-### 请求示例
+### claude.ai（自定义连接器）
 
-`2026-07-28` 版调用 `device_status`：
+1. 在 claude.ai 的连接器设置里选择「添加自定义连接器」。
+2. URL 填端点，请求头添加 `x-api-key`，值为你的 API key。
+3. 添加后，Claude 手机端与 Claude Code 也会同步使用这个连接器。
 
-```http
-POST <MCP_ENDPOINT>
-Authorization: Bearer <ACCESS_TOKEN>
-Content-Type: application/json
-Accept: application/json, text/event-stream
-MCP-Protocol-Version: 2026-07-28
-Mcp-Method: tools/call
-Mcp-Name: device_status
+::: warning x-mcp-client
+claude.ai 的自定义连接器需要经过 claude.ai 审核才能添加 `x-mcp-client`。未配置时为 `default`：同一个 Biz 账号下所有未配置 `x-mcp-client` 的连接共用一个登录状态。多人共用一把 key 时，请其他成员在 Claude Code、Codex 等客户端里配置各自的 `x-mcp-client`。
+:::
 
+### Claude Code
+
+用命令行添加：
+
+```bash
+claude mcp add --transport http candyhouse \
+  https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp \
+  --header "x-api-key: <YOUR_API_KEY>" \
+  --header "x-mcp-client: claude-code"
+```
+
+或在项目的 `.mcp.json` 里配置。`headers` 支持 `${VAR}` 引用环境变量，避免把 key 写进仓库：
+
+```json
 {
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "device_status",
-    "arguments": { "deviceId": "<DEVICE_ID>" },
-    "_meta": {
-      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-      "io.modelcontextprotocol/clientInfo": { "name": "ExampleClient", "version": "1.0.0" },
-      "io.modelcontextprotocol/clientCapabilities": {}
+  "mcpServers": {
+    "candyhouse": {
+      "type": "http",
+      "url": "https://jhcr1i3ecb.execute-api.ap-northeast-1.amazonaws.com/prod/mcp",
+      "headers": {
+        "x-api-key": "${CANDYHOUSE_API_KEY}",
+        "x-mcp-client": "claude-code"
+      }
     }
   }
 }
 ```
 
-## 在 AI 应用中连接
+详见 [Claude Code 的 MCP 文档](https://code.claude.com/docs/zh-CN/mcp)。
 
-一般步骤如下。各 AI 应用的具体操作在上线时补充。
+### Codex
 
-1. 在 AI 应用里添加自定义 MCP 连接器，URL 填 `<MCP_ENDPOINT>`。
-2. AI 应用会打开 CANDY HOUSE 的登录页。用你在 Sesame App 里使用的账号登录。
-3. 确认授权内容并同意。首次连接通常只授予只读权限（查看设备和定时任务）。
-4. 第一次让 AI 开关锁或创建定时任务时，AI 应用会请你追加授予控制权限。
-5. 要撤销授权，在 AI 应用里删除或断开该连接器。
+1. 打开「插件」，切换到「MCP」标签，点击「添加」。
+2. URL 填端点。
+3. 标头添加 `x-api-key`（你的 API key）和 `x-mcp-client`（如 `codex`）。
 
-## 授权说明
+详见 [Codex 插件文档](https://www.codex-docs.com/docs/plugins)。
 
-本节面向自行开发 MCP 客户端的开发者。主流 AI 应用已内置以下流程。
+### 其他客户端
 
-### 发现授权服务器
+支持 Streamable HTTP 并能自定义请求头的 MCP 客户端都可以连接。不能自定义请求头的客户端（如 ChatGPT 的连接器）目前不支持。
 
-1. 不带 token 访问 `<MCP_ENDPOINT>`，返回 `401`，并在 `WWW-Authenticate` 头里给出受保护资源元数据（RFC 9728）的地址和所需 scope：
+## 登录
 
-   ```http
-   HTTP/1.1 401 Unauthorized
-   WWW-Authenticate: Bearer resource_metadata="<受保护资源元数据 URL>", scope="<SCOPE_READ>"
-   ```
+1. 让 AI 查看或操作设备。未登录时，AI 会请你提供 SESAME App 使用的邮箱。
+2. AI 调用 `auth_start`，验证码发送到该邮箱。
+3. 把验证码告诉 AI，AI 调用 `auth_verify` 完成登录。
 
-2. 获取该元数据，从 `authorization_servers` 得到授权服务器，再按 RFC 8414 / OpenID Connect Discovery 获取授权服务器元数据。
-
-### 客户端注册
-
-- 以 **Client ID Metadata Document（CIMD）** 为主：用你托管的元数据文档的 HTTPS URL 作为 `client_id`，文档里至少要有 `client_id`、`client_name`、`redirect_uris`。授权服务器元数据里的 `client_id_metadata_document_supported` 为 `true`。
-- 其他注册方式是否提供，上线时另行说明。
-
-### 获取 token
-
-- 使用授权码模式加 PKCE（`S256`）。
-- 授权请求和 token 请求都要带 `resource=<MCP_ENDPOINT>`（RFC 8707）。签发的 token 只对这个端点有效，`aud` 不符的 token 会被拒绝。
-- 授权响应带有 `iss` 参数时，客户端要先与授权服务器的 `issuer` 比对，一致才能用授权码换 token（RFC 9207）。
-
-### 权限范围（scope）
-
-| scope | 允许的操作 | 对应工具 |
-| --- | --- | --- |
-| `<SCOPE_READ>` | 查看设备和定时任务 | `device_list`、`device_status`、`schedule_list` |
-| `<SCOPE_CONTROL>` | 改变设备状态，包括定时执行 | `lock`、`unlock`、`schedule_create`、`schedule_cancel` |
-
-两个 scope 互不包含。只需要查看时，只申请 `<SCOPE_READ>`。
-
-### 权限不足时的增量授权
-
-用只有 `<SCOPE_READ>` 的 token 调用控制类工具，返回 `403`：
-
-```http
-HTTP/1.1 403 Forbidden
-WWW-Authenticate: Bearer error="insufficient_scope", scope="<SCOPE_CONTROL>", resource_metadata="<受保护资源元数据 URL>"
-```
-
-客户端应把已有的 scope 与 `scope` 里给出的 scope 合并，重新发起授权，拿到新 token 后重试原请求。
-
-### token 的使用
-
-- 每个请求都带 `Authorization: Bearer <access token>`。
-- token 无效、过期或 `aud` 不符时返回 `401`，需要刷新或重新授权。
-- 这个 token 只用于 `<MCP_ENDPOINT>`，不得转发给其他服务；本服务也不接受为其他服务签发的 token。
+- 验证码有有效期，输错的次数也有上限；过期或超过次数后，需要重新调用 `auth_start`。短时间内失败过多时，账号会被暂时锁定，最长约 1 小时。
+- 要切换 SESAME 账号，先让 AI 调用 `auth_logout`。
 
 ## 工具列表
 
 - `deviceId` 必须来自 `device_list`，`scheduleId` 必须来自 `schedule_list`，不要自行构造。
-- 只能操作你自己账号下的设备和定时任务。传入别人的 ID 时，按「找不到」处理，不会执行任何操作。
-- `tools/list` 总是列出全部 7 个工具；调用时才检查 scope。
+- 只能操作自己账号下的设备和定时任务，不含访客钥匙（guest）的设备。传入别人的 ID 时按「找不到」处理，不会执行任何操作。
 
-### 设备
+### 登录
 
-| 工具 | 参数 | 所需 scope | 注解 | 说明 |
-| --- | --- | --- | --- | --- |
-| `device_list` | 无 | `<SCOPE_READ>` | `readOnlyHint` | 设备列表，不含访客钥匙（guest）的设备 |
-| `device_status` | `deviceId` | `<SCOPE_READ>` | `readOnlyHint` | 设备状态：是否在线、锁状态、电量、固件版本 |
-| `lock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint`、`openWorldHint` | 上锁，仅限锁类设备 |
-| `unlock` | `deviceId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint`、`openWorldHint` | 开锁，仅限锁类设备 |
+| 工具 | 参数 | 说明 |
+| --- | --- | --- |
+| `auth_start` | `email` | 向邮箱发送验证码 |
+| `auth_verify` | `code` | 校验验证码，完成登录 |
+| `auth_logout` | 无 | 登出，清除登录状态 |
 
-- `lock` / `unlock` 成功只表示指令已被接受并下发，不保证设备已经到达目标状态。需要确认时，再调用 `device_status`，或使用 [Webhook](./webhook.md) 接收状态变化通知。
-- 短时间内对同一设备重复发送同一动作，可能返回 `ACTION_IN_PROGRESS`。
+### 设备（需要登录）
 
-### 定时任务
+| 工具 | 参数 | 说明 |
+| --- | --- | --- |
+| `device_list` | 无 | 设备列表 |
+| `device_status` | `deviceId` | 设备的最新已知状态：锁状态、在线、电量、固件版本等 |
+| `lock` | `deviceId` | 上锁 |
+| `unlock` | `deviceId` | 开锁 |
+| `upgrade_firmware` | `deviceId` | 开始固件升级 |
 
-| 工具 | 参数 | 所需 scope | 注解 | 说明 |
-| --- | --- | --- | --- | --- |
-| `schedule_create` | 见下表 | `<SCOPE_CONTROL>` | `destructiveHint`、`openWorldHint` | 创建定时上锁 / 开锁 |
-| `schedule_list` | 无 | `<SCOPE_READ>` | `readOnlyHint` | 定时任务列表及最近一次执行结果 |
-| `schedule_cancel` | `scheduleId` | `<SCOPE_CONTROL>` | `destructiveHint`、`idempotentHint` | 取消定时任务 |
+- `lock`、`unlock`、`upgrade_firmware` 在指令被接受后就返回，不保证设备已经动作，也不会再推送结果。刚下指令后查到的状态可能还是旧的，几秒后再查。
+- 对同一设备调用 `upgrade_firmware` 后 30 秒内再次调用，返回 `ACTION_IN_PROGRESS`。
+
+### 定时任务（需要登录）
+
+| 工具 | 参数 | 说明 |
+| --- | --- | --- |
+| `schedule_create` | 见下表 | 创建定时任务 |
+| `schedule_list` | 无 | 未执行的一次性任务和生效中的循环任务 |
+| `schedule_cancel` | `scheduleId` | 取消定时任务；循环任务取消后不再执行 |
 
 `schedule_create` 的参数：
 
 | 参数 | 类型 | 必填条件 | 说明 |
 | --- | --- | --- | --- |
-| `action` | `lock` / `unlock` | 必填 | 到时执行的动作 |
-| `deviceId` | string | 必填 | 目标设备，须为锁类设备 |
-| `timezone` | string | 必填 | IANA 时区名，如 `Asia/Tokyo`、`America/New_York`。`atIso`、`hour`、`minute` 都按这个时区解释 |
+| `action` | string | 必填 | `lock`、`unlock` 或 `upgrade_firmware` |
+| `deviceId` | string | 必填 | 目标设备 |
 | `timingType` | `delay` / `at` / `recurring` | 必填 | 延时一次 / 指定时刻一次 / 循环 |
-| `delaySeconds` | integer | `timingType` 为 `delay` | 从现在起延迟的秒数，60 ～ 31536000 |
-| `atIso` | string | `timingType` 为 `at` | 不带时区后缀的 ISO 8601 本地时间，如 `2026-12-01T08:00:00`，必须晚于当前时间。不要加 `Z` 或 `+09:00` |
-| `pattern` | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` 为 `recurring` | 循环模式 |
-| `hour` | integer | `timingType` 为 `recurring` | 0 ～ 23 |
-| `minute` | integer | `timingType` 为 `recurring` | 0 ～ 59 |
-| `dayOfWeek` | integer | `pattern` 为 `weekly` | 1 ～ 7，1 为周一，7 为周日 |
-| `dayOfMonth` | integer | `pattern` 为 `monthly` | 1 ～ 31，当月没有这一天时跳过当月 |
+| `delaySeconds` | integer | `timingType` 为 `delay` | 从现在起延迟的秒数，60～31536000 |
+| `atIso` | string | `timingType` 为 `at` | 不带时区后缀的本地时间，如 `2026-12-01T08:00:00`，必须晚于当前时间。不要加 `Z` 或 `+09:00` |
+| `pattern` | `daily` / `weekdays` / `weekends` / `weekly` / `monthly` | `timingType` 为 `recurring` | 每天 / 工作日 / 周末 / 每周 / 每月 |
+| `hour` | integer | `timingType` 为 `recurring` | 0～23 |
+| `minute` | integer | `timingType` 为 `recurring` | 0～59 |
+| `dayOfWeek` | integer | `pattern` 为 `weekly` | 1～7，1 为周一，7 为周日 |
+| `dayOfMonth` | integer | `pattern` 为 `monthly` | 1～31，当月没有这一天时跳过 |
+| `timezone` | string | 可选 | IANA 时区名，如 `America/New_York`。`atIso`、`hour`、`minute` 按这个时区解释；不传时为日本时间（`Asia/Tokyo`）。时区名无效时返回 `PARAMETER_FAILED` |
 
-- 到点后由服务端执行，执行前会再次确认设备仍属于你。
-- 执行结果不会主动推送，可以用 `schedule_list` 查看 `lastFireStatus`。
+- 有夏令时的时区：循环任务的时刻在夏令时开始那天不存在时，当天跳过；在夏令时结束那天出现两次时，只执行一次。一次性任务的时刻不存在时，顺延夏令时的时长；出现两次时取第一次。
+- 到点后由服务端执行，不会推送执行结果。一次性任务执行后从 `schedule_list` 消失，要确认结果请调用 `device_status`。
+
+### 知识库与售后政策（不需要登录）
+
+| 工具 | 参数 | 说明 |
+| --- | --- | --- |
+| `knowledge_search` | `query`；可选 `product`、`topK` | 检索帮助中心文章和客服回复，返回相关片段，不生成回答 |
+| `support_policy` | 无 | 售后与购买政策全文（保修、维修费、换货退货、适配器价格、发货、收据、取消订单、被锁在门外时的补偿），以及回答政策问题的规则 |
+
+售后政策同时作为 resource 提供：`policy://candyhouse/support-policy`（Markdown），可用 `resources/list`、`resources/read` 读取。
 
 ## 工具返回格式
 
-工具结果遵循 MCP 的 `CallToolResult`：
+- `content` 只有一条 `text`，内容是工具结果的 JSON 文本，含 `ok`、`message`、`data` 等字段。结果供 AI 阅读，字段结构不保证稳定，请不要在程序里依赖。
+- 业务失败（未登录、找不到设备、参数不合法等）时 `isError` 为 `true`，`data.reason` 给出原因。AI 可以据此纠正后重试。
 
-| 字段 | 说明 |
-| --- | --- |
-| `resultType` | 固定为 `complete` |
-| `content` | 文本内容。成功时是 `structuredContent` 的 JSON 序列化，方便不读结构化结果的客户端 |
-| `structuredContent` | 结构化结果。成功时符合该工具的 `outputSchema`（可从 `tools/list` 获取）；失败时为 `{ "reason", "message" }` |
-| `isError` | `true` 表示业务失败（如找不到设备、参数不合法）。AI 可以根据 `reason` 和 `message` 自行纠正后重试 |
-
-成功示例（`device_status`）：
-
-```json
-{
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "{\"deviceId\":\"<DEVICE_ID>\", ...}" }],
-  "structuredContent": {
-    "deviceId": "<DEVICE_ID>",
-    "deviceName": "玄关",
-    "deviceModel": "sesame_5",
-    "online": true,
-    "lockState": "locked",
-    "batteryPercent": 82,
-    "currentFirmwareVersion": "<VERSION>",
-    "latestFirmwareVersion": "<VERSION>"
-  },
-  "isError": false
-}
-```
-
-失败示例：
-
-```json
-{
-  "resultType": "complete",
-  "content": [{ "type": "text", "text": "Device not found. Call device_list to get a valid deviceId." }],
-  "structuredContent": {
-    "reason": "DEVICE_NOT_FOUND",
-    "message": "Device not found. Call device_list to get a valid deviceId."
-  },
-  "isError": true
-}
-```
-
-各工具成功时 `structuredContent` 的主要字段：
-
-| 工具 | 主要字段 |
-| --- | --- |
-| `device_list` | `devices[]`：`deviceId`、`deviceName`、`deviceModel` |
-| `device_status` | `deviceId`、`deviceName`、`deviceModel`、`online`、`lockState`、`batteryPercent`、`currentFirmwareVersion`、`latestFirmwareVersion` |
-| `lock` / `unlock` | `deviceId`、`deviceName`、`action`、`accepted` |
-| `schedule_create` | `scheduleId`、`nextFireAt`（带时差的 ISO 8601）、`timezone` |
-| `schedule_list` | `schedules[]`：`scheduleId`、`action`、`deviceName`、`timingType`、`timezone`、`state`、`nextFireAt`、`lastFiredAt`、`lastFireStatus`、`fireCount` |
-| `schedule_cancel` | `scheduleId`、`state` |
-
-`lockState` 取值：`locked` / `unlocked` / `moved`，与 [Webhook](./webhook.md) 的 `CHSesame2Status` 相同。
-
-`state` 取值：`PENDING`（一次性任务待执行）、`ACTIVE`（循环任务生效中）、`COMPLETED`、`FAILED`（一次性任务已执行，成功 / 失败）、`CANCELLED`。`lastFireStatus` 取值：`success`、`failure`，尚未执行时为空。
-
-`reason` 取值：
+常见的 `data.reason`：
 
 | 值 | 含义 |
 | --- | --- |
-| `INVALID_ARGUMENT` | 参数不合法，如缺少必填项、时区名无效、`atIso` 早于当前时间 |
-| `DEVICE_NOT_FOUND` | 找不到设备，或设备不属于你、不是锁类设备 |
-| `ACTION_IN_PROGRESS` | 同一设备的同一动作正在处理中 |
-| `SCHEDULE_NOT_FOUND` | 找不到定时任务，或任务不属于你 |
-| `SCHEDULE_LIMIT_EXCEEDED` | 有效定时任务数达到上限 |
-| `UPSTREAM_ERROR` | 调用下游服务失败，可稍后重试 |
-| `INTERNAL_ERROR` | 其他服务端错误 |
+| `NOT_AUTHENTICATED` | 未登录或登录已失效 |
+| `DEVICE_NOT_FOUND` | 找不到设备，或设备不属于你 |
+| `SCHEDULE_NOT_FOUND` | 找不到定时任务：已执行、已取消，或不属于你 |
+| `PARAMETER_FAILED` | 参数不合法，如时区名无效、`atIso` 早于当前时间、不能定时的 `action` |
+| `ACTION_IN_PROGRESS` | 同一设备的固件升级正在进行 |
+
+失败示例（`content[0].text`）：
+
+```json
+{
+  "ok": false,
+  "resultType": "DEVICE_LIST",
+  "message": "You are not logged in or your session has expired. Please log in first.",
+  "data": { "action": "device_list", "reason": "NOT_AUTHENTICATED", "chatType": "user" }
+}
+```
 
 ## 错误处理
 
 ### HTTP 状态码
 
-| 状态码 | 场景 | 处理方式 |
-| --- | --- | --- |
-| `400` | 请求头与请求体不一致或缺少必填请求头（`-32020`）；缺少必需的客户端能力（`-32021`）；不支持的协议版本（`-32022`，响应里列出支持的版本）；请求体不是合法 JSON-RPC | 修正请求；版本不支持时改用列出的版本 |
-| `401` | 没有 token，或 token 无效、过期、`aud` 不符 | 按 `WWW-Authenticate` 重新授权或刷新 token |
-| `403` | scope 不足（`error="insufficient_scope"`）；`Origin` 请求头不被允许 | 按[增量授权](#权限不足时的增量授权)追加 scope |
-| `404` | 方法不存在（JSON-RPC `-32601`） | 检查 `method` |
-| `405` | 使用了 `GET`、`DELETE` 等 `POST` 以外的方法 | 只用 `POST` |
-| `429` | 请求过于频繁（入口限速或按账号限流） | 稍后重试；有 `Retry-After` 时按它等待 |
+| 状态码 | 来源 | 场景 | 处理方式 |
+| --- | --- | --- | --- |
+| `400` | 服务端 | `x-mcp-client` 为空或不合法（`INVALID_MCP_CLIENT`）；批量请求（`BATCH_NOT_SUPPORTED`）；请求不符合 MCP 协议，如请求头与请求体不一致 | 修正请求；批量请求改为逐条发送 |
+| `401` | 网关 | 没有 `x-api-key` | 添加请求头 |
+| `403` | 网关 | API key 无效 | 检查 key |
+| `403` | 服务端 | API key 已被更换（`API_KEY_REJECTED`） | 改用新 key |
+| `405` | 服务端 | 使用了 `POST` 以外的方法 | 只用 `POST` |
+| `429` | 服务端 | 本月额度已用完（`QUOTA_EXCEEDED`），不带 `Retry-After` | 重试无效，等下月重置或升级套餐 |
+| `429` | 网关 | 请求过于频繁 | 稍后重试 |
+| `503` | 服务端 | 额度检查暂时不可用（`QUOTA_UNAVAILABLE`） | 稍后重试 |
+
+网关返回的错误不是 JSON-RPC 格式。服务端在处理 MCP 请求前拒绝时，返回 JSON-RPC 错误，`error.data.reason` 区分原因：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "error": { "code": -32000, "message": "Monthly API usage quota exceeded", "data": { "reason": "QUOTA_EXCEEDED" } }
+}
+```
 
 ### JSON-RPC 错误码
 
 | `error.code` | 含义 |
 | --- | --- |
-| `-32700` | 请求体不是合法 JSON |
-| `-32600` | 不是合法的 JSON-RPC 请求 |
-| `-32601` | 方法不存在 |
-| `-32602` | 参数不合法，如工具或 resource 不存在 |
-| `-32603` | 服务端内部错误 |
-| `-32020` | `HeaderMismatch`：请求头与请求体不一致，或缺少必填请求头 |
-| `-32021` | `MissingRequiredClientCapability`：缺少必需的客户端能力 |
-| `-32022` | `UnsupportedProtocolVersion`：不支持该协议版本 |
+| `-32600` | 不是合法的请求，包括 `INVALID_MCP_CLIENT`、`BATCH_NOT_SUPPORTED` |
+| `-32601` | 方法或工具不存在 |
+| `-32602` | 工具参数不符合 `inputSchema` |
+| `-32603` | 工具执行时发生服务端错误 |
+| `-32000` | 服务端在处理前拒绝，见 `error.data.reason` |
 
-工具执行中的业务失败不使用 JSON-RPC 错误，而是返回 `isError: true` 的工具结果，见[工具返回格式](#工具返回格式)。
+## 额度与限制
 
-## 使用限制
-
-- 只能访问授权账号自己的设备和定时任务；不含访客钥匙（guest）的设备。
-- 请求频率有上限（按入口和按账号），具体数值上线时公布。超出时返回 `429`。
-- 每个账号的有效定时任务数有上限，具体数值上线时公布。
-- 定时任务的执行结果不主动推送，请用 `schedule_list` 查看。
-- 不提供工具清单变更通知。
-- 以下功能不通过本端点提供：固件升级、帮助中心检索、群组相关操作。
+- 每次 `tools/call` 计入 API key 的调用额度，与 Web API 共用；`initialize`、`tools/list` 等其他请求不计。额度与套餐见 [SESAME Biz [开发者页]](https://biz.candyhouse.co/biz/developer)。
+- 端点有整体的请求频率上限，超出时返回 `429`。
+- 不提供：群组相关功能、图片检索、工具清单变更通知。
